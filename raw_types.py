@@ -2,6 +2,8 @@ from enum import Enum
 import struct
 import base64
 
+MAX_MESSAGE_SIZE = 0x20000
+
 def decode_timestamp(ts):
 	(year, month, day, weekDay, hour, minute,
 		second, millisecond) = struct.unpack('<I6BH', ts)
@@ -185,7 +187,7 @@ class RawMessage(GeneralClass):
 		try:
 			return (self.magic == 0x6060
 				and self.size == self.total_headers_size + self.body_size + 0x20
-				and self.size < 0xffff)
+				and self.size < MAX_MESSAGE_SIZE)
 		except:
 			return False
 	def validate(self):

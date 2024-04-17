@@ -43,6 +43,8 @@
 #define CEC_STATE_ABBREV_WLREADY 4
 #define CEC_STATE_ABBREV_OTHER 5
 
+#define MAX_MESSAGE_SIZE 0x20000
+
 typedef char CecMessageId[8];
 
 Result cecdInit(void);

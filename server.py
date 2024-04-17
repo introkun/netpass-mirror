@@ -1,10 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from raw_types import RawMessage
+from raw_types import RawMessage, MAX_MESSAGE_SIZE
 import sqlite3, math, time, struct, base64
 
-HOST = "127.0.0.1"
+HOST = "0.0.0.0"
 PORT = 8080
-MAX_STREETPASS_SIZE = 0xffff
 
 def get_current_timestamp():
 	now = time.localtime()
@@ -20,7 +19,7 @@ class Database:
 			title_id INTIGER NOT NULL,
 			message_id BIGINT NOT NULL,
 			mac BIGINT NOT NULL,
-			message BLOB(65535) NOT NULL,
+			message BLOB NOT NULL,
 			time BIGINT NOT NULL
 		);
 		CREATE INDEX IF NOT EXISTS outbox_title_id ON outbox (title_id);
@@ -32,7 +31,8 @@ class Database:
 			message_id BIGINT NOT NULL,
 			from_mac BIGINT NOT NULL,
 			to_mac BIGINT NOT NULL,
-			message BLOB(65535) NOT NULL,
+			message BLOB NOT NULL,
+			sent INTIGER NOT NULL DEFAULT 0,
 			time BIGINT NOT NULL
 		);
 		CREATE INDEX IF NOT EXISTS inbox_title_id ON inbox (title_id);
@@ -44,12 +44,18 @@ class Database:
 		""")
 		self.con.commit()
 	def store_outbox(self, mac, msg):
-		self.cur.execute("DELETE FROM outbox WHERE title_id = ? AND message_id = ? AND mac = ?",
-			(msg.title_id, msg.message_id, mac))
+		self.cur.execute("DELETE FROM outbox WHERE title_id = ? AND mac = ?",
+			(msg.title_id, mac))
 		self.cur.execute("INSERT INTO outbox (title_id, message_id, mac, message, time) VALUES (?, ?, ?, ?, ?)",
 			(msg.title_id, msg.message_id, mac, msg.data, math.floor(time.time())))
 		self.con.commit()
 	def update_inbox(self, mac, title_id):
+		res = self.cur.execute("SELECT message FROM outbox WHERE title_id = ? AND mac = ? LIMIT 1", (title_id, mac))
+		res = res.fetchone()
+		if not res:
+			return False
+		ownmsg = RawMessage(res[0])
+		ownmsg.ts_sent = get_current_timestamp()
 		res = self.cur.execute("SELECT title_id, message_id, mac, message FROM outbox WHERE title_id = ? AND mac <> ? ORDER BY time DESC LIMIT 10", (title_id, mac))
 		data = []
 		for row in res.fetchall():
@@ -59,22 +65,27 @@ class Database:
 			message = msg.data
 			to_mac = mac
 			data.append((title_id, message_id, from_mac, to_mac, message, math.floor(time.time())))
+			data.append((title_id, ownmsg.message_id, to_mac, from_mac, ownmsg.data, math.floor(time.time())))
 		for d in data:
 			try:
 				self.cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (?, ?, ?, ?, ?, ?)", d)
 				self.con.commit()
 			except sqlite3.IntegrityError:
 				pass
+		return True
 	def pop_inbox(self, mac, title_id):
-		res = self.cur.execute("SELECT title_id, message_id, from_mac, to_mac, message FROM inbox WHERE title_id = ? AND to_mac = ? ORDER BY time DESC LIMIT 1", (title_id, mac))
+		res = self.cur.execute("SELECT title_id, message_id, from_mac, to_mac, message FROM inbox WHERE title_id = ? AND to_mac = ? AND sent = 0 ORDER BY time DESC LIMIT 1", (title_id, mac))
 		res = res.fetchone()
 		if res is None:
 			return None
 		msg = RawMessage(res[4])
-		self.cur.execute("DELETE FROM inbox WHERE message_id = ? AND to_mac = ?", (msg.message_id, res[3]))
+		self.cur.execute("UPDATE inbox SET sent = 1 WHERE message_id = ? AND to_mac = ?", (msg.message_id, res[3]))
 		self.con.commit()
 		if not msg.validate(): return None
 		return (msg, res[2])
+	def cleanup(self):
+		self.cur.execute("DELETE FROM outbox WHERE time < ?", (math.floor(time.time() - 60*60*24*30),))
+		self.cur.execute("DELETE FROM inbox WHERE time < ?", (math.floor(time.time() - 60*60*24*90),))
 
 class StreetPassServer(BaseHTTPRequestHandler):
 	def write_response(self, httpcode, errmsg):
@@ -103,7 +114,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			length = int(length)
 			if length < 4: #0x70:
 				return self.write_response(400, "Content too short")
-			if length > MAX_STREETPASS_SIZE:
+			if length > MAX_MESSAGE_SIZE:
 				return self.write_response(413, "Content too long")
 		except:
 			return self.write_response(411, "Invalid content-length error")
@@ -125,6 +136,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		# aaaaand update those streetpasses
 		database.update_inbox(mac, msg.title_id)
 		self.write_response(200, "Success")
+		database.cleanup()
 	def pop_inbox(self, title_id):
 		mac = self.get_mac()
 		if mac is None: return
@@ -137,19 +149,26 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
 		self.end_headers()
 		self.wfile.write(msg.data)
+		database.cleanup()
 	def do_GET(self):
 		if self.path.startswith("/inbox"):
 			parts = self.path.split("/")
 			if len(parts) > 2:
 				title_id = None
 				try:
-					b64tid = parts[2]
-					while len(b64tid) % 4: b64tid += "="
-					title_id = struct.unpack('<I', base64.b64decode(b64tid, b'+-'))[0]
+					title_id = struct.unpack('>I', bytes.fromhex(parts[2]))[0]
 				except:
-					return self.write_response(400, "Invalid inbox id")
+					# b64 legacy, remove at some point
+					# obsolete since  17.4.2024
+					try:
+						b64tid = parts[2]
+						while len(b64tid) % 4: b64tid += "="
+						title_id = struct.unpack('<I', base64.b64decode(b64tid, b'+-'))[0]
+					except:
+						return self.write_response(400, "Invalid inbox id")
 				if len(parts) > 3:
 					if parts[3] == "pop":
+						print(title_id)
 						return self.pop_inbox(title_id)
 		self.write_response(404, "path not found")
 	def do_POST(self):

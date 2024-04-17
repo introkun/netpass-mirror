@@ -13,7 +13,8 @@
 #define SOC_BUFFERSIZE 0x100000
 static u32 *SOC_buffer = NULL;
 
-#define BASE_URL "http://10.6.42.119:8080"
+#define BASE_URL "https://streetpass.sorunome.de"
+//#define BASE_URL "http://10.6.42.119:8080"
 
 struct curlReply {
   u8 *ptr;
@@ -21,11 +22,11 @@ struct curlReply {
   size_t size;
 };
 
-void initCurlReply(struct curlReply* r) {
+void initCurlReply(struct curlReply* r, size_t size) {
 	if (!r->ptr) {
 		r->len = 0;
-		r->size = 0xff;
-		r->ptr = malloc(0xff);
+		r->size = size;
+		r->ptr = malloc(size);
 	}
 }
 void deinitCurlReply(struct curlReply* r) {
@@ -37,14 +38,15 @@ void deinitCurlReply(struct curlReply* r) {
 	r->size = 0;
 }
 
-size_t curlWrite(void *ptr, size_t size, size_t nmemb, struct curlReply* r) {
+size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
+	struct curlReply* r = (struct curlReply*)ptr;
 	if (!r) {
-		return 0;
+		return size*nmemb; // let's just pretend we did all correct
 	}
-	initCurlReply(r);
+	initCurlReply(r, 0xFF);
 	size_t new_len = r->len + size*nmemb;
 	if (new_len > r->size) {
-		if (new_len > 0xffff) return 0;
+		if (new_len > MAX_MESSAGE_SIZE) return 0;
 		r->size += new_len;
 		u8* newptr = realloc(r->ptr, r->size);
 		if (!newptr) {
@@ -53,7 +55,7 @@ size_t curlWrite(void *ptr, size_t size, size_t nmemb, struct curlReply* r) {
 		}
 		r->ptr = newptr;
 	}
-	memcpy(r->ptr + r->len, ptr, size*nmemb);
+	memcpy(r->ptr + r->len, data, size*nmemb);
 	r->ptr[new_len] = '\0';
 	r->len = new_len;
 	return size*nmemb;
@@ -105,14 +107,16 @@ Result httpRequest(CURL* curl, char* method, char* url, u8 mac[6], int size, u8*
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
+	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
-	if (reply) {
-		initCurlReply(reply);
-	}
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWrite);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reply);
 
 	res = curl_easy_perform(curl);
+	if (res != CURLE_OK) {
+		res = -res;
+		goto cleanup;
+	}
 	long http_code = 0;
 	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 	if (!(http_code >= 200 && http_code < 300)) {
@@ -152,16 +156,14 @@ Result getMac(u8 mac[6]) {
 	return res;
 }
 
-Result uploadOutboxes() {
+Result uploadOutboxes(u8 mac[6]) {
 	Result res = 0;
-	u8 mac[6] = {0, 0, 0, 0, 0, 0};
-	res = getMac(mac);
-	if (R_FAILED(res)) return res;
 	Result messages = 0;
 	CecMboxListHeader mbox_list;
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
 	if (R_FAILED(res)) return -1;
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
+		printf("Uploading outbox %d/%ld...", i+1, mbox_list.num_boxes);
 		int title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
 		CecBoxInfoFull outbox;
 		res = cecdOpenAndRead(title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoFull), (u8*)&outbox);
@@ -170,10 +172,11 @@ Result uploadOutboxes() {
 			u8* msg = malloc(outbox.messages[j].message_size);
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
+				printf("%ld", res);
 				free(msg);
 				continue;
 			}
-			char url[250];
+			char url[50];
 			sprintf(url, "%s/outbox/upload", BASE_URL);
 			res = httpRequest(0, "POST", url, mac, outbox.messages[j].message_size, msg, 0);
 			if (R_FAILED(res)) {
@@ -183,31 +186,33 @@ Result uploadOutboxes() {
 			messages++;
 			free(msg);
 		}
+		if (R_FAILED(res)) {
+			printf("Failed %ld\n", res);
+		} else {
+			printf("Done\n");
+		}
 	}
 	return messages;
 }
 
-Result downloadInboxes() {
+Result downloadInboxes(u8 mac[6]) {
 	Result res = 0;
-	u8 mac[6] = {0, 0, 0, 0, 0, 0};
-	res = getMac(mac);
-	if (R_FAILED(res)) return res;
 	Result messages = 0;
 	CecMboxListHeader mbox_list;
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
 	if (R_FAILED(res)) return -1;
+	struct curlReply reply;
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
-		int title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
-		char* title_b64 = b64encode((u8*)&title_id, sizeof(int));
+		printf("Checking inbox %d/%ld", i+1, mbox_list.num_boxes);
+		char url[100];
+		sprintf(url, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
 		long http_code = 0;
 		do {
-			char url[250];
-			sprintf(url, "%s/inbox/%s/pop", BASE_URL, title_b64);
-			struct curlReply reply;
+			printf(".");
+			initCurlReply(&reply, MAX_MESSAGE_SIZE);
 			CURL* curl = curl_easy_init();
 			res = httpRequest(curl, "GET", url, mac, 0, 0, &reply);
 			if (R_FAILED(res)) {
-				deinitCurlReply(&reply);
 				curl_easy_cleanup(curl);
 				break;
 			}
@@ -219,11 +224,15 @@ Result downloadInboxes() {
 					messages++;
 				}
 			}
-			deinitCurlReply(&reply);
 			curl_easy_cleanup(curl);
 		} while (http_code == 200);
-		free(title_b64);
+		if (R_FAILED(res)) {
+			printf("Failed %ld\n", res);
+		} else {
+			printf("Done\n");
+		}
 	}
+	deinitCurlReply(&reply);
 	return messages;
 }
 
@@ -234,15 +243,17 @@ int main() {
 	srand(time(NULL));
 
 	cecdInit();
+	u8 mac[6] = {0, 0, 0, 0, 0, 0};
+	getMac(mac);
 
-	Result upload_messages = uploadOutboxes();
+	Result upload_messages = uploadOutboxes(mac);
 	if (R_FAILED(upload_messages)) {
 		printf("Failed to upload StreetPass data: %ld\n", upload_messages);
 	} else {
 		printf("Uploaded %ld StreetPass message(s)\n", upload_messages);
 	}
 
-	Result download_messages = downloadInboxes();
+	Result download_messages = downloadInboxes(mac);
 	if (R_FAILED(download_messages)) {
 		printf("Failed to download StreetPass data: %ld\n", download_messages);
 	} else {

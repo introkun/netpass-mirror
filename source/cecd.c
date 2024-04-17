@@ -234,7 +234,12 @@ Result addStreetpassMessage(u8* msgbuf) {
 	// sanity checks
 	if (msgheader->magic != 0x6060) return -1; // bad magic
 	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return -1;
-	if (msgheader->message_size > 0xFFFF) return -1; // prooobably too large
+	if (msgheader->message_size > MAX_MESSAGE_SIZE) return -1; // prooobably too large
+
+	// update the msg header about the receive time
+	if (!msgheader->received.year) {
+		getCurrentTime(&(msgheader->received));
+	}
 
 	// let's open the box buffer to see if we can even accept a new message, or if the message has already been accepted
 	const int max_boxbuf_size = sizeof(CecBoxInfoHeader) + sizeof(CecMessageHeader)*10;
