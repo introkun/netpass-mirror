@@ -140,8 +140,20 @@ class RawMessage(GeneralClass):
 		return struct.unpack('<I', self.data[0x18:0x18+4])[0]
 	@property
 	def message_id(self):
-#		return self.data[0x20:0x20+8]
 		return struct.unpack('<q', self.data[0x20:0x20+8])[0]
+	@message_id.setter
+	def message_id(self, value):
+		b = struct.pack('<q', value)
+		for i in range(8):
+			self.data[0x20 + i] = b[i]
+	@property
+	def message_id2(self):
+		return struct.unpack('<q', self.data[0x2C:0x2C+8])[0]
+	@message_id2.setter
+	def message_id2(self, value):
+		b = struct.pack('<q', value)
+		for i in range(8):
+			self.data[0x2C + i] = b[i]
 	@property
 	def send_method(self):
 		return struct.unpack('<B', self.data[0x35:0x36])[0]

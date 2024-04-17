@@ -62,9 +62,10 @@ class Database:
 			(title_id, message_id, from_mac, message) = row
 			msg = RawMessage(message)
 			msg.ts_sent = get_current_timestamp()
-			message = msg.data
+			msg.message_id2 = ownmsg.message_id
+			ownmsg.message_id2 = msg.message_id
 			to_mac = mac
-			data.append((title_id, message_id, from_mac, to_mac, message, math.floor(time.time())))
+			data.append((title_id, message_id, from_mac, to_mac, msg.data, math.floor(time.time())))
 			data.append((title_id, ownmsg.message_id, to_mac, from_mac, ownmsg.data, math.floor(time.time())))
 		for d in data:
 			try:
