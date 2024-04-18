@@ -41,7 +41,7 @@ GFXBUILD	:=	$(BUILD)
 APP_AUTHOR	:=	Sorunome
 APP_TITLE	:=	StreetPass Test
 APP_DESCRIPTION	:=	StreetPass in the modern world!
-#ROMFS		:=	romfs
+ROMFS		:=	romfs
 #GFXBUILD	:=	$(ROMFS)/gfx
 
 #---------------------------------------------------------------------------------

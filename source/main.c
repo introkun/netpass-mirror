@@ -23,8 +23,8 @@ struct curlReply {
 };
 
 void initCurlReply(struct curlReply* r, size_t size) {
+	r->len = 0;
 	if (!r->ptr) {
-		r->len = 0;
 		r->size = size;
 		r->ptr = malloc(size);
 	}
@@ -43,14 +43,15 @@ size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	if (!r) {
 		return size*nmemb; // let's just pretend we did all correct
 	}
-	initCurlReply(r, 0xFF);
+	if (!r->ptr) {
+		initCurlReply(r, 0xFF);
+	}
 	size_t new_len = r->len + size*nmemb;
 	if (new_len > r->size) {
 		if (new_len > MAX_MESSAGE_SIZE) return 0;
 		r->size += new_len;
 		u8* newptr = realloc(r->ptr, r->size);
 		if (!newptr) {
-			deinitCurlReply(r);
 			return 0; // out of memory
 		}
 		r->ptr = newptr;
@@ -107,7 +108,8 @@ Result httpRequest(CURL* curl, char* method, char* url, u8 mac[6], int size, u8*
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+	curl_easy_setopt(curl, CURLOPT_CAINFO, "romfs:/certs.pem");
 
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWrite);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reply);
@@ -172,7 +174,6 @@ Result uploadOutboxes(u8 mac[6]) {
 			u8* msg = malloc(outbox.messages[j].message_size);
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
-				printf("%ld", res);
 				free(msg);
 				continue;
 			}
@@ -218,13 +219,13 @@ Result downloadInboxes(u8 mac[6]) {
 			}
 
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+			curl_easy_cleanup(curl);
 			if (http_code == 200) {
 				res = addStreetpassMessage(reply.ptr);
 				if (!R_FAILED(res)) {
 					messages++;
 				}
 			}
-			curl_easy_cleanup(curl);
 		} while (http_code == 200);
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
@@ -240,6 +241,7 @@ int main() {
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
 	networkInit();
+	romfsInit();
 	srand(time(NULL));
 
 	cecdInit();
@@ -267,6 +269,7 @@ int main() {
 		u32 kDown = hidKeysDown();
 		if (kDown & KEY_START) break;
 	}
+	romfsExit();
 	gfxExit();
 	curl_global_cleanup();
 	return 0;
