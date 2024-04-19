@@ -43,6 +43,7 @@
 #define CEC_STATE_ABBREV_WLREADY 4
 #define CEC_STATE_ABBREV_OTHER 5
 
+// only a made-up number that is prolly large enough for existing streetpass messages
 #define MAX_MESSAGE_SIZE 0x20000
 
 typedef char CecMessageId[8];
