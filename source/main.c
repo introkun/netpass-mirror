@@ -7,7 +7,6 @@
 
 #include <3ds.h>
 #include "cecd.h"
-#include "base64.h"
 
 #define SOC_ALIGN 0x1000
 #define SOC_BUFFERSIZE 0x100000
