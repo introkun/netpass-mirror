@@ -17,9 +17,9 @@ static u32 *SOC_buffer = NULL;
 //#define BASE_URL "http://10.6.42.119:8080"
 
 struct curlReply {
-  u8 *ptr;
-  size_t len;
-  size_t size;
+	u8 *ptr;
+	size_t len;
+	size_t size;
 };
 
 void initCurlReply(struct curlReply* r, size_t size) {
@@ -29,6 +29,7 @@ void initCurlReply(struct curlReply* r, size_t size) {
 		r->ptr = malloc(size);
 	}
 }
+
 void deinitCurlReply(struct curlReply* r) {
 	if (r->ptr) {
 		free(r->ptr);
@@ -100,15 +101,17 @@ Result httpRequest(CURL* curl, char* method, char* url, u8 mac[6], int size, u8*
 
 	// set some options
 	curl_easy_setopt(curl, CURLOPT_URL, url);
-	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, "3ds");
-	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
-	curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_2TLS);
+	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50);
+	curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method);
-	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
+	curl_easy_setopt(curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 5);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(curl, CURLOPT_CAINFO, "romfs:/certs.pem");
 
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWrite);
