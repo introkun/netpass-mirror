@@ -9,6 +9,9 @@
 #include <citro2d.h>
 #include "cecd.h"
 #include "curl-handler.h"
+#include "scene.h"
+
+#define VERSION "v0.1.0"
 
 //#define BASE_URL "https://streetpass.sorunome.de"
 #define BASE_URL "http://10.6.42.119:8080"
@@ -79,8 +82,8 @@ Result downloadInboxes(void) {
 		} while (http_code == 200);
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
-		} else {
-			printf("Done\n");
+		} else {C3D_FrameEnd(0);
+
 		}
 	}
 	deinitCurlReply(&reply);
@@ -109,40 +112,58 @@ cleanup:
 int main() {
 	gfxInitDefault();
 	consoleInit(GFX_BOTTOM, NULL);
-	//C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
-	//C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
-	//C2D_Prepare();
+	printf("Starting StreetPass %s\n", VERSION);
+	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
+	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
+	C2D_Prepare();
 	romfsInit();
 	curlInit();
 	srand(time(NULL));
 
-	//C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 	cecdInit();
-
+/*
 	Result upload_messages = uploadOutboxes();
 	if (R_FAILED(upload_messages)) {
 		printf("Failed to upload StreetPass data: %ld\n", upload_messages);
 	} else {
 		printf("Uploaded %ld StreetPass message(s)\n", upload_messages);
-	}
-
+	}*/
+/*
 	Result download_messages = downloadInboxes();
 	if (R_FAILED(download_messages)) {
 		printf("Failed to download StreetPass data: %ld\n", download_messages);
 	} else {
 		printf("Downloaded %ld new StreetPass message(s)\n", download_messages);
-	}
+	}*/
 
-	printf("Press start to exit");
+	Scene* scene = malloc(sizeof(Scene));
+	getLoadingScene(scene, 0, (void*)uploadOutboxes);
+
+	scene->init(scene);
 
 	while (aptMainLoop()) {
-		hidScanInput();
-		u32 kDown = hidKeysDown();
-		if (kDown & KEY_START) break;
+		Scene* new_scene = processScene(scene);
+		if (!new_scene) break;
+		if (new_scene != scene) {
+			scene = new_scene;
+			continue;
+		}
+		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+		C2D_TargetClear(top, C2D_Color32(0x68, 0xB0, 0xD8, 0xFF));
+		C2D_SceneBegin(top);
+		scene->render(scene);
+		C3D_FrameEnd(0);
 	}
-	//C2D_Fini();
-	//C3D_Fini();
+	free(scene);
+	/*
+	hidScanInput();
+	u32 kDown = hidKeysDown();
+	if (kDown & KEY_START) break;
+	*/
+	C2D_Fini();
+	C3D_Fini();
 	curlExit();
 	romfsExit();
 	gfxExit();

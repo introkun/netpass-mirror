@@ -127,7 +127,8 @@ Result curlInit(void) {
 
 void curlExit(void) {
 	running = false;
-	// TODO: trigger curl_multi_thread to exit
+	threadJoin(curl_multi_thread, U64_MAX);
+	threadFree(curl_multi_thread);
 
 	curl_global_cleanup();
 	socExit();
