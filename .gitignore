@@ -1,7 +1,9 @@
 __pycache__
 build
 database.db
-3ds-test.3dsx
-3ds-test.elf
-3ds-test.smdh
-3ds-test.3dsx.txt
+netpass.3dsx
+netpass.elf
+netpass.smdh
+netpass.3dsx.txt
+netpass.cia
+netpass.cia.txt

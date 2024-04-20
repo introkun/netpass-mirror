@@ -31,7 +31,7 @@ include $(DEVKITARM)/3ds_rules
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	netpass
 BUILD		:=	build
 SOURCES		:=	source source/scenes
 DATA		:=	data
@@ -39,7 +39,7 @@ INCLUDES	:=	include
 GRAPHICS	:=	gfx
 GFXBUILD	:=	$(BUILD)
 APP_AUTHOR	:=	Sorunome
-APP_TITLE	:=	StreetPass Test
+APP_TITLE	:=	NetPass
 APP_DESCRIPTION	:=	StreetPass in the modern world!
 ROMFS		:=	romfs
 #GFXBUILD	:=	$(ROMFS)/gfx
