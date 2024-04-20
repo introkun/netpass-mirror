@@ -3,7 +3,7 @@
 #include <3ds.h>
 #include "curl-handler.h"
 
-#define VERSION "v0.1.0"
+#define VERSION "v0.1.1"
 
 #define BASE_URL "https://streetpass.sorunome.de"
 //#define BASE_URL "http://10.6.42.119:8080"

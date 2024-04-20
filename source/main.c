@@ -15,6 +15,7 @@ int main() {
 	C2D_Prepare();
 	romfsInit();
 	curlInit();
+	bgLoopInit();
 	//srand(time(NULL));
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
@@ -40,7 +41,6 @@ int main() {
 				printf("Got location: %d\n", location);
 			}
 		}
-		bgLoopInit();
 	}));
 
 	scene->init(scene);
@@ -62,7 +62,7 @@ int main() {
 	bgLoopExit();
 	C2D_Fini();
 	C3D_Fini();
-	curlExit();
+	//curlExit();
 	romfsExit();
 	gfxExit();
 	return 0;

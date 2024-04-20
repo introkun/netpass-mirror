@@ -4,7 +4,7 @@ make
 
 VERSION_MAJOR=0
 VERSION_MINOR=1
-VERSION_MICRO=0
+VERSION_MICRO=1
 
 # allows easier upload
 cp netpass.3dsx netpass.3dsx.txt

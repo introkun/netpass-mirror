@@ -22,7 +22,7 @@ Result uploadOutboxes(void) {
 				continue;
 			}
 			char url[50];
-			sprintf(url, "%s/outbox/upload", BASE_URL);
+			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, 0);
 			if (R_FAILED(res)) {
 				free(msg);
@@ -50,11 +50,12 @@ Result downloadInboxes(void) {
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Checking inbox %d/%ld", i+1, mbox_list.num_boxes);
 		char url[100];
-		sprintf(url, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
+		snprintf(url, 100, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
 		u32 http_code;
 		do {
 			printf(".");
 			initCurlReply(&reply, MAX_MESSAGE_SIZE);
+			printf("%d %d\n", reply.size, (int)reply.ptr);
 			res = httpRequest("GET", url, 0, 0, &reply);
 			if (R_FAILED(res)) break;
 
@@ -81,7 +82,7 @@ Result getLocation(void) {
 	CurlReply reply;
 	initCurlReply(&reply, 4);
 	char url[80];
-	sprintf(url, "%s/location/current", BASE_URL);
+	snprintf(url, 80, "%s/location/current", BASE_URL);
 	res = httpRequest("GET", url, 0, 0, &reply);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
@@ -98,7 +99,7 @@ cleanup:
 Result setLocation(int location) {
 	Result res;
 	char url[80];
-	sprintf(url, "%s/location/%d/enter", BASE_URL, location);
+	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0);
 	if (R_FAILED(res)) {
 		printf("ERROR: Failed to enter location %d: %ld\n", location, res);

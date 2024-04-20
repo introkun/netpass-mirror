@@ -31,7 +31,8 @@ void curl_multi_loop(void* p) {
 	do {
 		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
 		if (mc != CURLM_OK) {
-			printf("curl multi fail: %u\n", mc);
+			printf("ERROR curl multi fail: %u\n", mc);
+			return;
 		}
 		CURLMsg* msg;
 		int msgsLeft;
@@ -45,7 +46,6 @@ void curl_multi_loop(void* p) {
 					}
 				}
 			}
-			svcSleepThread(0);
 		}
 		if (!openHandles) {
 			svcSleepThread((u64)1000000 * 100);
@@ -197,7 +197,7 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 
 	// add mac header
 	char header_mac[25];
-	char* header_mac_i = header_mac + sprintf(header_mac, "3ds-mac: ");
+	char* header_mac_i = header_mac + snprintf(header_mac, 25 - 12, "3ds-mac: ");
 	for (int i = 0; i < 6; i++) {
 		header_mac_i += sprintf(header_mac_i, "%02X", mac[i]);
 	}
@@ -221,6 +221,7 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
 	curl_easy_setopt(curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 5);
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 0);
 	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(curl, CURLOPT_CAINFO, "romfs:/certs.pem");
 
@@ -269,12 +270,11 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply* reply
 	CURL* curl = curl_easy_init();
 	if (!curl) return -1;
 	res = httpRequestSetup(curl, method, url, size, body, reply);
-	if (R_FAILED(res)) {
-		curl_handle_cleanup(curl);
-		return res;
-	}
+	if (R_FAILED(res)) goto cleanup;
 	res = httpRequestFinish(curl);
-	if (R_FAILED(res)) return res;
+	if (R_FAILED(res)) goto cleanup;
 
+cleanup:
+	curl_handle_cleanup(curl);
 	return res;
 }
