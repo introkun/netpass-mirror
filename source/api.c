@@ -55,7 +55,6 @@ Result downloadInboxes(void) {
 		do {
 			printf(".");
 			initCurlReply(&reply, MAX_MESSAGE_SIZE);
-			printf("%d %d\n", reply.size, (int)reply.ptr);
 			res = httpRequest("GET", url, 0, 0, &reply);
 			if (R_FAILED(res)) break;
 
@@ -106,6 +105,7 @@ Result setLocation(int location) {
 		return res;
 	}
 	printf("Entered location %d!\n", location);
+	downloadInboxes();
 	return res;
 }
 

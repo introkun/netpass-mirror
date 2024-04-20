@@ -15,7 +15,7 @@ int main() {
 	C2D_Prepare();
 	romfsInit();
 	curlInit();
-	bgLoopInit();
+	//bgLoopInit();
 	//srand(time(NULL));
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
@@ -29,6 +29,7 @@ int main() {
 		return getLocationScene(location);
 	})), lambda(void, (void) {
 		uploadOutboxes();
+		downloadInboxes();
 		Result res = getLocation();
 		if (R_FAILED(res) && res != -1) {
 			printf("ERROR failed to get location: %ld\n", res);
@@ -59,7 +60,7 @@ int main() {
 		C3D_FrameEnd(0);
 	}
 	printf("Exiting...\n");
-	bgLoopExit();
+	//bgLoopExit();
 	C2D_Fini();
 	C3D_Fini();
 	//curlExit();
