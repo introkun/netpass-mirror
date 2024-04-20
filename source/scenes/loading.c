@@ -44,7 +44,6 @@ void N(render)(Scene* sc) {
 
 void N(exit)(Scene* sc) {
 	C2D_TextBufDelete(N(data)->g_staticBuf);
-	threadJoin(N(data)->thread, U64_MAX);
 	threadFree(N(data)->thread);
 	free(N(data));
 }

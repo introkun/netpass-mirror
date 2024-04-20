@@ -99,7 +99,7 @@ class Database:
 		if type(location_id) is not int or location_id < 0 or location_id >= NUM_LOCATIONS:
 			return False
 		try:
-			self.cur.execute("INSERT INTO location (location_id, mac, time_from, time_to) VALUES (?, ?, ?, ?)", (location_id, mac, math.floor(time.time()), math.floor(time.time() + 60*60*10)))
+			self.cur.execute("INSERT INTO location (location_id, mac, time_start, time_end) VALUES (?, ?, ?, ?)", (location_id, mac, math.floor(time.time()), math.floor(time.time() + 60*60*10)))
 			self.con.commit()
 			return True
 		except sqlite3.IntegrityError:
@@ -111,12 +111,12 @@ class Database:
 			return -1
 		return res[0]
 	def streetpass_location(self, mac, location_id):
-		res = self.cur.execute("SELECT time_from, time_to FROM location WHERE mac = ? AND location_id = ?")
+		res = self.cur.execute("SELECT time_start, time_end FROM location WHERE mac = ? AND location_id = ?", (mac, location_id))
 		res = res.fetchone()
 		curtime = math.floor(time.time())
 		if res is None or res[0] > curtime or res[1] < curtime:
 			return False
-		res = self.cur.execute("SELECT mac FROM location WHERE mac <> ? AND location_id = ? AND time_from < ? AND time_to > ? ORDER BY RANDOM() LIMIT ?",
+		res = self.cur.execute("SELECT mac FROM location WHERE mac <> ? AND location_id = ? AND time_start < ? AND time_end > ? ORDER BY RANDOM() LIMIT ?",
 			(mac, location_id, curtime, curtime, random.randint(1, 5)))
 		for row in res.fetchall():
 			self.streetpass_mac(mac, row[0])
@@ -211,7 +211,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		database.cleanup()
 		if not database.enter_location(mac, location_id):
 			return self.write_response(409, "Cannot enter location")
-		self.streetpass_location(mac, location_id)
+		database.streetpass_location(mac, location_id)
 		self.write_response(200, "Success")
 	def get_location(self):
 		mac = self.get_mac()

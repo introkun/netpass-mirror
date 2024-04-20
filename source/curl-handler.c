@@ -126,10 +126,15 @@ Result curlInit(void) {
 }
 
 void curlExit(void) {
+	for (int i = 0; i < MAX_CONNECTIONS; i++) {
+		if (handles[i].handle) {
+			curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
+			curl_easy_cleanup(handles[i].handle);
+		}
+	}
 	running = false;
-	threadJoin(curl_multi_thread, U64_MAX);
-	threadFree(curl_multi_thread);
-
+	//threadFree(curl_multi_thread);
+	curl_multi_cleanup(curl_multi_handle);
 	curl_global_cleanup();
 	socExit();
 }
@@ -138,9 +143,11 @@ void curl_handle_cleanup(CURL* curl) {
 	for (int i = 0; i < MAX_CONNECTIONS; i++) {
 		if (handles[i].handle == curl) {
 			handles[i].status = CURL_HANDLE_STATUS_RESET;
+			handles[i].handle = 0;
 			break;
 		}
 	}
+	curl_multi_remove_handle(curl_multi_handle, curl);
 	curl_easy_cleanup(curl);
 }
 

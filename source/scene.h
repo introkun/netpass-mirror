@@ -26,3 +26,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/loading.h"
 #include "scenes/switch.h"
 #include "scenes/home.h"
+#include "scenes/location.h"
