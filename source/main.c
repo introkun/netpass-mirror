@@ -16,6 +16,12 @@
 //#define BASE_URL "https://streetpass.sorunome.de"
 #define BASE_URL "http://10.6.42.119:8080"
 
+#define lambda(return_type, function_body) \
+({ \
+	return_type __fn__ function_body \
+		__fn__; \
+})
+
 Result uploadOutboxes(void) {
 	Result res = 0;
 	Result messages = 0;
@@ -82,8 +88,8 @@ Result downloadInboxes(void) {
 		} while (http_code == 200);
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
-		} else {C3D_FrameEnd(0);
-
+		} else {
+			printf("Done\n");
 		}
 	}
 	deinitCurlReply(&reply);
@@ -108,6 +114,8 @@ cleanup:
 	deinitCurlReply(&reply);
 	return res;
 }
+
+static int location;
 
 int main() {
 	gfxInitDefault();
@@ -138,8 +146,22 @@ int main() {
 		printf("Downloaded %ld new StreetPass message(s)\n", download_messages);
 	}*/
 
-	Scene* scene = malloc(sizeof(Scene));
-	getLoadingScene(scene, 0, (void*)uploadOutboxes);
+	Scene* scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+		if (location == -1) {
+			return getHomeScene(); // load home
+		}
+		return 0;
+	})), lambda(void, (void) {
+		uploadOutboxes();
+		Result res = getLocation();
+		if (R_FAILED(res) && res != -1) {
+			printf("ERROR failed to get location: %ld\n", res);
+			location = -1;
+		} else {
+			location = res;
+			printf("Got location: %d\n", location);
+		}
+	}));
 
 	scene->init(scene);
 
@@ -156,7 +178,6 @@ int main() {
 		scene->render(scene);
 		C3D_FrameEnd(0);
 	}
-	free(scene);
 	/*
 	hidScanInput();
 	u32 kDown = hidKeysDown();

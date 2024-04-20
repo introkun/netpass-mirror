@@ -17,8 +17,12 @@ struct Scene {
 	SceneResult (*process)(Scene*);
 	Scene* next_scene;
 	u32 data;
+
+	bool need_free;
 };
 
 Scene* processScene(Scene* scene);
 
 #include "scenes/loading.h"
+#include "scenes/switch.h"
+#include "scenes/home.h"

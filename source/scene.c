@@ -1,4 +1,5 @@
 #include "scene.h"
+#include <malloc.h>
 
 Scene* processScene(Scene* scene) {
 	SceneResult res = scene->process(scene);
@@ -7,10 +8,16 @@ Scene* processScene(Scene* scene) {
 		return scene;
 	case scene_stop:
 		scene->exit(scene);
+		if (scene->need_free) {
+			free(scene);
+		}
 		return 0;
 	case scene_switch:
 		Scene* new_scene = scene->next_scene;
 		scene->exit(scene);
+		if (scene->need_free) {
+			free(scene);
+		}
 		new_scene->init(new_scene);
 		return new_scene;
 	}

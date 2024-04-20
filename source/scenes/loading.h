@@ -2,4 +2,4 @@
 
 #include "../scene.h"
 
-void getLoadingScene(Scene* scene, Scene* next_scene, void(*func)(void));
+Scene* getLoadingScene(Scene* next_scene, void(*func)(void));
