@@ -47,6 +47,8 @@ ROMFS		:=	romfs
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
+include $(TOPDIR)/version.env
+
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
 CFLAGS	:=	-g -Wall -O2 -mword-relocations \
@@ -54,6 +56,9 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -D__3DS__
+CFLAGS	+=	-D_VERSION_MAJOR_=$(NETPASS_VERSION_MAJOR) \
+			-D_VERSION_MINOR_=$(NETPASS_VERSION_MINOR) \
+			-D_VERSION_MICRO_=$(NETPASS_VERSION_MICRO)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 

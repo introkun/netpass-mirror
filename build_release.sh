@@ -2,19 +2,17 @@
 make clean
 make
 
-VERSION_MAJOR=0
-VERSION_MINOR=1
-VERSION_MICRO=2
+source version.env
 
 # allows easier upload
 cp netpass.3dsx netpass.3dsx.txt
 
 # strip elf
-arm-none-eabi-strip netpass.elf
+$DEVKITARM/bin/arm-none-eabi-strip netpass.elf
 
-../makerom -f cia -v -target t -exefslogo -o netpass.cia \
+makerom -f cia -v -target t -exefslogo -o netpass.cia \
 	-elf netpass.elf -rsf netpass.rsf \
-	-major 0 -minor 1 -micro 0 \
+	-major $NETPASS_VERSION_MAJOR -minor $NETPASS_VERSION_MINOR -micro $NETPASS_VERSION_MICRO \
 	-icon netpass.smdh
 
 cp netpass.cia netpass.cia.txt

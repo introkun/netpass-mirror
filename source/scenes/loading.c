@@ -33,7 +33,7 @@ void N(init)(Scene* sc) {
 	s32 prio = 0;
 	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
 	N(data)->thread_done = false;
-	N(data)->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, prio-1, -2, true);
+	N(data)->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, prio-1, -2, false);
 }
 
 void N(render)(Scene* sc) {

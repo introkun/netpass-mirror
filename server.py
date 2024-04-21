@@ -60,31 +60,6 @@ class Database:
 		self.cur.execute("INSERT INTO outbox (title_id, message_id, mac, message, time) VALUES (?, ?, ?, ?, ?)",
 			(msg.title_id, msg.message_id, mac, msg.data, math.floor(time.time())))
 		self.con.commit()
-	def update_inbox(self, mac, title_id):
-		res = self.cur.execute("SELECT message FROM outbox WHERE title_id = ? AND mac = ? LIMIT 1", (title_id, mac))
-		res = res.fetchone()
-		if not res:
-			return False
-		ownmsg = RawMessage(res[0])
-		ownmsg.ts_sent = get_current_timestamp()
-		res = self.cur.execute("SELECT title_id, message_id, mac, message FROM outbox WHERE title_id = ? AND mac <> ? ORDER BY time DESC LIMIT 10", (title_id, mac))
-		data = []
-		for row in res.fetchall():
-			(title_id, message_id, from_mac, message) = row
-			msg = RawMessage(message)
-			msg.ts_sent = get_current_timestamp()
-			msg.message_id2 = ownmsg.message_id
-			ownmsg.message_id2 = msg.message_id
-			to_mac = mac
-			data.append((title_id, message_id, from_mac, to_mac, msg.data, math.floor(time.time())))
-			data.append((title_id, ownmsg.message_id, to_mac, from_mac, ownmsg.data, math.floor(time.time())))
-		for d in data:
-			try:
-				self.cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (?, ?, ?, ?, ?, ?)", d)
-				self.con.commit()
-			except sqlite3.IntegrityError:
-				pass
-		return True
 	def pop_inbox(self, mac, title_id):
 		res = self.cur.execute("SELECT title_id, message_id, from_mac, to_mac, message FROM inbox WHERE title_id = ? AND to_mac = ? AND sent = 0 ORDER BY time DESC LIMIT 1", (title_id, mac))
 		res = res.fetchone()
@@ -202,8 +177,6 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			return self.write_response(400, "Bad Message")
 		# now we have to store the new outbox message
 		database.store_outbox(mac, msg)
-		# aaaaand update those streetpasses
-		database.update_inbox(mac, msg.title_id)
 		self.write_response(200, "Success")
 	def enter_location(self, location_id):
 		mac = self.get_mac()

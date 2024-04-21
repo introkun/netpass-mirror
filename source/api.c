@@ -47,6 +47,7 @@ Result downloadInboxes(void) {
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
 	if (R_FAILED(res)) return -1;
 	CurlReply reply;
+	reply.ptr = 0;
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Checking inbox %d/%ld", i+1, mbox_list.num_boxes);
 		char url[100];
@@ -105,7 +106,6 @@ Result setLocation(int location) {
 		return res;
 	}
 	printf("Entered location %d!\n", location);
-	downloadInboxes();
 	return res;
 }
 
@@ -132,7 +132,7 @@ void bgLoop(void* p) {
 void bgLoopInit(void) {
 	s32 prio = 0;
 	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
-	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, prio-1, -2, true);
+	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, prio-1, -2, false);
 }
 
 void bgLoopExit(void) {

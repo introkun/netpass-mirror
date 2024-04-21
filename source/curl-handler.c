@@ -14,9 +14,10 @@ static bool running = false;
 static u8 mac[6];
 
 #define CURL_HANDLE_STATUS_FREE 0
-#define CURL_HANDLE_STATUS_RUNNING 1
-#define CURL_HANDLE_STATUS_DONE 2
-#define CURL_HANDLE_STATUS_RESET 3
+#define CURL_HANDLE_STATUS_PENDING 1
+#define CURL_HANDLE_STATUS_RUNNING 2
+#define CURL_HANDLE_STATUS_DONE 3
+#define CURL_HANDLE_STATUS_RESET 4
 struct CurlHandle {
 	CURL* handle;
 	CURLcode result;
@@ -41,6 +42,7 @@ void curl_multi_loop(void* p) {
 				for (int i = 0; i < MAX_CONNECTIONS; i++) {
 					if (handles[i].handle == msg->easy_handle) {
 						handles[i].result = msg->data.result;
+						curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
 						handles[i].status = CURL_HANDLE_STATUS_DONE;
 						break;
 					}
@@ -57,6 +59,9 @@ void curl_multi_loop(void* p) {
 				handles[i].handle = 0;
 				handles[i].result = 0;
 				handles[i].status = CURL_HANDLE_STATUS_FREE;
+			}
+			if (handles[i].status == CURL_HANDLE_STATUS_PENDING) {
+				curl_multi_add_handle(curl_multi_handle, handles[i].handle);
 			}
 		}
 	} while (running);
@@ -120,7 +125,7 @@ Result curlInit(void) {
 
 	s32 prio = 0;
 	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
-	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, prio-1, -2, true);
+	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, prio-1, -2, false);
 
 	return res;
 }
@@ -147,7 +152,6 @@ void curl_handle_cleanup(CURL* curl) {
 			break;
 		}
 	}
-	curl_multi_remove_handle(curl_multi_handle, curl);
 	curl_easy_cleanup(curl);
 }
 
@@ -183,7 +187,6 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	for (; curl_handle_slot < MAX_CONNECTIONS; curl_handle_slot++) {
 		if (handles[curl_handle_slot].status == CURL_HANDLE_STATUS_FREE) {
 			found_handle_slot = true;
-			handles[curl_handle_slot].status = CURL_HANDLE_STATUS_RUNNING;
 			handles[curl_handle_slot].handle = curl;
 			break;
 		}
@@ -228,7 +231,7 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWrite);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reply);
 
-	curl_multi_add_handle(curl_multi_handle, curl);
+	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	return res;
 }
 
