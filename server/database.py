@@ -103,7 +103,7 @@ class Database:
 		with self.con.cursor() as cur:
 			cur.execute("SELECTL COUNT(*) FROM location WHERE location_id = %s", (location_id,))
 			population = cur.fetchone()[0]
-			limit = min(1, population / 1000) * population
+			limit = math.ceil(min(1, population / 1000) * population)
 			cur.execute("""
 			SELECT l1.mac, (
 				SELECT l2.mac
