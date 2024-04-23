@@ -157,7 +157,7 @@ class Database:
 					cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", d)
 				return True
 		finally:
-			self.con.commit()				self.con.commit()
+			self.con.commit()
 	def cleanup(self):
 		try:
 			with self.con.cursor() as cur:
