@@ -23,6 +23,9 @@ In other words, you'll need to run the following command in a Terminal/command p
 dkp-pacman -S 3ds-dev 3ds-curl
 ```
 
+In order to create the `.CIA` file you need `makerom` executable on your `$PATH`
+You can get it precompilated on https://github.com/3DSGuy/Project_CTR/releases and then copy it to `$DEVKITPRO/tools/bin` 
+
 ## Compilation
 
 This project ships with a [Makefile](Makefile), which is meant to simplify the compilation process. If you're unfamiliar with them, you can find out more about GNU Make [here](https://www.gnu.org/software/make/).
