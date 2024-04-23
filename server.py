@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from raw_types import RawMessage, MAX_MESSAGE_SIZE
+from threading import Timer
 import sqlite3, math, time, struct, base64, random
 
 NUM_LOCATIONS = 3
@@ -10,6 +11,32 @@ PORT = 8080
 def get_current_timestamp():
 	now = time.localtime()
 	return struct.pack('<I6BH', now.tm_year, now.tm_mon, now.tm_mday, now.tm_wday, now.tm_hour, now.tm_min, now.tm_sec, 0)
+
+# From https://stackoverflow.com/a/38317060
+class RepeatedTimer(object):
+	def __init__(self, interval, function, *args, **kwargs):
+		self._timer = None
+		self.interval = interval
+		self.function = function
+		self.args = args
+		self.kwargs = kwargs
+		self.is_running = False
+		self.start()
+
+	def _run(self):
+		self.is_running = False
+		self.start()
+		self.function(*self.args, **self.kwargs)
+
+	def start(self):
+		if not self.is_running:
+			self._timer = Timer(self.interval, self._run)
+			self._timer.start()
+			self.is_running = True
+
+	def stop(self):
+		self._timer.cancel()
+		self.is_running = False
 
 class Database:
 	def __init__(self):
@@ -96,6 +123,23 @@ class Database:
 		for row in res.fetchall():
 			self.streetpass_mac(mac, row[0])
 		return True
+	def streetpass_location_bg(self, location_id):
+		res = self.cur.execute("SELECTL COUNT(*) FROM location WHERE location_id = ?", (location_id,))
+		population = res.fetchone()[0]
+		limit = min(1, population / 1000) * population
+		res = self.cur.execute("""
+		SELECT l1.mac, (
+			SELECT l2.mac
+			FROM location l2
+			WHERE l2.location_id = l1.location_id AND l1.mac <> l2.mac
+			ORDER BY RANDOM() LIMIT 1
+		) mac
+		FROM location l1
+		WHERE l1.location_id = ?
+		ORDER BY RANDOM() LIMIT ?
+		""", (location_id, limit))
+		for row in res.fetchall():
+			self.streetpass_mac(row[0], row[1])
 	def streetpass_mac(self, mac1, mac2):
 		if mac1 == mac2:
 			return False
@@ -163,7 +207,6 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			return self.write_response(411, "Invalid content-length error")
 		mac = self.get_mac()
 		if mac is None: return
-		database.cleanup()
 		MSG_HEADER_SIZE = 0x70
 		buf = self.rfile.read(MSG_HEADER_SIZE)
 		msg = RawMessage(buf)
@@ -181,7 +224,6 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def enter_location(self, location_id):
 		mac = self.get_mac()
 		if mac is None: return
-		database.cleanup()
 		if not database.enter_location(mac, location_id):
 			return self.write_response(409, "Cannot enter location")
 		database.streetpass_location(mac, location_id)
@@ -189,7 +231,6 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def get_location(self):
 		mac = self.get_mac()
 		if mac is None: return
-		database.cleanup()
 		res = database.get_location(mac)
 		if res == -1:
 			return self.write_response(204, "Not in any location")
@@ -200,7 +241,6 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def pop_inbox(self, title_id):
 		mac = self.get_mac()
 		if mac is None: return
-		database.cleanup()
 		res = database.pop_inbox(mac, title_id)
 		if res is None:
 			return self.write_response(204, "Inbox empty")
@@ -250,14 +290,26 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			return self.upload_new_messages()
 		self.write_response(404, "Path not found")
 
+def bg_tasks_frequent():
+	database.cleanup()
+def bg_tasks_hourly():
+	# here we need to create streetpasses within a location; the larger the location the more likely
+	for location_id in range(NUM_LOCATIONS):
+		database.streetpass_location_bg(location_id)
+
 if __name__ == "__main__":
 	database = Database()
 	web_server = HTTPServer((HOST, PORT), StreetPassServer)
+	bg_frequent = RepeatedTimer(1, bg_tasks_frequent)
+	bg_hourly = RepeatedTimer(60*60, bg_tasks_hourly)
+	bg_frequent.start()
+	bg_hourly.start()
 	print(f'Started server on http://{HOST}:{PORT}')
-
 	try:
 		web_server.serve_forever()
 	except KeyboardInterrupt:
 		pass
 	web_server.server_close()
+	bg_hourly.stop()
+	bg_frequent.stop()
 	print("Server stopped")
