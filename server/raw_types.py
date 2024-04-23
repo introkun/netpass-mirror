@@ -34,8 +34,10 @@ class CecDataPathType(Enum):
 class GeneralClass():
 	data = b''
 	def __init__(self, filename):
-		if type(filename) is bytes:
+		if type(filename) is bytes or type(filename) is bytearray:
 			self.load(filename)
+		elif type(filename) is memoryview:
+			self.load(filename.tobytes())
 		else:
 			self.loadf(filename)
 	def loadf(self, filename):
