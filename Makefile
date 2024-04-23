@@ -40,7 +40,7 @@ GRAPHICS	:=	gfx
 GFXBUILD	:=	$(BUILD)
 APP_AUTHOR	:=	Sorunome
 APP_TITLE	:=	NetPass
-APP_DESCRIPTION	:=	StreetPass in the modern world!
+APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS		:=	romfs
 #GFXBUILD	:=	$(ROMFS)/gfx
 
