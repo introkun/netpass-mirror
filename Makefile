@@ -37,12 +37,13 @@ SOURCES		:=	source source/scenes
 DATA		:=	data
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
-GFXBUILD	:=	$(BUILD)
+#GFXBUILD	:=	$(BUILD)
 APP_AUTHOR	:=	Sorunome
 APP_TITLE	:=	NetPass
 APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS		:=	romfs
-#GFXBUILD	:=	$(ROMFS)/gfx
+GFXBUILD	:=	$(ROMFS)/gfx
+ICON		:= icon.png
 
 #---------------------------------------------------------------------------------
 # options for code generation

@@ -6,6 +6,7 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_loading;
 	C2D_Text g_dots;
+	C2D_SpriteSheet spr;
 	float text_x;
 	float text_y;
 	float text_width;
@@ -30,6 +31,8 @@ void N(init)(Scene* sc) {
 	N(data)->text_x = (SCREEN_TOP_WIDTH - N(data)->text_width) / 2;
 	N(data)->text_y = (SCREEN_TOP_HEIGHT - height) / 2;
 
+	//N(data)->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
+
 	s32 prio = 0;
 	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
 	N(data)->thread_done = false;
@@ -37,6 +40,8 @@ void N(init)(Scene* sc) {
 }
 
 void N(render)(Scene* sc) {
+	//C2D_Image img = C2D_SpriteSheetGetImage(N(data)->spr, 0);
+	//C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	C2D_DrawText(&N(data)->g_loading, C2D_AlignLeft, N(data)->text_x, N(data)->text_y, 0, 1, 1);
 	C2D_DrawText(&N(data)->g_dots, C2D_AlignLeft, N(data)->text_x + N(data)->text_width - 35 + 10*(time(NULL)%2), N(data)->text_y, 0, 1, 1);
 }
@@ -44,6 +49,8 @@ void N(render)(Scene* sc) {
 
 void N(exit)(Scene* sc) {
 	C2D_TextBufDelete(N(data)->g_staticBuf);
+	//C2D_SpriteSheetFree(N(data)->spr);
+	threadJoin(N(data)->thread, U64_MAX);
 	threadFree(N(data)->thread);
 	free(N(data));
 }
