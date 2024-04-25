@@ -134,6 +134,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 					return self.pop_inbox(title_id)
 		if self.path == "/location/current":
 			return self.get_location()
+		if self.path == "/ping":
+			return self.write_response(200, "pong")
 		self.write_response(404, "path not found")
 	def do_POST(self):
 		if self.path == "/outbox/upload":
