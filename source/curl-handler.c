@@ -1,5 +1,6 @@
 #include "curl-handler.h"
 #include "cecd.h"
+#include "api.h"
 #include <malloc.h>
 #include <string.h>
 #define MAX_CONNECTIONS 20
@@ -135,9 +136,7 @@ Result curlInit(void) {
 	res = getMac(mac);
 	if (R_FAILED(res)) return res;
 
-	s32 prio = 0;
-	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
-	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, prio-1, -2, false);
+	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, main_thread_prio()-1, -2, false);
 
 	return res;
 }

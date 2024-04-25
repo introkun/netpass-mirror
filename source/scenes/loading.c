@@ -34,10 +34,8 @@ void N(init)(Scene* sc) {
 
 	N(data)->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
 
-	s32 prio = 0;
-	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
 	N(data)->thread_done = false;
-	N(data)->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, prio-1, -2, false);
+	N(data)->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, main_thread_prio()-1, -2, false);
 }
 
 void N(render)(Scene* sc) {

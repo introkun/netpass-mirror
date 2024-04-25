@@ -15,6 +15,8 @@ int main() {
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
 	romfsInit();
+	init_main_thread_prio();
+
 	cecdInit();
 	curlInit();
 	//srand(time(NULL));
