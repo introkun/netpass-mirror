@@ -3,6 +3,7 @@
 #include "api.h"
 #include <malloc.h>
 #include <string.h>
+#include <stdlib.h>
 #define MAX_CONNECTIONS 20
 
 #define SOC_ALIGN 0x1000
@@ -27,14 +28,32 @@ struct CurlHandle {
 
 static struct CurlHandle handles[MAX_CONNECTIONS];
 
+static int _thread_lock = 0;
+
+int getThreadLock(void) {
+	while (_thread_lock) {
+		svcSleepThread(1000000);
+	}
+	while(!(_thread_lock = rand()));
+	return _thread_lock;
+}
+
+void releaseThreadLock(int lock) {
+	if (_thread_lock == lock) {
+		_thread_lock = 0;
+	}
+}
+
 void curl_multi_loop(void* p) {
 	CURLM* curl_multi_handle = curl_multi_init();
 	running = true;
 	int openHandles = 0;
+	int lock = getThreadLock();
 	do {
 		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
 		if (mc != CURLM_OK) {
 			printf("ERROR curl multi fail: %u\n", mc);
+			releaseThreadLock(lock);
 			return;
 		}
 		CURLMsg* msg;
@@ -51,11 +70,13 @@ void curl_multi_loop(void* p) {
 				}
 			}
 		}
+		releaseThreadLock(lock);
 		if (!openHandles) {
 			svcSleepThread((u64)1000000 * 100);
 		} else {
 			svcSleepThread(1000000);
 		}
+		lock = getThreadLock();
 		for (int i = 0; i < MAX_CONNECTIONS; i++) {
 			if (handles[i].status == CURL_HANDLE_STATUS_RESET) {
 				handles[i].handle = 0;
@@ -75,6 +96,7 @@ void curl_multi_loop(void* p) {
 		}
 	}
 	curl_multi_cleanup(curl_multi_handle);
+	releaseThreadLock(lock);
 }
 
 Result getMac(u8 mac[6]) {
@@ -201,6 +223,8 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 		return -1;
 	}
 
+	int lock = getThreadLock();
+
 	struct curl_slist* headers = NULL;
 
 	// add mac header
@@ -237,6 +261,7 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reply);
 
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
+	releaseThreadLock(lock);
 	return res;
 }
 
@@ -256,6 +281,8 @@ Result httpRequestFinish(CURL* curl) {
 		svcSleepThread((u64)1000000 * 1);
 	}
 
+	int lock = getThreadLock();
+
 	res = handles[curl_handle_slot].result;
 	if (res != CURLE_OK) {
 		res = -res;
@@ -270,6 +297,7 @@ Result httpRequestFinish(CURL* curl) {
 	res = http_code;
 cleanup:
 	curl_handle_cleanup(curl);
+	releaseThreadLock(lock);
 	return res;
 }
 

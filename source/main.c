@@ -1,5 +1,6 @@
 #include <3ds.h>
 #include <citro2d.h>
+#include <stdlib.h>
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -19,7 +20,7 @@ int main() {
 
 	cecdInit();
 	curlInit();
-	//srand(time(NULL));
+	srand(time(NULL));
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
