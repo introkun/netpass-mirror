@@ -16,6 +16,10 @@ Result uploadOutboxes(void) {
 		if (R_FAILED(res)) continue;
 		for (int j = 0; j < outbox.header.num_messages; j++) {
 			u8* msg = malloc(outbox.messages[j].message_size);
+			if (!msg) {
+				printf("ERROR: failed to allocate message\n");
+				return -1;
+			}
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
 				free(msg);

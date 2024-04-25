@@ -14,6 +14,10 @@ Scene* processScene(Scene* scene) {
 		return 0;
 	case scene_switch:
 		Scene* new_scene = scene->next_scene;
+		if (!new_scene) {
+			printf("ERROR: Could not create scene!!");
+			return NULL;
+		}
 		scene->exit(scene);
 		if (scene->need_free) {
 			free(scene);

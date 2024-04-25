@@ -3,6 +3,7 @@
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
+#include "curl-handler.h"
 
 static int location;
 
@@ -14,22 +15,39 @@ int main() {
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
 	romfsInit();
+	cecdInit();
 	curlInit();
-	//bgLoopInit();
 	//srand(time(NULL));
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
-	cecdInit();
-
 	Scene* scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+		if (R_FAILED(location) && location != -1) {
+			// something not working
+			return getConnectionErrorScene(location);
+		}
+		bgLoopInit();
 		if (location == -1) {
 			return getHomeScene(); // load home
 		}
 		return getLocationScene(location);
 	})), lambda(void, (void) {
+		Result res;
+		// first, we gotta wait for having internet
+		char url[50];
+		snprintf(url, 50, "%s/ping", BASE_URL);
+	check_internet:
+		res = httpRequest("GET", url, 0, 0, 0);
+		if (R_FAILED(res)) {
+			if (res == -CURLE_COULDNT_RESOLVE_HOST) {
+				svcSleepThread((u64)1000000 * 100);
+				goto check_internet;
+			}
+			location = res;
+			return;
+		}
 		uploadOutboxes();
-		Result res = getLocation();
+		res = getLocation();
 		if (R_FAILED(res) && res != -1) {
 			printf("ERROR failed to get location: %ld\n", res);
 			location = -1;
@@ -41,7 +59,6 @@ int main() {
 				printf("Got location: %d\n", location);
 			}
 		}
-		bgLoopInit();
 	}));
 
 	scene->init(scene);
@@ -54,10 +71,11 @@ int main() {
 			continue;
 		}
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(top, C2D_Color32(0x68, 0xB0, 0xD8, 0xFF));
+		C2D_TargetClear(top, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
 		C2D_SceneBegin(top);
 		scene->render(scene);
 		C3D_FrameEnd(0);
+		svcSleepThread(1);
 	}
 	printf("Exiting...\n");
 	bgLoopExit();

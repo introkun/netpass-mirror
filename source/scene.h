@@ -27,3 +27,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/switch.h"
 #include "scenes/home.h"
 #include "scenes/location.h"
+#include "scenes/connection_error.h"

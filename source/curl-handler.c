@@ -8,16 +8,16 @@
 #define SOC_BUFFERSIZE 0x100000
 static u32 *SOC_buffer = NULL;
 
-static CURLM* curl_multi_handle;
 static Thread curl_multi_thread;
 static bool running = false;
 static u8 mac[6];
 
 #define CURL_HANDLE_STATUS_FREE 0
-#define CURL_HANDLE_STATUS_PENDING 1
-#define CURL_HANDLE_STATUS_RUNNING 2
-#define CURL_HANDLE_STATUS_DONE 3
-#define CURL_HANDLE_STATUS_RESET 4
+#define CURL_HANDLE_STATUS_RESERVED 1
+#define CURL_HANDLE_STATUS_PENDING 2
+#define CURL_HANDLE_STATUS_RUNNING 3
+#define CURL_HANDLE_STATUS_DONE 4
+#define CURL_HANDLE_STATUS_RESET 5
 struct CurlHandle {
 	CURL* handle;
 	CURLcode result;
@@ -27,6 +27,7 @@ struct CurlHandle {
 static struct CurlHandle handles[MAX_CONNECTIONS];
 
 void curl_multi_loop(void* p) {
+	CURLM* curl_multi_handle = curl_multi_init();
 	running = true;
 	int openHandles = 0;
 	do {
@@ -61,10 +62,18 @@ void curl_multi_loop(void* p) {
 				handles[i].status = CURL_HANDLE_STATUS_FREE;
 			}
 			if (handles[i].status == CURL_HANDLE_STATUS_PENDING) {
+				handles[i].status = CURL_HANDLE_STATUS_RUNNING;
 				curl_multi_add_handle(curl_multi_handle, handles[i].handle);
 			}
 		}
 	} while (running);
+	for (int i = 0; i < MAX_CONNECTIONS; i++) {
+		if (handles[i].handle) {
+			curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
+			curl_easy_cleanup(handles[i].handle);
+		}
+	}
+	curl_multi_cleanup(curl_multi_handle);
 }
 
 Result getMac(u8 mac[6]) {
@@ -98,6 +107,10 @@ void initCurlReply(CurlReply* r, size_t size) {
 	if (!r->ptr) {
 		r->size = size;
 		r->ptr = malloc(size);
+		if (!r->ptr) {
+			r->size = 0;
+			printf("ERROR: failed to allocate curlReply\n");
+		}
 	}
 }
 
@@ -118,7 +131,6 @@ Result curlInit(void) {
 	res = socInit(SOC_buffer, SOC_BUFFERSIZE);
 	if (R_FAILED(res)) return res;
 	curl_global_init(CURL_GLOBAL_ALL);
-	curl_multi_handle = curl_multi_init();
 
 	res = getMac(mac);
 	if (R_FAILED(res)) return res;
@@ -131,15 +143,8 @@ Result curlInit(void) {
 }
 
 void curlExit(void) {
-	for (int i = 0; i < MAX_CONNECTIONS; i++) {
-		if (handles[i].handle) {
-			curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
-			curl_easy_cleanup(handles[i].handle);
-		}
-	}
 	running = false;
 	//threadFree(curl_multi_thread);
-	curl_multi_cleanup(curl_multi_handle);
 	curl_global_cleanup();
 	socExit();
 }
@@ -186,6 +191,7 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	bool found_handle_slot = false;
 	for (; curl_handle_slot < MAX_CONNECTIONS; curl_handle_slot++) {
 		if (handles[curl_handle_slot].status == CURL_HANDLE_STATUS_FREE) {
+			handles[curl_handle_slot].status = CURL_HANDLE_STATUS_RESERVED;
 			found_handle_slot = true;
 			handles[curl_handle_slot].handle = curl;
 			break;
@@ -222,8 +228,8 @@ Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body,
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
-	curl_easy_setopt(curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 5);
-	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_easy_setopt(curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 0);
 	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(curl, CURLOPT_CAINFO, "romfs:/certs.pem");
