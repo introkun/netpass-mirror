@@ -23,12 +23,12 @@ static u8 mac[6];
 struct CurlHandle {
 	CURL* handle;
 	CURLcode result;
-	int status;
+	volatile int status;
 };
 
 static struct CurlHandle handles[MAX_CONNECTIONS];
 
-static int _thread_lock = 0;
+static volatile int _thread_lock = 0;
 
 int getThreadLock(void) {
 	while (_thread_lock) {
@@ -296,7 +296,6 @@ Result httpRequestFinish(CURL* curl) {
 	}
 	res = http_code;
 cleanup:
-	curl_handle_cleanup(curl);
 	releaseThreadLock(lock);
 	return res;
 }

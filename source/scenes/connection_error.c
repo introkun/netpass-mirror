@@ -18,24 +18,30 @@ void N(init)(Scene* sc) {
 	Result res = (Result)sc->data;
 	char str[200];
 	const char* subtext = "";
+	C2D_Font str_font;
+	C2D_Font subtext_font = _font(str_libcurl_error);
 	if (res > -100) {
 		// libcurl error code
 		int errcode = -res;
 		const char* errmsg = curl_easy_strerror(errcode);
-		snprintf(str, 200, "libCURL error (%d): %s", errcode, errmsg);
+		snprintf(str, 200, _s(str_libcurl_error), errcode, errmsg);
+		str_font = _font(str_libcurl_error);
 		if (errcode == 60) {
-			subtext = "Make sure that your systems date and time are set correctly!";
+			subtext = _s(str_libcurl_date_and_time);
+			subtext_font = _font(str_libcurl_date_and_time);
 		}
 	} else if (res > -600) {
 		// http status code
 		int status_code = -res;
-		snprintf(str, 200, "HTTP status code %d", status_code);
+		snprintf(str, 200, _s(str_httpstatus_error), status_code);
+		str_font = _font(str_httpstatus_error);
 	} else {
 		// 3ds error code
-		snprintf(str, 200, "3DS error code %08lx", (u32)res);
+		snprintf(str, 200, _s(str_3ds_error), (u32)res);
+		str_font = _font(str_3ds_error);
 	}
-	C2D_TextParse(&N(data)->g_title, N(data)->g_staticBuf, str);
-	C2D_TextParse(&N(data)->g_subtext, N(data)->g_staticBuf, subtext);
+	C2D_TextFontParse(&N(data)->g_title, str_font, N(data)->g_staticBuf, str);
+	C2D_TextFontParse(&N(data)->g_subtext, subtext_font, N(data)->g_staticBuf, subtext);
 }
 
 void N(render)(Scene* sc) {

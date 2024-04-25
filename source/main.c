@@ -10,8 +10,10 @@ static int location;
 
 int main() {
 	gfxInitDefault();
+	cfguInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+	stringsInit();
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
@@ -86,6 +88,7 @@ int main() {
 	C3D_Fini();
 	//curlExit();
 	romfsExit();
+	cfguExit();
 	gfxExit();
 	return 0;
 }

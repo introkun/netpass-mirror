@@ -3,6 +3,7 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include "api.h"
+#include "strings.h"
 
 #define SCREEN_TOP_WIDTH 400
 #define SCREEN_TOP_HEIGHT 240

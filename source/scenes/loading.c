@@ -25,7 +25,8 @@ void N(init)(Scene* sc) {
 	N(data) = malloc(sizeof(N(DataStruct)));
 	if (!N(data)) return;
 	N(data)->g_staticBuf = C2D_TextBufNew(100);
-	C2D_TextParse(&N(data)->g_loading, N(data)->g_staticBuf, "Loading    ");
+	//C2D_TextParse(&N(data)->g_loading, N(data)->g_staticBuf, "Loading    ");
+	TextLangParse(&N(data)->g_loading, N(data)->g_staticBuf, str_loading);
 	C2D_TextParse(&N(data)->g_dots, N(data)->g_staticBuf, "...");
 	float height;
 	C2D_TextGetDimensions(&N(data)->g_loading, 1, 1, &N(data)->text_width, &height);

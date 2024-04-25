@@ -10,10 +10,10 @@ typedef struct {
 } N(DataStruct);
 
 N(DataStruct)* N(data) = 0;
-static const char* const N(locations)[3] = {
-	"You are at the Train Station",
-	"You are at Town Plaza",
-	"You are at the Mall"
+LanguageString* N(locations)[3] = {
+	&str_at_train_station,
+	&str_at_plaza,
+	&str_at_mall,
 };
 
 void N(init)(Scene* sc) {
@@ -21,8 +21,8 @@ void N(init)(Scene* sc) {
 	if (!N(data)) return;
 	N(data)->g_staticBuf = C2D_TextBufNew(2000);
 	N(data)->cursor = 0;
-	C2D_TextParse(&N(data)->g_location, N(data)->g_staticBuf, N(locations)[sc->data]);
-	C2D_TextParse(&N(data)->g_entries[0], N(data)->g_staticBuf, "Exit");
+	TextLangParse(&N(data)->g_location, N(data)->g_staticBuf, *N(locations)[sc->data]);
+	TextLangParse(&N(data)->g_entries[0], N(data)->g_staticBuf, str_exit);
 }
 
 void N(render)(Scene* sc) {

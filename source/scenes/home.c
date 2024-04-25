@@ -18,11 +18,11 @@ void N(init)(Scene* sc) {
 	if (!N(data)) return;
 	N(data)->g_staticBuf = C2D_TextBufNew(2000);
 	N(data)->cursor = 0;
-	C2D_TextParse(&N(data)->g_home, N(data)->g_staticBuf, "You are currently at home.");
-	C2D_TextParse(&N(data)->g_entries[0], N(data)->g_staticBuf, "Go to Train Station");
-	C2D_TextParse(&N(data)->g_entries[1], N(data)->g_staticBuf, "Go to Plaza");
-	C2D_TextParse(&N(data)->g_entries[2], N(data)->g_staticBuf, "Go to Mall");
-	C2D_TextParse(&N(data)->g_entries[3], N(data)->g_staticBuf, "Exit");
+	TextLangParse(&N(data)->g_home, N(data)->g_staticBuf, str_at_home);
+	TextLangParse(&N(data)->g_entries[0], N(data)->g_staticBuf, str_goto_train_station);
+	TextLangParse(&N(data)->g_entries[1], N(data)->g_staticBuf, str_goto_plaza);
+	TextLangParse(&N(data)->g_entries[2], N(data)->g_staticBuf, str_goto_mall);
+	TextLangParse(&N(data)->g_entries[3], N(data)->g_staticBuf, str_exit);
 }
 
 void N(render)(Scene* sc) {
