@@ -20,3 +20,6 @@ Result setLocation(int location);
 void bgLoopInit(void);
 void bgLoopExit(void);
 void triggerDownloadInboxes(void);
+
+s32 main_thread_prio(void);
+void init_main_thread_prio(void);

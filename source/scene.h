@@ -2,6 +2,7 @@
 
 #include <3ds.h>
 #include <citro2d.h>
+#include "api.h"
 
 #define SCREEN_TOP_WIDTH 400
 #define SCREEN_TOP_HEIGHT 240
@@ -27,3 +28,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/switch.h"
 #include "scenes/home.h"
 #include "scenes/location.h"
+#include "scenes/connection_error.h"

@@ -15,6 +15,7 @@ int N(new_location) = 0;
 
 void N(init)(Scene* sc) {
 	N(data) = malloc(sizeof(N(DataStruct)));
+	if (!N(data)) return;
 	N(data)->g_staticBuf = C2D_TextBufNew(2000);
 	N(data)->cursor = 0;
 	C2D_TextParse(&N(data)->g_home, N(data)->g_staticBuf, "You are currently at home.");
@@ -25,6 +26,7 @@ void N(init)(Scene* sc) {
 }
 
 void N(render)(Scene* sc) {
+	if (!N(data)) return;
 	C2D_DrawText(&N(data)->g_home, C2D_AlignLeft, 10, 10, 0, 1, 1);
 	for (int i = 0; i < 4; i++) {
 		C2D_DrawText(&N(data)->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
@@ -36,25 +38,29 @@ void N(render)(Scene* sc) {
 }
 
 void N(exit)(Scene* sc) {
-	C2D_TextBufDelete(N(data)->g_staticBuf);
-	free(N(data));
+	if (N(data)) {
+		C2D_TextBufDelete(N(data)->g_staticBuf);
+		free(N(data));
+	}
 }
 
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
+	if (N(data)) {
 	N(data)->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-	if (N(data)->cursor < 0) N(data)->cursor = 0;
-	if (N(data)->cursor > 3) N(data)->cursor = 3;
-	if (kDown & KEY_A) {
-		if (N(data)->cursor == 3) return scene_stop;
-		// load location scene
-		N(new_location) = N(data)->cursor;
-		sc->next_scene = getLoadingScene(getLocationScene(N(new_location)), lambda(void, (void) {
-			setLocation(N(new_location));
-			triggerDownloadInboxes();
-		}));
-		return scene_switch;
+		if (N(data)->cursor < 0) N(data)->cursor = 0;
+		if (N(data)->cursor > 3) N(data)->cursor = 3;
+		if (kDown & KEY_A) {
+			if (N(data)->cursor == 3) return scene_stop;
+			// load location scene
+			N(new_location) = N(data)->cursor;
+			sc->next_scene = getLoadingScene(getLocationScene(N(new_location)), lambda(void, (void) {
+				setLocation(N(new_location));
+				triggerDownloadInboxes();
+			}));
+			return scene_switch;
+		}
 	}
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
@@ -62,6 +68,7 @@ SceneResult N(process)(Scene* sc) {
 
 Scene* getHomeScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
+	if (!scene) return NULL;
 	scene->init = N(init);
 	scene->render = N(render);
 	scene->exit = N(exit);

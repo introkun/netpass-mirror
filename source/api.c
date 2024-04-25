@@ -16,6 +16,10 @@ Result uploadOutboxes(void) {
 		if (R_FAILED(res)) continue;
 		for (int j = 0; j < outbox.header.num_messages; j++) {
 			u8* msg = malloc(outbox.messages[j].message_size);
+			if (!msg) {
+				printf("ERROR: failed to allocate message\n");
+				return -1;
+			}
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
 				free(msg);
@@ -109,6 +113,14 @@ Result setLocation(int location) {
 	return res;
 }
 
+static s32 main_thread_prio_s = 0;
+s32 main_thread_prio(void) {
+	return main_thread_prio_s;
+}
+void init_main_thread_prio(void) {
+	svcGetThreadPriority(&main_thread_prio_s, CUR_THREAD_HANDLE);
+}
+
 static int dl_inbox_status = 1;
 static bool dl_loop_running = true;
 Thread bg_loop_thread = 0;
@@ -130,9 +142,7 @@ void bgLoop(void* p) {
 }
 
 void bgLoopInit(void) {
-	s32 prio = 0;
-	svcGetThreadPriority(&prio, CUR_THREAD_HANDLE);
-	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, prio-1, -2, false);
+	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, main_thread_prio()-1, -2, false);
 }
 
 void bgLoopExit(void) {
