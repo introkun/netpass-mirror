@@ -2,6 +2,8 @@
 #include "cecd.h"
 #include <stdlib.h>
 
+int location = -1;
+
 Result uploadOutboxes(void) {
 	Result res = 0;
 	Result messages = 0;
@@ -118,7 +120,7 @@ void init_main_thread_prio(void) {
 	svcGetThreadPriority(&main_thread_prio_s, CUR_THREAD_HANDLE);
 }
 
-static int dl_inbox_status = 1;
+static volatile int dl_inbox_status = 1;
 static bool dl_loop_running = true;
 Thread bg_loop_thread = 0;
 void triggerDownloadInboxes(void) {

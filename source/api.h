@@ -23,3 +23,5 @@ void triggerDownloadInboxes(void);
 
 s32 main_thread_prio(void);
 void init_main_thread_prio(void);
+
+extern int location;

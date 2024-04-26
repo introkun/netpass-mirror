@@ -4,7 +4,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAX_CONNECTIONS 20
+#define MAX_CONNECTIONS 3
 
 #define SOC_ALIGN 0x1000
 #define SOC_BUFFERSIZE 0x100000
@@ -27,13 +27,14 @@ struct CurlHandle {
 	volatile int status;
 	char* method;
 	char* url;
+	bool do_reply;
 	int size;
 	u8* body;
 	Result res;
 	CurlReply reply;
 };
 
-static struct CurlHandle handles[MAX_CONNECTIONS];
+static struct CurlHandle handles[MAX_CONNECTIONS] = {0};
 
 Result getMac(u8 mac[6]) {
 	Result res = 0;
@@ -63,9 +64,6 @@ Result getMac(u8 mac[6]) {
 
 size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	CurlReply* r = (CurlReply*)ptr;
-	if (!r) {
-		return size*nmemb; // let's just pretend we did all correct
-	}
 	size_t new_len = r->len + size*nmemb;
 	if (new_len > MAX_MESSAGE_SIZE) {
 		return 0;
@@ -101,7 +99,6 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	handles[curl_handle_slot].size = size;
 	handles[curl_handle_slot].body = body;
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
-	handles[curl_handle_slot].reply.ptr = (u8*)reply;
 	// request is being sent, let's wait until it is back
 	
 	while (handles[curl_handle_slot].status != CURL_HANDLE_STATUS_DONE) {
@@ -122,7 +119,6 @@ static CURLM* curl_multi_handle;
 
 void curl_multi_loop_request_finish(int i) {
 	struct CurlHandle* h = &handles[i];
-	h->res = 0;
 	h->res = h->result;
 	if (h->res != CURLE_OK) {
 		h->res = -h->res;
@@ -185,19 +181,9 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, curlWrite);
 	h->reply.len = 0;
 	h->reply.offset = i;
-	if (h->reply.ptr) {
-		h->reply.ptr = malloc(MAX_MESSAGE_SIZE);
-		if (!h->reply.ptr) {
-			h->res = -1;
-			h->status = CURL_HANDLE_STATUS_DONE;
-			return;
-		}
-		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
-	} else {
-		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, NULL);
-	}
-	h->status = CURL_HANDLE_STATUS_RUNNING;
+	curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
 
+	h->status = CURL_HANDLE_STATUS_RUNNING;
 	curl_multi_add_handle(curl_multi_handle, h->handle);
 }
 
@@ -231,9 +217,6 @@ void curl_multi_loop(void* p) {
 		}
 		for (int i = 0; i < MAX_CONNECTIONS; i++) {
 			if (handles[i].status == CURL_HANDLE_STATUS_RESET) {
-				if (handles[i].reply.ptr) {
-					free(handles[i].reply.ptr);
-				}
 				handles[i].handle = 0;
 				handles[i].result = 0;
 				handles[i].status = CURL_HANDLE_STATUS_FREE;

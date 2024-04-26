@@ -52,9 +52,9 @@ SceneResult N(process)(Scene* sc) {
 		if (kDown & KEY_A) {
 			if (_data->cursor == 3) return scene_stop;
 			// load location scene
-			int new_location = _data->cursor;
-			sc->next_scene = getLoadingScene(getLocationScene(new_location), lambda(void, (void) {
-				setLocation(new_location);
+			location = _data->cursor;
+			sc->next_scene = getLoadingScene(getLocationScene(location), lambda(void, (void) {
+				setLocation(location);
 				triggerDownloadInboxes();
 			}));
 			return scene_switch;

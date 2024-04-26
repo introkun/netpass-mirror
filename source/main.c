@@ -6,8 +6,6 @@
 #include "cecd.h"
 #include "curl-handler.h"
 
-static int location;
-
 int main() {
 	gfxInitDefault();
 	cfguInit();
