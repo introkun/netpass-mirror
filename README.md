@@ -51,3 +51,5 @@ To build `.cia` files, run
  - English: Sorunome
  - German: Sorunome
  - Russian: [Rednorka](https://gbatemp.net/members/rednorka.575239/)
+ - Japanese: [Akira-SN](https://gitlab.com/Akira-SN)
+ - Polish: [DanteyPL](https://gitlab.com/DanteyPL)

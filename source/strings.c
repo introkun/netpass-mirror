@@ -1,5 +1,7 @@
 #include "strings.h"
 
+#define CFG_LANGUAGE_PL 21
+
 LanguageString str_loading = {
 	{CFG_LANGUAGE_EN, "Loading    "},
 	{CFG_LANGUAGE_DE, "Laden    "},
