@@ -177,7 +177,7 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_CUSTOMREQUEST, h->method);
 	curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 30);
 	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
-	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
 	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
