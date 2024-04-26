@@ -277,15 +277,9 @@ Result addStreetpassMessage(u8* msgbuf) {
 	}
 	free(boxbuf);
 
-	// box stuffs is done, let's fetch the mbox, update it and fetch the hmac key
+	// box stuffs is done, let's fetch the mbox, to fetch the hmac key
 	CecMBoxInfoHeader mboxheader;
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-	if (R_FAILED(res)) return -2;
-	getCurrentTime(&(mboxheader.last_received));
-	mboxheader.flag3 = 1; // set the new notification dot
-	//mboxheader.flag4 = 1;
-	//mboxheader.flag5 = 1;
-	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
 	if (R_FAILED(res)) return -2;
 
 	// great,we have all the bits we need now
@@ -293,6 +287,15 @@ Result addStreetpassMessage(u8* msgbuf) {
 		msgheader->title_id, false,
 		msgheader->message_size, msgbuf,
 		msgheader->message_id, mboxheader.hmac_key);
+	if (R_FAILED(res)) return res;
+
+	// now set the green notification dot
+	getCurrentTime(&(mboxheader.last_received));
+	mboxheader.flag3 = 1; // set the new notification dot
+	//mboxheader.flag4 = 1;
+	//mboxheader.flag5 = 1;
+	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
+	if (R_FAILED(res)) return -2;
 
 	return res;
 cleanup_box:
