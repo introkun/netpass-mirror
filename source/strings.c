@@ -7,7 +7,7 @@ LanguageString str_loading = {
 };
 LanguageString str_libcurl_error = {
 	{CFG_LANGUAGE_EN, "libCURL error (%d): %s"},
-	{CFG_LANGUAGE_EN, "libCURL fehler (%d): %s"},
+	{CFG_LANGUAGE_DE, "libCURL Fehler (%d): %s"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_libcurl_date_and_time = {
