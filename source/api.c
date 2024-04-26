@@ -50,14 +50,20 @@ Result downloadInboxes(void) {
 	Result res = 0;
 	Result messages = 0;
 	CecMboxListHeader mbox_list;
+	CecBoxInfoHeader box_header;
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
-	if (R_FAILED(res)) return -1;
+	if (R_FAILED(res)) return res;
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
+		int title_id = (int)strtol((char*)mbox_list.box_names[i], NULL, 16);
+		if (!title_id) continue;
+		res = cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(CecBoxInfoHeader), (u8*)&box_header);
+		if (R_FAILED(res)) continue;
+		int box_messages = box_header.num_messages;
 		printf("Checking inbox %d/%ld", i+1, mbox_list.num_boxes);
 		char url[100];
 		snprintf(url, 100, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
-		u32 http_code;
-		do {
+		u32 http_code = 200;
+		while (http_code == 200 && box_messages < box_header.max_num_messages-1) {
 			printf(".");
 			CurlReply* reply;
 			res = httpRequest("GET", url, 0, 0, &reply);
@@ -68,10 +74,11 @@ Result downloadInboxes(void) {
 				res = addStreetpassMessage(reply->ptr);
 				if (!R_FAILED(res)) {
 					messages++;
+					box_messages++;
 				}
 			}
 			curlFreeHandler(reply->offset);
-		} while (http_code == 200);
+		}
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
 		} else {
