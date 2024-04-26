@@ -1,6 +1,7 @@
 #include "loading.h"
 #include <stdlib.h>
 #define N(x) scenes_loading_namespace_##x
+#define _data ((N(DataStruct)*)sc->d)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -14,52 +15,50 @@ typedef struct {
 	bool thread_done;
 } N(DataStruct);
 
-N(DataStruct)* N(data) = 0;
-
 void N(threadFn)(Scene* sc) {
 	((void(*)(void))(sc->data))();
-	N(data)->thread_done = true;
+	_data->thread_done = true;
 }
 
 void N(init)(Scene* sc) {
-	N(data) = malloc(sizeof(N(DataStruct)));
-	if (!N(data)) return;
-	N(data)->g_staticBuf = C2D_TextBufNew(100);
-	//C2D_TextParse(&N(data)->g_loading, N(data)->g_staticBuf, "Loading    ");
-	TextLangParse(&N(data)->g_loading, N(data)->g_staticBuf, str_loading);
-	C2D_TextParse(&N(data)->g_dots, N(data)->g_staticBuf, "...");
+	sc->d = malloc(sizeof(N(DataStruct)));
+	if (!_data) return;
+	_data->g_staticBuf = C2D_TextBufNew(100);
+	//C2D_TextParse(&_data->g_loading, _data->g_staticBuf, "Loading    ");
+	TextLangParse(&_data->g_loading, _data->g_staticBuf, str_loading);
+	C2D_TextParse(&_data->g_dots, _data->g_staticBuf, "...");
 	float height;
-	C2D_TextGetDimensions(&N(data)->g_loading, 1, 1, &N(data)->text_width, &height);
-	N(data)->text_x = (SCREEN_TOP_WIDTH - N(data)->text_width) / 2;
-	N(data)->text_y = (SCREEN_TOP_HEIGHT - height) / 2;
+	C2D_TextGetDimensions(&_data->g_loading, 1, 1, &_data->text_width, &height);
+	_data->text_x = (SCREEN_TOP_WIDTH - _data->text_width) / 2;
+	_data->text_y = (SCREEN_TOP_HEIGHT - height) / 2;
 
-	N(data)->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
+	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/loading.t3x");
 
-	N(data)->thread_done = false;
-	N(data)->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, main_thread_prio()-1, -2, false);
+	_data->thread_done = false;
+	_data->thread = threadCreate((void(*)(void*))N(threadFn), sc, 8*1024, main_thread_prio()-1, -2, false);
 }
 
 void N(render)(Scene* sc) {
-	if (!N(data)) return;
-	C2D_Image img = C2D_SpriteSheetGetImage(N(data)->spr, 0);
+	if (!_data) return;
+	C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, 0);
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
-	C2D_DrawText(&N(data)->g_loading, C2D_AlignLeft, N(data)->text_x, N(data)->text_y, 0, 1, 1);
-	C2D_DrawText(&N(data)->g_dots, C2D_AlignLeft, N(data)->text_x + N(data)->text_width - 35 + 10*(time(NULL)%2), N(data)->text_y, 0, 1, 1);
+	C2D_DrawText(&_data->g_loading, C2D_AlignLeft, _data->text_x, _data->text_y, 0, 1, 1);
+	C2D_DrawText(&_data->g_dots, C2D_AlignLeft, _data->text_x + _data->text_width - 35 + 10*(time(NULL)%2), _data->text_y, 0, 1, 1);
 }
 
 
 void N(exit)(Scene* sc) {
-	if (N(data)) {
-		C2D_TextBufDelete(N(data)->g_staticBuf);
-		C2D_SpriteSheetFree(N(data)->spr);
-		threadJoin(N(data)->thread, U64_MAX);
-		threadFree(N(data)->thread);
-		free(N(data));
+	if (_data) {
+		C2D_TextBufDelete(_data->g_staticBuf);
+		C2D_SpriteSheetFree(_data->spr);
+		threadJoin(_data->thread, U64_MAX);
+		threadFree(_data->thread);
+		free(_data);
 	}
 }
 
 SceneResult N(process)(Scene* sc) {
-	if (N(data) && N(data)->thread_done) return scene_switch;
+	if (_data && _data->thread_done) return scene_switch;
 	return scene_continue;
 }
 

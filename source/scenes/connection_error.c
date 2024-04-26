@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <curl/curl.h>
 #define N(x) scenes_error_namespace_##x
+#define _data ((N(DataStruct)*)sc->d)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -9,12 +10,10 @@ typedef struct {
 	C2D_Text g_subtext;
 } N(DataStruct);
 
-N(DataStruct)* N(data) = 0;
-
 void N(init)(Scene* sc) {
-	N(data) = malloc(sizeof(N(DataStruct)));
-	if (!N(data)) return;
-	N(data)->g_staticBuf = C2D_TextBufNew(1000);
+	sc->d = malloc(sizeof(N(DataStruct)));
+	if (!_data) return;
+	_data->g_staticBuf = C2D_TextBufNew(1000);
 	Result res = (Result)sc->data;
 	char str[200];
 	const char* subtext = "";
@@ -40,20 +39,20 @@ void N(init)(Scene* sc) {
 		snprintf(str, 200, _s(str_3ds_error), (u32)res);
 		str_font = _font(str_3ds_error);
 	}
-	C2D_TextFontParse(&N(data)->g_title, str_font, N(data)->g_staticBuf, str);
-	C2D_TextFontParse(&N(data)->g_subtext, subtext_font, N(data)->g_staticBuf, subtext);
+	C2D_TextFontParse(&_data->g_title, str_font, _data->g_staticBuf, str);
+	C2D_TextFontParse(&_data->g_subtext, subtext_font, _data->g_staticBuf, subtext);
 }
 
 void N(render)(Scene* sc) {
-	if (!N(data)) return;
-	C2D_DrawText(&N(data)->g_title, C2D_AlignLeft, 10, 10, 0, 0.5, 0.5);
-	C2D_DrawText(&N(data)->g_subtext, C2D_AlignLeft, 10, 35, 0, 0.5, 0.5);
+	if (!_data) return;
+	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 0.5, 0.5);
+	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft, 10, 35, 0, 0.5, 0.5);
 }
 
 void N(exit)(Scene* sc) {
-	if (N(data)) {
-		C2D_TextBufDelete(N(data)->g_staticBuf);
-		free(N(data));
+	if (_data) {
+		C2D_TextBufDelete(_data->g_staticBuf);
+		free(_data);
 	}
 }
 

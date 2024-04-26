@@ -20,6 +20,7 @@ struct Scene {
 	Scene* next_scene;
 	u32 data;
 
+	void* d;
 	bool need_free;
 };
 

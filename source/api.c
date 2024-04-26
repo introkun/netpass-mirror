@@ -50,8 +50,6 @@ Result downloadInboxes(void) {
 	CecMboxListHeader mbox_list;
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
 	if (R_FAILED(res)) return -1;
-	CurlReply reply;
-	reply.ptr = 0;
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Checking inbox %d/%ld", i+1, mbox_list.num_boxes);
 		char url[100];
@@ -59,17 +57,18 @@ Result downloadInboxes(void) {
 		u32 http_code;
 		do {
 			printf(".");
-			initCurlReply(&reply, MAX_MESSAGE_SIZE);
+			CurlReply* reply;
 			res = httpRequest("GET", url, 0, 0, &reply);
 			if (R_FAILED(res)) break;
 
 			http_code = res;
 			if (http_code == 200) {
-				res = addStreetpassMessage(reply.ptr);
+				res = addStreetpassMessage(reply->ptr);
 				if (!R_FAILED(res)) {
 					messages++;
 				}
 			}
+			curlFreeHandler(reply->offset);
 		} while (http_code == 200);
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
@@ -77,26 +76,24 @@ Result downloadInboxes(void) {
 			printf("Done\n");
 		}
 	}
-	deinitCurlReply(&reply);
 	return messages;
 }
 
 Result getLocation(void) {
 	Result res;
-	CurlReply reply;
-	initCurlReply(&reply, 4);
+	CurlReply* reply;
 	char url[80];
 	snprintf(url, 80, "%s/location/current", BASE_URL);
 	res = httpRequest("GET", url, 0, 0, &reply);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	if (http_code == 200) {
-		res = *(u32*)(reply.ptr);
+		res = *(u32*)(reply->ptr);
 	} else {
 		res = -1;
 	}
 cleanup:
-	deinitCurlReply(&reply);
+	curlFreeHandler(reply->offset);
 	return res;
 }
 

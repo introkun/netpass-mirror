@@ -12,7 +12,7 @@ static u32 *SOC_buffer = NULL;
 
 static Thread curl_multi_thread;
 static bool running = false;
-static u8 mac[6];
+static u8 mac[6] = {0};
 
 #define CURL_HANDLE_STATUS_FREE 0
 #define CURL_HANDLE_STATUS_RESERVED 1
@@ -20,84 +20,20 @@ static u8 mac[6];
 #define CURL_HANDLE_STATUS_RUNNING 3
 #define CURL_HANDLE_STATUS_DONE 4
 #define CURL_HANDLE_STATUS_RESET 5
+
 struct CurlHandle {
 	CURL* handle;
 	CURLcode result;
 	volatile int status;
+	char* method;
+	char* url;
+	int size;
+	u8* body;
+	Result res;
+	CurlReply reply;
 };
 
 static struct CurlHandle handles[MAX_CONNECTIONS];
-
-static volatile int _thread_lock = 0;
-
-int getThreadLock(void) {
-	while (_thread_lock) {
-		svcSleepThread(1000000);
-	}
-	while(!(_thread_lock = rand()));
-	return _thread_lock;
-}
-
-void releaseThreadLock(int lock) {
-	if (_thread_lock == lock) {
-		_thread_lock = 0;
-	}
-}
-
-void curl_multi_loop(void* p) {
-	CURLM* curl_multi_handle = curl_multi_init();
-	running = true;
-	int openHandles = 0;
-	int lock = getThreadLock();
-	do {
-		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
-		if (mc != CURLM_OK) {
-			printf("ERROR curl multi fail: %u\n", mc);
-			releaseThreadLock(lock);
-			return;
-		}
-		CURLMsg* msg;
-		int msgsLeft;
-		while ((msg = curl_multi_info_read(curl_multi_handle, &msgsLeft))) {
-			if (msg->msg == CURLMSG_DONE) {
-				for (int i = 0; i < MAX_CONNECTIONS; i++) {
-					if (handles[i].handle == msg->easy_handle) {
-						handles[i].result = msg->data.result;
-						curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
-						handles[i].status = CURL_HANDLE_STATUS_DONE;
-						break;
-					}
-				}
-			}
-		}
-		releaseThreadLock(lock);
-		if (!openHandles) {
-			svcSleepThread((u64)1000000 * 100);
-		} else {
-			svcSleepThread(1000000);
-		}
-		lock = getThreadLock();
-		for (int i = 0; i < MAX_CONNECTIONS; i++) {
-			if (handles[i].status == CURL_HANDLE_STATUS_RESET) {
-				handles[i].handle = 0;
-				handles[i].result = 0;
-				handles[i].status = CURL_HANDLE_STATUS_FREE;
-			}
-			if (handles[i].status == CURL_HANDLE_STATUS_PENDING) {
-				handles[i].status = CURL_HANDLE_STATUS_RUNNING;
-				curl_multi_add_handle(curl_multi_handle, handles[i].handle);
-			}
-		}
-	} while (running);
-	for (int i = 0; i < MAX_CONNECTIONS; i++) {
-		if (handles[i].handle) {
-			curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
-			curl_easy_cleanup(handles[i].handle);
-		}
-	}
-	curl_multi_cleanup(curl_multi_handle);
-	releaseThreadLock(lock);
-}
 
 Result getMac(u8 mac[6]) {
 	Result res = 0;
@@ -125,25 +61,195 @@ Result getMac(u8 mac[6]) {
 	return res;
 }
 
-void initCurlReply(CurlReply* r, size_t size) {
-	r->len = 0;
-	if (!r->ptr) {
-		r->size = size;
-		r->ptr = malloc(size);
-		if (!r->ptr) {
-			r->size = 0;
-			printf("ERROR: failed to allocate curlReply\n");
-		}
+size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
+	CurlReply* r = (CurlReply*)ptr;
+	if (!r) {
+		return size*nmemb; // let's just pretend we did all correct
 	}
+	size_t new_len = r->len + size*nmemb;
+	if (new_len > MAX_MESSAGE_SIZE) {
+		return 0;
+	}
+	memcpy(r->ptr + r->len, data, size*nmemb);
+	r->ptr[new_len] = '\0';
+	r->len = new_len;
+	return size*nmemb;
 }
 
-void deinitCurlReply(CurlReply* r) {
-	if (r->ptr) {
-		free(r->ptr);
+void curlFreeHandler(int offset) {
+	handles[offset].status = CURL_HANDLE_STATUS_RESET;
+}
+
+Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply) {
+	Result res = 0;
+	int curl_handle_slot = 0;
+	bool found_handle_slot = false;
+	for (; curl_handle_slot < MAX_CONNECTIONS; curl_handle_slot++) {
+		if (handles[curl_handle_slot].status == CURL_HANDLE_STATUS_FREE) {
+			handles[curl_handle_slot].status = CURL_HANDLE_STATUS_RESERVED;
+			found_handle_slot = true;
+			break;
+		}
 	}
-	r->ptr = NULL;
-	r->len = 0;
-	r->size = 0;
+	if (!found_handle_slot) {
+		// TODO: dunno, wait or something?
+		return -1;
+	}
+
+	handles[curl_handle_slot].method = method;
+	handles[curl_handle_slot].url = url;
+	handles[curl_handle_slot].size = size;
+	handles[curl_handle_slot].body = body;
+	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
+	handles[curl_handle_slot].reply.ptr = (u8*)reply;
+	// request is being sent, let's wait until it is back
+	
+	while (handles[curl_handle_slot].status != CURL_HANDLE_STATUS_DONE) {
+		//printf("%d", handles[curl_handle_slot].status);
+		svcSleepThread((u64)1000000 * 100);
+	}
+
+	res = handles[curl_handle_slot].res;
+	if (reply) {
+		*reply = &handles[curl_handle_slot].reply;
+	} else {
+		curlFreeHandler(curl_handle_slot);
+	}
+	return res;
+}
+
+static CURLM* curl_multi_handle;
+
+void curl_multi_loop_request_finish(int i) {
+	struct CurlHandle* h = &handles[i];
+	h->res = 0;
+	h->res = h->result;
+	if (h->res != CURLE_OK) {
+		h->res = -h->res;
+		goto cleanup;
+	}
+	long http_code = 0;
+	curl_easy_getinfo(h->handle, CURLINFO_RESPONSE_CODE, &http_code);
+	if (!(http_code >= 200 && http_code < 300)) {
+		h->res = -http_code;
+		goto cleanup;
+	}
+	h->res = http_code;
+cleanup:
+	curl_multi_remove_handle(curl_multi_handle, h->handle);
+	curl_easy_cleanup(h->handle);
+	h->handle = 0;
+	h->status = CURL_HANDLE_STATUS_DONE;
+}
+
+void curl_multi_loop_request_setup(int i) {
+	struct CurlHandle* h = &handles[i];
+	h->handle = curl_easy_init();
+	if (!h->handle) {
+		h->res = -1;
+		h->status = CURL_HANDLE_STATUS_DONE;
+		return;
+	}
+	struct curl_slist* headers = NULL;
+
+	// add mac header
+	char header_mac[25];
+	char* header_mac_i = header_mac + snprintf(header_mac, 25 - 12, "3ds-mac: ");
+	for (int j = 0; j < 6; j++) {
+		header_mac_i += sprintf(header_mac_i, "%02X", mac[j]);
+	}
+	headers = curl_slist_append(headers, header_mac);
+
+	if (h->body) {
+		curl_easy_setopt(h->handle, CURLOPT_POSTFIELDS, h->body);
+		headers = curl_slist_append(headers, "Content-Type: application/binary");
+		curl_easy_setopt(h->handle, CURLOPT_POSTFIELDSIZE, h->size);
+	}
+
+	// set some options
+	curl_easy_setopt(h->handle, CURLOPT_URL, h->url);
+	curl_easy_setopt(h->handle, CURLOPT_NOPROGRESS, 1);
+	curl_easy_setopt(h->handle, CURLOPT_USERAGENT, "3ds");
+	curl_easy_setopt(h->handle, CURLOPT_FOLLOWLOCATION, 1);
+	curl_easy_setopt(h->handle, CURLOPT_MAXREDIRS, 50);
+	curl_easy_setopt(h->handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
+	curl_easy_setopt(h->handle, CURLOPT_HTTPHEADER, headers);
+	curl_easy_setopt(h->handle, CURLOPT_CUSTOMREQUEST, h->method);
+	curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 30);
+	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
+	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
+	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
+	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
+
+	curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, curlWrite);
+	h->reply.len = 0;
+	h->reply.offset = i;
+	if (h->reply.ptr) {
+		h->reply.ptr = malloc(MAX_MESSAGE_SIZE);
+		if (!h->reply.ptr) {
+			h->res = -1;
+			h->status = CURL_HANDLE_STATUS_DONE;
+			return;
+		}
+		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
+	} else {
+		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, NULL);
+	}
+	h->status = CURL_HANDLE_STATUS_RUNNING;
+
+	curl_multi_add_handle(curl_multi_handle, h->handle);
+}
+
+void curl_multi_loop(void* p) {
+	curl_multi_handle = curl_multi_init();
+	running = true;
+	int openHandles = 0;
+	do {
+		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
+		if (mc != CURLM_OK) {
+			printf("ERROR curl multi fail: %u\n", mc);
+			return;
+		}
+		CURLMsg* msg;
+		int msgsLeft;
+		while ((msg = curl_multi_info_read(curl_multi_handle, &msgsLeft))) {
+			if (msg->msg == CURLMSG_DONE) {
+				for (int i = 0; i < MAX_CONNECTIONS; i++) {
+					if (handles[i].handle == msg->easy_handle) {
+						handles[i].result = msg->data.result;
+						curl_multi_loop_request_finish(i);
+						break;
+					}
+				}
+			}
+		}
+		if (!openHandles) {
+			svcSleepThread((u64)1000000 * 100);
+		} else {
+			svcSleepThread(1000000);
+		}
+		for (int i = 0; i < MAX_CONNECTIONS; i++) {
+			if (handles[i].status == CURL_HANDLE_STATUS_RESET) {
+				if (handles[i].reply.ptr) {
+					free(handles[i].reply.ptr);
+				}
+				handles[i].handle = 0;
+				handles[i].result = 0;
+				handles[i].status = CURL_HANDLE_STATUS_FREE;
+			}
+			if (handles[i].status == CURL_HANDLE_STATUS_PENDING) {
+				curl_multi_loop_request_setup(i);
+			}
+		}
+	} while (running);
+	for (int i = 0; i < MAX_CONNECTIONS; i++) {
+		if (handles[i].handle) {
+			curl_multi_remove_handle(curl_multi_handle, handles[i].handle);
+			curl_easy_cleanup(handles[i].handle);
+		}
+	}
+	curl_multi_cleanup(curl_multi_handle);
 }
 
 Result curlInit(void) {
@@ -168,148 +274,4 @@ void curlExit(void) {
 	//threadFree(curl_multi_thread);
 	curl_global_cleanup();
 	socExit();
-}
-
-void curl_handle_cleanup(CURL* curl) {
-	for (int i = 0; i < MAX_CONNECTIONS; i++) {
-		if (handles[i].handle == curl) {
-			handles[i].status = CURL_HANDLE_STATUS_RESET;
-			handles[i].handle = 0;
-			break;
-		}
-	}
-	curl_easy_cleanup(curl);
-}
-
-size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
-	CurlReply* r = (CurlReply*)ptr;
-	if (!r) {
-		return size*nmemb; // let's just pretend we did all correct
-	}
-	if (!r->ptr) {
-		initCurlReply(r, 0xFF);
-	}
-	size_t new_len = r->len + size*nmemb;
-	if (new_len > r->size) {
-		if (new_len > MAX_MESSAGE_SIZE) return 0;
-		r->size += new_len;
-		u8* newptr = realloc(r->ptr, r->size);
-		if (!newptr) {
-			return 0; // out of memory
-		}
-		r->ptr = newptr;
-	}
-	memcpy(r->ptr + r->len, data, size*nmemb);
-	r->ptr[new_len] = '\0';
-	r->len = new_len;
-	return size*nmemb;
-}
-
-Result httpRequestSetup(CURL* curl, char* method, char* url, int size, u8* body, CurlReply* reply) {
-	Result res = 0;
-
-	int curl_handle_slot = 0;
-	bool found_handle_slot = false;
-	for (; curl_handle_slot < MAX_CONNECTIONS; curl_handle_slot++) {
-		if (handles[curl_handle_slot].status == CURL_HANDLE_STATUS_FREE) {
-			handles[curl_handle_slot].status = CURL_HANDLE_STATUS_RESERVED;
-			found_handle_slot = true;
-			handles[curl_handle_slot].handle = curl;
-			break;
-		}
-	}
-	if (!found_handle_slot) {
-		// TODO: dunno, wait or something?
-		return -1;
-	}
-
-	int lock = getThreadLock();
-
-	struct curl_slist* headers = NULL;
-
-	// add mac header
-	char header_mac[25];
-	char* header_mac_i = header_mac + snprintf(header_mac, 25 - 12, "3ds-mac: ");
-	for (int i = 0; i < 6; i++) {
-		header_mac_i += sprintf(header_mac_i, "%02X", mac[i]);
-	}
-	headers = curl_slist_append(headers, header_mac);
-
-	if (body) {
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
-		headers = curl_slist_append(headers, "Content-Type: application/binary");
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, size);
-	}
-
-	// set some options
-	curl_easy_setopt(curl, CURLOPT_URL, url);
-	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
-	curl_easy_setopt(curl, CURLOPT_USERAGENT, "3ds");
-	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50);
-	curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method);
-	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
-	curl_easy_setopt(curl, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
-	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20);
-	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 0);
-	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
-	curl_easy_setopt(curl, CURLOPT_CAINFO, "romfs:/certs.pem");
-
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWrite);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reply);
-
-	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
-	releaseThreadLock(lock);
-	return res;
-}
-
-Result httpRequestFinish(CURL* curl) {
-	Result res = 0;
-	int curl_handle_slot = 0;
-	bool found_handle_slot = false;
-	for (; curl_handle_slot < MAX_CONNECTIONS; curl_handle_slot++) {
-		if (handles[curl_handle_slot].handle == curl) {
-			found_handle_slot = true;
-			break;
-		}
-	}
-	if (!found_handle_slot) return -1;
-
-	while (handles[curl_handle_slot].status != CURL_HANDLE_STATUS_DONE) {
-		svcSleepThread((u64)1000000 * 1);
-	}
-
-	int lock = getThreadLock();
-
-	res = handles[curl_handle_slot].result;
-	if (res != CURLE_OK) {
-		res = -res;
-		goto cleanup;
-	}
-	long http_code = 0;
-	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-	if (!(http_code >= 200 && http_code < 300)) {
-		res = -http_code;
-		goto cleanup;
-	}
-	res = http_code;
-cleanup:
-	releaseThreadLock(lock);
-	return res;
-}
-
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply* reply) {
-	Result res = 0;
-	CURL* curl = curl_easy_init();
-	if (!curl) return -1;
-	res = httpRequestSetup(curl, method, url, size, body, reply);
-	if (R_FAILED(res)) goto cleanup;
-	res = httpRequestFinish(curl);
-	if (R_FAILED(res)) goto cleanup;
-
-cleanup:
-	curl_handle_cleanup(curl);
-	return res;
 }
