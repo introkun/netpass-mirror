@@ -3,66 +3,79 @@
 LanguageString str_loading = {
 	{CFG_LANGUAGE_EN, "Loading     "},
 	{CFG_LANGUAGE_DE, "Laden     "},
+	{CFG_LANGUAGE_JP, "読み込み中     "},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_libcurl_error = {
 	{CFG_LANGUAGE_EN, "libCURL error (%d): %s"},
 	{CFG_LANGUAGE_EN, "libCURL fehler (%d): %s"},
+	{CFG_LANGUAGE_JP, "libCURL エラー (%d): %s"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_libcurl_date_and_time = {
 	{CFG_LANGUAGE_EN, "Make sure that your systems date and time are set correctly!"},
 	{CFG_LANGUAGE_DE, "Stelle sicher, dass die Systemszeit und -datum richtig gesetzt sind!"},
+	{CFG_LANGUAGE_JP, "本体設定から日付と時刻が正しく設定されているか確認してください！"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_httpstatus_error = {
 	{CFG_LANGUAGE_EN, "HTTP status code %d"},
+	{CFG_LANGUAGE_JP, "HTTP ステータスコード %d"},
 	{CFG_LANGUAGE_DE, NULL},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_3ds_error = {
 	{CFG_LANGUAGE_EN, "3DS error code %08lx"},
+	{CFG_LANGUAGE_JP, "3DS エラーコード %08lx"},
 	{CFG_LANGUAGE_DE, NULL},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_at_home = {
 	{CFG_LANGUAGE_EN, "You are at home."},
 	{CFG_LANGUAGE_DE, "Du bist zuhause."},
+	{CFG_LANGUAGE_JP, "あなたは今、家にいます"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_goto_train_station = {
 	{CFG_LANGUAGE_EN, "Go to Train Station"},
 	{CFG_LANGUAGE_DE, "Gehe zum Bahnhof"},
+	{CFG_LANGUAGE_JP, "駅へ出かける"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_EN, "You are at the Train Station"},
 	{CFG_LANGUAGE_DE, "Du bist am Bahnhof"},
+	{CFG_LANGUAGE_JP, "あなたは今、駅にいます"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_goto_plaza = {
 	{CFG_LANGUAGE_EN, "Go to Plaza"},
 	{CFG_LANGUAGE_DE, "Gehe zum Plaza"},
+	{CFG_LANGUAGE_JP, "プラザへ出かける"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_EN, "You are at the Plaza"},
 	{CFG_LANGUAGE_DE, "Du bist am Plaza"},
+	{CFG_LANGUAGE_JP, "あなたは今、プラザにいます"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_goto_mall = {
 	{CFG_LANGUAGE_EN, "Go to Mall"},
 	{CFG_LANGUAGE_DE, "Gehe zum Einkaufszentrum"},
+	{CFG_LANGUAGE_JP, "ショッピングモールへ出かける"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_at_mall = {
 	{CFG_LANGUAGE_EN, "You are at the Mall"},
 	{CFG_LANGUAGE_DE, "Du bist im Einkaufszentrum"},
+	{CFG_LANGUAGE_JP, "あなたは今、ショッピングモールにいます"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_exit = {
 	{CFG_LANGUAGE_EN, "Exit"},
 	{CFG_LANGUAGE_DE, "Verlassen"},
+	{CFG_LANGUAGE_JP, "終了する"},
 	{CFG_LANGUAGE_ES, 0},
 };
 
