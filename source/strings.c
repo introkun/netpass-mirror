@@ -45,7 +45,7 @@ LanguageString str_goto_train_station = {
 LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_EN, "You are at the Train Station"},
 	{CFG_LANGUAGE_DE, "Du bist am Bahnhof"},
-	{CFG_LANGUAGE_JP, "あなたは今、駅にいます"},
+	{CFG_LANGUAGE_JP, "駅に滞在中"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_goto_plaza = {
@@ -57,7 +57,7 @@ LanguageString str_goto_plaza = {
 LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_EN, "You are at the Plaza"},
 	{CFG_LANGUAGE_DE, "Du bist am Plaza"},
-	{CFG_LANGUAGE_JP, "あなたは今、プラザにいます"},
+	{CFG_LANGUAGE_JP, "プラザに滞在中"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_goto_mall = {
@@ -69,7 +69,7 @@ LanguageString str_goto_mall = {
 LanguageString str_at_mall = {
 	{CFG_LANGUAGE_EN, "You are at the Mall"},
 	{CFG_LANGUAGE_DE, "Du bist im Einkaufszentrum"},
-	{CFG_LANGUAGE_JP, "あなたは今、ショッピングモールにいます"},
+	{CFG_LANGUAGE_JP, "ショッピングモールに滞在中"},
 	{CFG_LANGUAGE_ES, 0},
 };
 LanguageString str_exit = {
