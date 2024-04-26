@@ -39,3 +39,15 @@ To build `.cia` files, run
 ```bash
 ./build_release.sh
 ```
+
+## Credits
+### Research
+ - [This gist](https://gist.github.com/wwylele/29a8caa6f5e5a7d88a00bedae90472ed) by wwylele, describing some cecd functionality
+ - [This repo](https://github.com/NarcolepticK/CECDocs) by NarcolepticK documenting some more of the cecd sysmodule
+ - [StreetPass 2](https://gbatemp.net/threads/streetpass-2-rise-from-the-ashes.526749/) for valuable data dumps
+ - 3Dbrew and all its contributors, especially of the [cecd service](https://www.3dbrew.org/wiki/CECD_Services)
+
+### Translations
+ - English: Sorunome
+ - German: Sorunome
+ - Russian: [Rednorka](https://gbatemp.net/members/rednorka.575239/)
