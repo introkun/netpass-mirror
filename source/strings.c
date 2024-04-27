@@ -117,7 +117,7 @@ LanguageString str_exit = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, "Выйти"},
 	{CFG_LANGUAGE_PL, "Wyjście"},
-	{CFG_LANGUAGE_FR, "Sortir"},
+	{CFG_LANGUAGE_FR, "Quitter"},
 };
 
 static u8 _language;
