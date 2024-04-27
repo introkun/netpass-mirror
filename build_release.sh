@@ -13,6 +13,7 @@ $DEVKITARM/bin/arm-none-eabi-strip netpass.elf
 makerom -f cia -v -target t -exefslogo -o netpass.cia \
 	-elf netpass.elf -rsf netpass.rsf \
 	-major $NETPASS_VERSION_MAJOR -minor $NETPASS_VERSION_MINOR -micro $NETPASS_VERSION_MICRO \
-	-icon netpass.smdh
+	-icon netpass.smdh \
+	-banner netpass.bnr
 
 cp netpass.cia netpass.cia.txt
