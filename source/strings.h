@@ -2,7 +2,7 @@
 #include <3ds.h>
 #include <citro2d.h>
 
-#define NUM_LANGUAGES 6
+#define NUM_LANGUAGES 7
 
 typedef const struct {
 	const CFG_Language language;
