@@ -292,8 +292,9 @@ Result addStreetpassMessage(u8* msgbuf) {
 	// now set the green notification dot
 	getCurrentTime(&(mboxheader.last_received));
 	mboxheader.flag3 = 1; // set the new notification dot
-	//mboxheader.flag4 = 1;
-	//mboxheader.flag5 = 1;
+	mboxheader.flag4 = 1;
+	mboxheader.flag5 = 1;
+	mboxheader.flag6 = 1;
 	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
 	if (R_FAILED(res)) return -2;
 

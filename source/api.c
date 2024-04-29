@@ -10,6 +10,12 @@ Result uploadOutboxes(void) {
 	CecMboxListHeader mbox_list;
 	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
 	if (R_FAILED(res)) return -1;
+	{
+		char url[50];
+		snprintf(url, 50, "%s/outbox/mboxlist", BASE_URL);
+		res = httpRequest("POST", url, sizeof(CecMboxListHeader), (u8*)&mbox_list, 0);
+		if (R_FAILED(res)) return res;
+	}
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Uploading outbox %d/%ld...", i+1, mbox_list.num_boxes);
 		int title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
@@ -29,12 +35,29 @@ Result uploadOutboxes(void) {
 			}
 			char url[50];
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
-			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, 0);
+			CurlReply* reply;
+			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply);
 			if (R_FAILED(res)) {
+				curlFreeHandler(reply->offset);
 				free(msg);
 				continue;
 			}
+			if (res == 200) {
+				// our reply body has the new send count
+				CecMessageHeader* h = (CecMessageHeader*)msg;
+				h->send_count = reply->ptr[0];
+				res = cecdWriteMessage(
+					h->title_id, true,
+					h->message_size, msg,
+					h->message_id);
+				if (R_FAILED(res)) {
+					curlFreeHandler(reply->offset);
+					free(msg);
+					continue;
+				}
+			}
 			messages++;
+			curlFreeHandler(reply->offset);
 			free(msg);
 		}
 		if (R_FAILED(res)) {

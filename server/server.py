@@ -1,9 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from raw_types import RawMessage, MAX_MESSAGE_SIZE
+from raw_types import RawMessage, MAX_MESSAGE_SIZE, MBOXLIST_SIZE, MBoxList
 from threading import Timer
 from database import Database
 from config import Config
-import struct
+from socketserver import ThreadingMixIn
+import struct, traceback
 
 # From https://stackoverflow.com/a/38317060
 class RepeatedTimer(object):
@@ -76,7 +77,32 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		if not msg.validate():
 			return self.write_response(400, "Bad Message")
 		# now we have to store the new outbox message
-		database.store_outbox(mac, msg)
+		newmsg = database.store_outbox(mac, msg)
+		if not newmsg:
+			return self.write_response(204, "Success")
+		self.send_response(200)
+		self.send_header("Content-Typ", "application/binary")
+		self.end_headers()
+		self.wfile.write(msg.send_count)
+	def upload_mboxlist(self):
+		length = self.headers['content-length'];
+		try:
+			length = int(length)
+			if length < 4:
+				print("meow?")
+				return self.write_response(400, "Content too short")
+			if length > MBOXLIST_SIZE:
+				return self.write_response(413, "Content too long")
+		except:
+			return self.write_response(411, "Invalid content-length error")
+		mac = self.get_mac()
+		if mac is None: return
+		buf = self.rfile.read(MBOXLIST_SIZE)
+		mboxlist = MBoxList(buf)
+		if not mboxlist.validate():
+			print("nuuu")
+			return self.write_response(400, "Bad Message")
+		database.store_mboxlist(mac, mboxlist)
 		self.write_response(200, "Success")
 	def enter_location(self, location_id):
 		mac = self.get_mac()
@@ -104,43 +130,63 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		(msg, from_mac) = res
 		self.send_response(200)
 		self.send_header("Content-Typ", "application/binary")
-		self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
+		#self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
 		self.end_headers()
 		self.wfile.write(msg.data)
 	def do_PUT(self):
-		if self.path.startswith("/location/"):
-			parts = self.path.split("/")
-			location_id = None
-			try:
-				location_id = int(parts[2])
-				if location_id < 0 or location_id >= config.get("num_locations"):
+		try:
+			if self.path.startswith("/location/"):
+				parts = self.path.split("/")
+				location_id = None
+				try:
+					location_id = int(parts[2])
+					if location_id < 0 or location_id >= config.get("num_locations"):
+						return self.write_response(400, "Invalid location id")
+				except:
 					return self.write_response(400, "Invalid location id")
-			except:
-				return self.write_response(400, "Invalid location id")
-			if len(parts) > 3:
-				if parts[3] == "enter":
-					return self.enter_location(location_id)
-		self.write_response(404, "path not found")
+				if len(parts) > 3:
+					if parts[3] == "enter":
+						return self.enter_location(location_id)
+			self.write_response(404, "path not found")
+		except Exception as e:
+			print(e)
+			print(traceback.format_exc())
+			self.write_response(500, "Internal Server Error")
 	def do_GET(self):
-		if self.path.startswith("/inbox/"):
-			parts = self.path.split("/")
-			title_id = None
-			try:
-				title_id = struct.unpack('>I', bytes.fromhex(parts[2]))[0]
-			except:
-				return self.write_response(400, "Invalid inbox id")
-			if len(parts) > 3:
-				if parts[3] == "pop":
-					return self.pop_inbox(title_id)
-		if self.path == "/location/current":
-			return self.get_location()
-		if self.path == "/ping":
-			return self.write_response(200, "pong")
-		self.write_response(404, "path not found")
+		try:
+			if self.path.startswith("/inbox/"):
+				parts = self.path.split("/")
+				title_id = None
+				try:
+					title_id = struct.unpack('>I', bytes.fromhex(parts[2]))[0]
+				except:
+					return self.write_response(400, "Invalid inbox id")
+				if len(parts) > 3:
+					if parts[3] == "pop":
+						return self.pop_inbox(title_id)
+			if self.path == "/location/current":
+				return self.get_location()
+			if self.path == "/ping":
+				return self.write_response(200, "pong")
+			self.write_response(404, "path not found")
+		except Exception as e:
+			print(e)
+			print(traceback.format_exc())
+			self.write_response(500, "Internal Server Error")
 	def do_POST(self):
-		if self.path == "/outbox/upload":
-			return self.upload_new_messages()
-		self.write_response(404, "Path not found")
+		try:
+			if self.path == "/outbox/mboxlist":
+				return self.upload_mboxlist()
+			if self.path == "/outbox/upload":
+				return self.upload_new_messages()
+			self.write_response(404, "Path not found")
+		except Exception as e:
+			print(e)
+			print(traceback.format_exc())
+			self.write_response(500, "Internal Server Error")
+
+class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
+	pass
 
 def bg_tasks_frequent():
 	database.cleanup()
@@ -152,7 +198,7 @@ def bg_tasks_hourly():
 if __name__ == "__main__":
 	config = Config("config.yaml")
 	database = Database(config)
-	web_server = HTTPServer((config.get("server.host"), config.get("server.port")), StreetPassServer)
+	web_server = ThreadingSimpleServer((config.get("server.host"), config.get("server.port")), StreetPassServer)
 	bg_frequent = RepeatedTimer(1, bg_tasks_frequent)
 	bg_hourly = RepeatedTimer(60*60, bg_tasks_hourly)
 	bg_frequent.start()

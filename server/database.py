@@ -1,4 +1,4 @@
-import psycopg2, math, time, random, struct
+import psycopg2, math, time, random, struct, itertools, threading
 from raw_types import RawMessage
 
 def get_current_timestamp():
@@ -9,14 +9,7 @@ def get_current_timestamp():
 class Database:
 	def __init__(self, config):
 		self.config = config
-		self.con = connection = psycopg2.connect(
-			user=config.get("postgres.user"),
-			password=config.get("postgres.password"),
-			host=config.get("postgres.host"),
-			port=config.get("postgres.port"),
-			database=config.get("postgres.database")
-		)
-		with self.con.cursor() as cur:
+		with self.con().cursor() as cur:
 			cur.execute("""
 			BEGIN;
 			CREATE TABLE IF NOT EXISTS outbox (
@@ -24,11 +17,18 @@ class Database:
 				message_id BIGINT NOT NULL,
 				mac BIGINT NOT NULL,
 				message BYTEA NOT NULL,
-				time BIGINT NOT NULL
+				time BIGINT NOT NULL,
+				send_count INT NOT NULL,
+				modified BOOL NOT NULL DEFAULT false
 			);
 			CREATE INDEX IF NOT EXISTS outbox_title_id ON outbox (title_id);
-			CREATE INDEX IF NOT EXISTS outbox_message_id ON outbox (message_id);
+			DROP INDEX IF EXISTS outbox_message_id;
+			CREATE UNIQUE INDEX IF NOT EXISTS outbox_unique_message_id ON outbox (mac, message_id);
 			CREATE INDEX IF NOT EXISTS outbox_mac ON outbox (mac);
+			ALTER TABLE outbox ADD COLUMN IF NOT EXISTS send_count INTEGER NOT NULL DEFAULT 255;
+			ALTER TABLE outbox ADD COLUMN IF NOT EXISTS modified BOOL NOT NULL DEFAULT false;
+			ALTER TABLE outbox ALTER COLUMN send_count DROP DEFAULT;
+
 
 			CREATE TABLE IF NOT EXISTS inbox (
 				title_id INT NOT NULL,
@@ -53,20 +53,66 @@ class Database:
 			);
 			CREATE INDEX IF NOT EXISTS location_location_id ON location (location_id);
 			CREATE UNIQUE INDEX IF NOT EXISTS location_mac_unique ON location (mac);
+
+			CREATE TABLE IF NOT EXISTS mboxlist (
+				mac BIGINT NOT NULL,
+				title_id INT NOT NULL,
+				time BIGINT NOT NULL
+			);
+			CREATE INDEX IF NOT EXISTS mboxlist_mac ON mboxlist (title_id);
+			CREATE UNIQUE INDEX IF NOT EXISTS mboxlist_unique ON mboxlist (mac, title_id);
 			COMMIT;
 			""")
-		self.con.commit()
+		self.con().commit()
+	connections = {}
+	def con(self):
+		thread_id = threading.get_ident()
+		if thread_id in self.connections:
+			return self.connections[thread_id]
+		self.connections[thread_id] = psycopg2.connect(
+			user=self.config.get("postgres.user"),
+			password=self.config.get("postgres.password"),
+			host=self.config.get("postgres.host"),
+			port=self.config.get("postgres.port"),
+			database=self.config.get("postgres.database")
+		)
+		return self.connections[thread_id]
+
+	def store_mboxlist(self, mac, mboxlist):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
+				for title_id in mboxlist.title_ids:
+					cur.execute("INSERT INTO mboxlist (mac, title_id, time) VALUES (%s, %s, %s)", (mac, title_id, math.floor(time.time())))
+		except Exception as e:
+			print(e)
+		finally:
+			self.con().commit()
 	def store_outbox(self, mac, msg):
-		with self.con.cursor() as cur:
-			cur.execute("DELETE FROM outbox WHERE title_id = %s AND mac = %s",
-				(msg.title_id, mac))
-			cur.execute("INSERT INTO outbox (title_id, message_id, mac, message, time) VALUES (%s, %s, %s, %s, %s)",
-				(msg.title_id, msg.message_id, mac, msg.data, math.floor(time.time())))
-		self.con.commit()
+		ret = None
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("SELECT message FROM outbox WHERE title_id = %s AND mac = %s AND message_id = %s AND modified = true", (msg.title_id, mac, msg.message_id))
+				res = cur.fetchone()
+				if res is not None:
+					oldmsg = RawMessage(res[0])
+					if oldmsg.send_count < msg.send_count:
+						ret = oldmsg
+						msg.send_count = oldmsg.send_count
+				curtime = math.floor(time.time())
+				cur.execute("""
+				INSERT INTO outbox
+				(title_id, message_id, mac, message, time, send_count) VALUES (%s, %s, %s, %s, %s, %s)
+				ON CONFLICT (mac, message_id) DO UPDATE SET
+					message = %s, time = %s, send_count = %s, modified = false
+				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
+			return ret
+		finally:
+			self.con().commit()
 	def pop_inbox(self, mac, title_id):
 		try:
-			with self.con.cursor() as cur:
-				cur.execute("SELECT title_id, message_id, from_mac, to_mac, message FROM inbox WHERE title_id = %s AND to_mac = %s AND sent = false ORDER BY time DESC LIMIT 1", (title_id, mac))
+			with self.con().cursor() as cur:
+				cur.execute("SELECT time, message_id, from_mac, to_mac, message FROM inbox WHERE title_id = %s AND to_mac = %s AND sent = false ORDER BY time DESC LIMIT 1", (title_id, mac))
 				res = cur.fetchone()
 				if res is None:
 					return None
@@ -75,29 +121,29 @@ class Database:
 				if not msg.validate(): return None
 				return (msg, res[2])
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def enter_location(self, mac, location_id):
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				if type(location_id) is not int or location_id < 0 or location_id >= self.config.get("num_locations"):
 					return False
 				cur.execute("INSERT INTO location (location_id, mac, time_start, time_end) VALUES (%s, %s, %s, %s) ON CONFLICT DO NOTHING", (location_id, mac, math.floor(time.time()), math.floor(time.time() + 60*60*10)))
 				return True
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def get_location(self, mac):
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				cur.execute("SELECT location_id FROM location WHERE mac = %s", (mac,))
 				res = cur.fetchone()
 				if res is None:
 					return -1
 				return res[0]
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def streetpass_location(self, mac, location_id):
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				cur.execute("SELECT time_start, time_end FROM location WHERE mac = %s AND location_id = %s", (mac, location_id))
 				res = cur.fetchone()
 				curtime = math.floor(time.time())
@@ -109,10 +155,10 @@ class Database:
 					self.streetpass_mac(mac, row[0])
 				return True
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def streetpass_location_bg(self, location_id):
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				cur.execute("SELECTL COUNT(*) FROM location WHERE location_id = %s", (location_id,))
 				population = cur.fetchone()[0]
 				limit = math.ceil(min(1, population / 1000) * population)
@@ -130,40 +176,68 @@ class Database:
 				for row in cur.fetchall():
 					self.streetpass_mac(row[0], row[1])
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def streetpass_mac(self, mac1, mac2):
 		if mac1 == mac2:
 			return False
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				cur.execute("""
-				SELECT o1.title_id, o1.mac, o1.message, o2.mac, o2.message
-				FROM outbox o1 INNER JOIN outbox o2 ON o1.title_id = o2.title_id
-				WHERE o1.mac = %s AND o2.mac = %s
+				SELECT any_value(m.mac), any_value(o.mac), any_value(o.message)
+				FROM outbox o INNER JOIN mboxlist m ON o.title_id = m.title_id
+				WHERE m.mac = %s AND o.mac = %s AND o.send_count <> 0
+				GROUP BY o.title_id
 				""", (mac1, mac2))
-				curtime = math.floor(time.time())
-				data = []
-				for row in cur.fetchall():
-					(title_id, mac1, message1, mac2, message2) = row
-					msg1 = RawMessage(message1)
-					msg2 = RawMessage(message2)
-					msg1.message_id2 = msg2.message_id
-					msg2.message_id2 = msg1.message_id
-					msg1.ts_sent = get_current_timestamp()
-					msg2.ts_sent = get_current_timestamp()
-					data.append((title_id, msg1.message_id, mac1, mac2, msg1.data, curtime))
-					data.append((title_id, msg2.message_id, mac2, mac1, msg2.data, curtime))
-				for d in data:
-					cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", d)
+				rows = []
+				rows.append(cur.fetchall())
+				cur.execute("""
+				SELECT any_value(m.mac), any_value(o.mac), any_value(o.message)
+				FROM outbox o INNER JOIN mboxlist m ON o.title_id = m.title_id
+				WHERE m.mac = %s AND o.mac = %s AND o.send_count <> 0
+				GROUP BY o.title_id
+				""", (mac2, mac1))
+				rows.append(cur.fetchall())
+				passes = []
+				for i in range(2):
+					p = {}
+					for r in rows[i]:
+						(mac_recv, mac_send, buf) = r
+						msg = RawMessage(buf)
+						if msg.send_count <= 0:
+							continue
+						p[msg.title_id] = (mac_recv, mac_send, msg)
+					passes.append(p)
+				for i in range(2):
+					for title_id, r in passes[i].items():
+						(mac_recv, mac_send, msg) = r
+						if msg.send_count <= 0:
+							continue
+						
+						if msg.send_method == 0:
+							# we are required to have a bi-directional pass
+							if title_id in passes[1 - i]:
+								msg.message_id2 = passes[1 - i][title_id][2].message_id
+							else:
+								continue
+						if msg.send_count < 0xFF:
+							msg.send_count -= 1
+							cur.execute("UPDATE outbox SET send_count = %s, message = %s, modified = true WHERE mac = %s AND message_id = %s",
+								(msg.send_count, msg.data, mac_send, msg.message_id))
+						msg.forward_count -= 1
+						msg.ts_sent = get_current_timestamp()
+						
+						cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING",
+							(msg.title_id, msg.message_id, mac_send, mac_recv, msg.data, math.floor(time.time())))
 				return True
 		finally:
-			self.con.commit()
+			self.con().commit()
 	def cleanup(self):
 		try:
-			with self.con.cursor() as cur:
+			with self.con().cursor() as cur:
 				curtime = math.floor(time.time())
 				cur.execute("DELETE FROM outbox WHERE time < %s", (curtime - 60*60*24*30,))
-				cur.execute("DELETE FROM inbox WHERE time < %s", (curtime - 60*60*24*90,))
+				cur.execute("DELETE FROM inbox WHERE time < %s", (curtime - 60*60*24*30,))
+				cur.execute("DELETE FROM mboxlist WHERE time < %s", (curtime - 60*60*24*30,))
 				cur.execute("DELETE FROM location WHERE time_end < %s", (curtime,))
 		finally:
-			self.con.commit()
+			self.con().commit()

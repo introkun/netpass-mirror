@@ -3,6 +3,7 @@ import struct
 import base64
 
 MAX_MESSAGE_SIZE = 0x20000
+MBOXLIST_SIZE = (12 + 16*24)
 
 def decode_timestamp(ts):
 	(year, month, day, weekDay, hour, minute,
@@ -46,19 +47,30 @@ class GeneralClass():
 	def load(self, d):
 		self.data = bytearray(d)
 		if hasattr(self, "MAGIC"):
-			magic = self.data[0:2]
+			magic = self.magic
 			if magic != self.MAGIC:
 				raise Exception("Wrong magic")
+	@property
+	def magic(self):
+		return struct.unpack('<H', self.data[0:2])[0]
 
 class MBoxList(GeneralClass):
 	FILENAME = "MBoxList____"
-	MAGIC = b'\x68\x68'
+	MAGIC = 0x6868
 	@property
 	def version(self):
 		return struct.unpack('<I', self.data[4:8])[0]
 	@property
 	def num_boxes(self):
 		return struct.unpack('<I', self.data[8:0xC])[0]
+	@property
+	def title_ids(self):
+		ret = []
+		for i in range(0, 16):
+			name = self.data[0xC + i*16:0xC + (i+1)*16].decode("ascii").strip('\x00')
+			if name != '':
+				ret.append(int(name, 16))
+		return ret
 	@property
 	def box_names(self):
 		ret = []
@@ -67,10 +79,18 @@ class MBoxList(GeneralClass):
 			if name != '':
 				ret.append(name)
 		return ret
+	def validate(self):
+		try:
+			if self.magic != self.MAGIC or self.num_boxes > 24 or len(self.data) > MBOXLIST_SIZE:
+				return False
+			self.title_ids
+		except:
+			return False
+		return True
 
 class MBoxInfo(GeneralClass):
 	FILENAME = "MBoxInfo____"
-	MAGIC = b'\x63\x63'
+	MAGIC = 0x6363
 	@property
 	def title_id(self):
 		return '{:0>8X}'.format(struct.unpack('<I', self.data[4:8])[0])
@@ -88,7 +108,7 @@ class MBoxInfo(GeneralClass):
 
 class BoxInfo(GeneralClass):
 	FILENAME = "BoxInfo_____"
-	MAGIC = b'\x62\x62'
+	MAGIC = 0x6262
 	@property
 	def size(self):
 		return struct.unpack('<I', self.data[4:8])[0]
@@ -116,15 +136,14 @@ class BoxInfo(GeneralClass):
 		for i in range(self.current_message_count):
 			ret.append(RawMessage(self.data[0x1C+4 + i*0x70:0x1C+4 + (i+1)*0x70]))
 		return ret
-
-class RawMessage(GeneralClass):
-	MAGIC = b'\x60\x60'
-	@property
-	def all_data(self):
-		return len(self.data) > 0x70
 	@property
 	def magic(self):
 		return struct.unpack('<H', self.data[0:2])[0]
+class RawMessage(GeneralClass):
+	MAGIC = 0x6060
+	@property
+	def all_data(self):
+		return len(self.data) > 0x70
 	@property
 	def size(self):
 		return struct.unpack('<I', self.data[4:8])[0]
@@ -158,6 +177,11 @@ class RawMessage(GeneralClass):
 			self.data[0x2C + i] = b[i]
 	@property
 	def send_method(self):
+		"""
+		0 - copy message_id (?) (street pass mii plaza, 00020800)
+		1 - send_method 1->3 (?) (new super mario bros 2, 0007ad00; super mario maker, 001a0400)
+		3 - no copy message_id (?) (a link between worlds, 000ec400)
+		"""
 		return struct.unpack('<B', self.data[0x35:0x36])[0]
 	@property
 	def is_unopen(self):
@@ -182,6 +206,18 @@ class RawMessage(GeneralClass):
 	def ts_created(self):
 		return self.data[0x60:0x60+12]
 	@property
+	def send_count(self):
+		return self.data[0x6C]
+	@send_count.setter
+	def send_count(self, value):
+		self.data[0x6C] = value
+	@property
+	def forward_count(self):
+		return self.data[0x6D]
+	@forward_count.setter
+	def forward_count(self, value):
+		self.data[0x6D] = value
+	@property
 	def extra_headers(self):
 		if not self.all_data:
 			return []
@@ -199,7 +235,7 @@ class RawMessage(GeneralClass):
 		return self.data[self.full_headers_size:self.full_headers_size+self.body_size]
 	def validate_header(self):
 		try:
-			return (self.magic == 0x6060
+			return (self.magic == self.MAGIC
 				and self.size == self.total_headers_size + self.body_size + 0x20
 				and self.size < MAX_MESSAGE_SIZE)
 		except:
