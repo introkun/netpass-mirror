@@ -31,22 +31,21 @@ include $(DEVKITARM)/3ds_rules
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	netpass
-OUTDIR		:=	out
-BUILD		:=	build
-SOURCES		:=	source source/scenes
-DATA		:=	data
-INCLUDES	:=	include
-GRAPHICS	:=	gfx
-#GFXBUILD	:=	$(BUILD)
-APP_AUTHOR	:=	Sorunome
-APP_TITLE	:=	NetPass
+TARGET			:=	netpass
+OUTDIR			:=	out
+BUILD			:=	build
+SOURCES			:=	source source/scenes
+DATA			:=	data
+INCLUDES		:=	include
+GRAPHICS		:=	gfx
+APP_AUTHOR		:=	Sorunome
+APP_TITLE		:=	NetPass
 APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
-ROMFS		:=	romfs
-GFXBUILD	:=	$(ROMFS)/gfx
-ICON		:= meta/icon.png
-BANNER_AUDIO :=	meta/audio.wav
-BANNER_IMAGE :=	meta/banner.png
+ROMFS			:=	romfs
+GFXBUILD		:=	$(ROMFS)/gfx
+ICON			:=	meta/icon.png
+BANNER_AUDIO	:=	meta/netpass.wav
+BANNER_IMAGE	:=	meta/banner.png
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -149,32 +148,10 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 export _3DSXDEPS	:=	$(if $(NO_SMDH),,$(OUTPUT).smdh)
 
-ifeq ($(strip $(ICON)),)
-	icons := $(wildcard *.png)
-	ifneq (,$(findstring $(TARGET).png,$(icons)))
-		export APP_ICON := $(TOPDIR)/$(TARGET).png
-	else
-		ifneq (,$(findstring icon.png,$(icons)))
-			export APP_ICON := $(TOPDIR)/icon.png
-		endif
-	endif
-else
-	export APP_ICON := $(TOPDIR)/$(ICON)
-endif
+export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
 
 BANNERTOOL	?=	bannertool
-
-ifeq ($(suffix $(BANNER_IMAGE)),.cgfx)
-	BANNER_IMAGE_ARG := -ci
-else
-	BANNER_IMAGE_ARG := -i
-endif
-
-ifeq ($(suffix $(BANNER_AUDIO)),.cwav)
-	BANNER_AUDIO_ARG := -ca
-else
-	BANNER_AUDIO_ARG := -a
-endif
+FFMPEG		?=	ffmpeg
 
 ifeq ($(strip $(NO_SMDH)),)
 	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
@@ -191,14 +168,21 @@ MAKEROM		?=	makerom
 MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major $NETPASS_VERSION_MAJOR -minor $NETPASS_VERSION_MINOR -micro $NETPASS_VERSION_MICRO -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
 
 #---------------------------------------------------------------------------------
-all: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
-	@$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) "$(BANNER_IMAGE)" $(BANNER_AUDIO_ARG) "$(BANNER_AUDIO)" -o "$(BUILD)/banner.bnr"
-	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
+3dsx: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+all: build cia
+
+cia: 3dsx
+	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_IMAGE) -vf scale=256:128 $(TOPDIR)/$(BUILD)/banner.png
+	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_AUDIO) -c:a pcm_s16le $(TOPDIR)/$(BUILD)/banner.wav
+	@$(BANNERTOOL) makebanner -i "$(TOPDIR)/$(BUILD)/banner.png" -a "$(TOPDIR)/$(BUILD)/banner.wav" -o "$(BUILD)/banner.bnr"
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
 	$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
 
 $(BUILD):
 	@mkdir -p $@
+	@$(FFMPEG) -y -i $(TOPDIR)/$(ICON) -vf scale=48:48 $(TOPDIR)/$(BUILD)/icon.png
 
 ifneq ($(GFXBUILD),$(BUILD))
 $(GFXBUILD):
