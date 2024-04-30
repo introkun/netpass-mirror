@@ -127,6 +127,10 @@ class Database:
 			with self.con().cursor() as cur:
 				if type(location_id) is not int or location_id < 0 or location_id >= self.config.get("num_locations"):
 					return False
+				cur.execute("SELECT count(*) FROM mboxlist WHERE mac = %s", (mac))
+				res = cur.fetchone()
+				if res is None or res[0] == 0:
+					return False
 				cur.execute("INSERT INTO location (location_id, mac, time_start, time_end) VALUES (%s, %s, %s, %s) ON CONFLICT DO NOTHING", (location_id, mac, math.floor(time.time()), math.floor(time.time() + 60*60*10)))
 				return True
 		finally:
