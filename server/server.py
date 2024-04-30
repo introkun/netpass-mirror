@@ -84,7 +84,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header("Content-Typ", "application/binary")
 		self.end_headers()
-		self.wfile.write(msg.send_count)
+		self.wfile.write(struct.pack('<B', msg.send_count))
 	def upload_mboxlist(self):
 		length = self.headers['content-length'];
 		try:
