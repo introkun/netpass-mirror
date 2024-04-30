@@ -98,7 +98,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		if not newmsg:
 			return self.write_response(204, "Success")
 		self.send_response(200)
-		self.send_header("Content-Typ", "application/binary")
+		self.send_header("Content-Type", "application/binary")
 		self.end_headers()
 		self.wfile.write(struct.pack('<B', msg.send_count))
 	def upload_mboxlist(self):
@@ -146,7 +146,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			return self.write_response(204, "Inbox empty")
 		(msg, from_mac) = res
 		self.send_response(200)
-		self.send_header("Content-Typ", "application/binary")
+		self.send_header("Content-Type", "application/binary")
 		#self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
 		self.end_headers()
 		self.wfile.write(msg.data)
