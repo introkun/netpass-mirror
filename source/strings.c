@@ -40,7 +40,7 @@ LanguageString str_libcurl_date_and_time = {
 	{CFG_LANGUAGE_EN, "Make sure that your systems date and time are set correctly!"},
 	{CFG_LANGUAGE_DE, "Stelle sicher, dass die Systemszeit und -datum richtig gesetzt sind!"},
 	{CFG_LANGUAGE_JP, "本体設定から日付と時刻が正しく設定されているか確認してください！"},
-	{CFG_LANGUAGE_ES, "Asegurate de que la fecha y hora del sistema sean correctas!"},
+	{CFG_LANGUAGE_ES, "Asegúrate de que la fecha y hora del sistema sean correctas!"},
 	{CFG_LANGUAGE_RU, "Проверьте, что ваша системная дата и время настроены правильно!"},
 	{CFG_LANGUAGE_PL, "Upewnij się, że data i czas systemowy jest ustawiony poprawnie!"},
 };
@@ -48,7 +48,7 @@ LanguageString str_httpstatus_error = {
 	{CFG_LANGUAGE_EN, "HTTP status code %d"},
 	{CFG_LANGUAGE_JP, "HTTP ステータスコード %d"},
 	{CFG_LANGUAGE_DE, NULL},
-	{CFG_LANGUAGE_ES, "Codigo de estado HTTP %d"},
+	{CFG_LANGUAGE_ES, "Código de estado HTTP %d"},
 	{CFG_LANGUAGE_RU, "Код статуса HTTP %d"},
 	{CFG_LANGUAGE_PL, "Błąd HTTP o kodzie %d"},
 };
@@ -56,7 +56,7 @@ LanguageString str_3ds_error = {
 	{CFG_LANGUAGE_EN, "3DS error code %08lx"},
 	{CFG_LANGUAGE_JP, "3DS エラーコード %08lx"},
 	{CFG_LANGUAGE_DE, NULL},
-	{CFG_LANGUAGE_ES, "Codigo de error de 3DS %08lx"},
+	{CFG_LANGUAGE_ES, "Código de error de 3DS %08lx"},
 	{CFG_LANGUAGE_RU, "Код ошибки 3DS %08lx"},
 	{CFG_LANGUAGE_PL, "Błąd 3DS o kodzie %08lx"},
 };
@@ -64,7 +64,7 @@ LanguageString str_at_home = {
 	{CFG_LANGUAGE_EN, "You are at home."},
 	{CFG_LANGUAGE_DE, "Du bist zuhause."},
 	{CFG_LANGUAGE_JP, "あなたは今、家にいます"},
-	{CFG_LANGUAGE_ES, "Estas en casa.},
+	{CFG_LANGUAGE_ES, "Estás en casa."},
 	{CFG_LANGUAGE_RU, "Вы находитесь дома."},
 	{CFG_LANGUAGE_PL, "Jesteś w domu."},
 };
@@ -80,7 +80,7 @@ LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_EN, "You are at the Train Station"},
 	{CFG_LANGUAGE_DE, "Du bist am Bahnhof"},
 	{CFG_LANGUAGE_JP, "駅に滞在中"},
-	{CFG_LANGUAGE_ES, "Estás en la Estacion de Tren"},
+	{CFG_LANGUAGE_ES, "Estás en la Estación de Tren"},
 	{CFG_LANGUAGE_RU, "Вы находитесь на Вокзале"},
 	{CFG_LANGUAGE_PL, "Jesteś na Stacji Kolejowej"},
 };
