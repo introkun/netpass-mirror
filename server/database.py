@@ -163,7 +163,7 @@ class Database:
 	def streetpass_location_bg(self, location_id):
 		try:
 			with self.con().cursor() as cur:
-				cur.execute("SELECTL COUNT(*) FROM location WHERE location_id = %s", (location_id,))
+				cur.execute("SELECT COUNT(*) FROM location WHERE location_id = %s", (location_id,))
 				population = cur.fetchone()[0]
 				limit = math.ceil(min(1, population / 1000) * population)
 				cur.execute("""
