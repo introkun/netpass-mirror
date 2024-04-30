@@ -167,7 +167,7 @@ class Database:
 				population = cur.fetchone()[0]
 				limit = math.ceil(min(1, population / 1000) * population)
 				cur.execute("""
-				SELECT l1.mac, (j
+				SELECT l1.mac, (
 					SELECT l2.mac
 					FROM location l2
 					WHERE l2.location_id = l1.location_id AND l1.mac <> l2.mac
