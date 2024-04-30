@@ -27,6 +27,7 @@ LanguageString str_loading = {
 	{CFG_LANGUAGE_ES, "Cargando    "},
 	{CFG_LANGUAGE_RU, "Загрузка    "},
 	{CFG_LANGUAGE_PL, "Ładowanie    "},
+	{CFG_LANGUAGE_FR, "Chargement	"},
 };
 LanguageString str_libcurl_error = {
 	{CFG_LANGUAGE_EN, "libCURL error (%d): %s"},
@@ -35,6 +36,7 @@ LanguageString str_libcurl_error = {
 	{CFG_LANGUAGE_ES, "Error de libCURL (%d): %s"},
 	{CFG_LANGUAGE_RU, "Ошибка libCURL (%d): %s"},
 	{CFG_LANGUAGE_PL, "Błąd libCURL (%d): %s"},
+	{CFG_LANGUAGE_FR, "Erreur libCURL (%d) : %s"},
 };
 LanguageString str_libcurl_date_and_time = {
 	{CFG_LANGUAGE_EN, "Make sure that your systems date and time are set correctly!"},
@@ -43,6 +45,7 @@ LanguageString str_libcurl_date_and_time = {
 	{CFG_LANGUAGE_ES, "Asegúrate de que la fecha y hora del sistema sean correctas!"},
 	{CFG_LANGUAGE_RU, "Проверьте, что ваша системная дата и время настроены правильно!"},
 	{CFG_LANGUAGE_PL, "Upewnij się, że data i czas systemowy jest ustawiony poprawnie!"},
+	{CFG_LANGUAGE_FR, "Assurez-vous que la date et l'heure de votre système sont correctement réglées !"},
 };
 LanguageString str_httpstatus_error = {
 	{CFG_LANGUAGE_EN, "HTTP status code %d"},
@@ -51,6 +54,7 @@ LanguageString str_httpstatus_error = {
 	{CFG_LANGUAGE_ES, "Código de estado HTTP %d"},
 	{CFG_LANGUAGE_RU, "Код статуса HTTP %d"},
 	{CFG_LANGUAGE_PL, "Błąd HTTP o kodzie %d"},
+	{CFG_LANGUAGE_FR, "Code de statut HTTP %d"},
 };
 LanguageString str_3ds_error = {
 	{CFG_LANGUAGE_EN, "3DS error code %08lx"},
@@ -59,6 +63,7 @@ LanguageString str_3ds_error = {
 	{CFG_LANGUAGE_ES, "Código de error de 3DS %08lx"},
 	{CFG_LANGUAGE_RU, "Код ошибки 3DS %08lx"},
 	{CFG_LANGUAGE_PL, "Błąd 3DS o kodzie %08lx"},
+	{CFG_LANGUAGE_FR, "Code d'erreur 3DS %08lx"},
 };
 LanguageString str_at_home = {
 	{CFG_LANGUAGE_EN, "You are at home."},
@@ -67,6 +72,7 @@ LanguageString str_at_home = {
 	{CFG_LANGUAGE_ES, "Estás en casa."},
 	{CFG_LANGUAGE_RU, "Вы находитесь дома."},
 	{CFG_LANGUAGE_PL, "Jesteś w domu."},
+	{CFG_LANGUAGE_FR, "Vous êtes à la maison"},
 };
 LanguageString str_goto_train_station = {
 	{CFG_LANGUAGE_EN, "Go to Train Station"},
@@ -75,6 +81,7 @@ LanguageString str_goto_train_station = {
 	{CFG_LANGUAGE_ES, "Ir a la Estación de Tren"},
 	{CFG_LANGUAGE_RU, "Отправиться на Вокзал"},
 	{CFG_LANGUAGE_PL, "Idź na Stacje Kolejową"},
+	{CFG_LANGUAGE_FR, "Se rendre à la gare"},
 };
 LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_EN, "You are at the Train Station"},
@@ -83,6 +90,7 @@ LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_ES, "Estás en la Estación de Tren"},
 	{CFG_LANGUAGE_RU, "Вы находитесь на Вокзале"},
 	{CFG_LANGUAGE_PL, "Jesteś na Stacji Kolejowej"},
+	{CFG_LANGUAGE_FR, "Vous êtes à la gare"},
 };
 LanguageString str_goto_plaza = {
 	{CFG_LANGUAGE_EN, "Go to Plaza"},
@@ -91,6 +99,7 @@ LanguageString str_goto_plaza = {
 	{CFG_LANGUAGE_ES, "Ir a la Plaza"},
 	{CFG_LANGUAGE_RU, "Отправиться на Площадь"},
 	{CFG_LANGUAGE_PL, "Idź na Rynek"},
+	{CFG_LANGUAGE_FR, "Se rendre à la place"},
 };
 LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_EN, "You are at the Plaza"},
@@ -99,6 +108,7 @@ LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_ES, "Estás en la Plaza"},
 	{CFG_LANGUAGE_RU, "Вы находитесь на Площади"},
 	{CFG_LANGUAGE_PL, "Jesteś na Rynku"},
+	{CFG_LANGUAGE_FR, "Vous êtes à la place"},
 };
 LanguageString str_goto_mall = {
 	{CFG_LANGUAGE_EN, "Go to Mall"},
@@ -107,6 +117,7 @@ LanguageString str_goto_mall = {
 	{CFG_LANGUAGE_ES, "Ir al Centro Comercial"},
 	{CFG_LANGUAGE_RU, "Отправиться в Торговый Центр"},
 	{CFG_LANGUAGE_PL, "Idź do Centrum Handlowego"},
+	{CFG_LANGUAGE_FR, "Se rendre au supermarché"},
 };
 LanguageString str_at_mall = {
 	{CFG_LANGUAGE_EN, "You are at the Mall"},
@@ -115,6 +126,7 @@ LanguageString str_at_mall = {
 	{CFG_LANGUAGE_ES, "Estás en el Centro Comercial"},
 	{CFG_LANGUAGE_RU, "Вы находитесь в Торговом Центре"},
 	{CFG_LANGUAGE_PL, "Jesteś w Centrum Handlowym"},
+	{CFG_LANGUAGE_FR, "Vous êtes au supermarché"},
 };
 LanguageString str_exit = {
 	{CFG_LANGUAGE_EN, "Exit"},
@@ -123,6 +135,7 @@ LanguageString str_exit = {
 	{CFG_LANGUAGE_ES, "Salir"},
 	{CFG_LANGUAGE_RU, "Выйти"},
 	{CFG_LANGUAGE_PL, "Wyjście"},
+	{CFG_LANGUAGE_FR, "Quitter"},
 };
 
 static u8 _language;
