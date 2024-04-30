@@ -32,6 +32,7 @@ include $(DEVKITARM)/3ds_rules
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
 TARGET		:=	netpass
+OUTDIR		:=	out
 BUILD		:=	build
 SOURCES		:=	source source/scenes
 DATA		:=	data
@@ -43,7 +44,9 @@ APP_TITLE	:=	NetPass
 APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx
-ICON		:= icon.png
+ICON		:= meta/icon.png
+BANNER_AUDIO :=	meta/audio.wav
+BANNER_IMAGE :=	meta/banner.png
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -82,7 +85,7 @@ LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export OUTPUT	:=	$(CURDIR)/$(OUTDIR)/$(TARGET)
 export TOPDIR	:=	$(CURDIR)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
@@ -159,8 +162,22 @@ else
 	export APP_ICON := $(TOPDIR)/$(ICON)
 endif
 
+BANNERTOOL	?=	bannertool
+
+ifeq ($(suffix $(BANNER_IMAGE)),.cgfx)
+	BANNER_IMAGE_ARG := -ci
+else
+	BANNER_IMAGE_ARG := -i
+endif
+
+ifeq ($(suffix $(BANNER_AUDIO)),.cwav)
+	BANNER_AUDIO_ARG := -ca
+else
+	BANNER_AUDIO_ARG := -a
+endif
+
 ifeq ($(strip $(NO_SMDH)),)
-	export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
+	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
 endif
 
 ifneq ($(ROMFS),)
@@ -169,9 +186,16 @@ endif
 
 .PHONY: all clean
 
+MAKEROM		?=	makerom
+
+MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major $NETPASS_VERSION_MAJOR -minor $NETPASS_VERSION_MINOR -micro $NETPASS_VERSION_MICRO -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
+
 #---------------------------------------------------------------------------------
-all: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES)
+all: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
+	@$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) "$(BANNER_IMAGE)" $(BANNER_AUDIO_ARG) "$(BANNER_AUDIO)" -o "$(BUILD)/banner.bnr"
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
 
 $(BUILD):
 	@mkdir -p $@
@@ -186,10 +210,13 @@ $(DEPSDIR):
 	@mkdir -p $@
 endif
 
+$(OUTDIR):
+	@mkdir -p $@
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(GFXBUILD)
+	@rm -fr $(BUILD) $(GFXBUILD) $(DEPSDIR) $(OUTDIR)
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
