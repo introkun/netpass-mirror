@@ -127,7 +127,7 @@ class Database:
 			with self.con().cursor() as cur:
 				if type(location_id) is not int or location_id < 0 or location_id >= self.config.get("num_locations"):
 					return False
-				cur.execute("SELECT count(*) FROM mboxlist WHERE mac = %s", (mac))
+				cur.execute("SELECT count(*) FROM mboxlist WHERE mac = %s", (mac,))
 				res = cur.fetchone()
 				if res is None or res[0] == 0:
 					return False
