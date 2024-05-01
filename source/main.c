@@ -37,10 +37,6 @@ int main() {
 	romfsInit();
 	init_main_thread_prio();
 
-	u32 device_id;
-	AM_GetDeviceId(&device_id);
-	printf("Device ID: %ld\n", device_id);
-
 	cecdInit();
 	curlInit();
 	srand(time(NULL));

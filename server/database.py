@@ -96,6 +96,13 @@ class Database:
 				count INT NOT NULL DEFAULT 1
 			);
 			CREATE UNIQUE INDEX IF NOT EXISTS title_unique ON title (title_id, title_name);
+
+			CREATE TABLE IF NOT EXISTS map_mac_nid (
+				mac BIGINT NOT NULL,
+				nid VARCHAR(50) NOT NULL
+			);
+			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_mac ON map_mac_nid (mac);
+			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_nid ON map_mac_nid (nid);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -119,14 +126,19 @@ class Database:
 		ON CONFLICT (title_id, reason_id) DO UPDATE SET count = r.count + 1
 		""", (title_id, msg, research_id))
 
+	def store_nid(self, mac, nid):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("INSERT INTO map_mac_nid (mac, nid) VALUES (%s, %s) ON CONFLICT DO NOTHING", (mac, nid))
+		finally:
+			self.con().commit()
+
 	def store_mboxlist(self, mac, mboxlist):
 		try:
 			with self.con().cursor() as cur:
 				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
 				for title_id in mboxlist.title_ids:
 					cur.execute("INSERT INTO mboxlist (mac, title_id, time) VALUES (%s, %s, %s)", (mac, title_id, math.floor(time.time())))
-		except Exception as e:
-			print(e)
 		finally:
 			self.con().commit()
 

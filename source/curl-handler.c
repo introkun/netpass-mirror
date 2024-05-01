@@ -19,6 +19,8 @@
 #include "curl-handler.h"
 #include "cecd.h"
 #include "api.h"
+#include "hmac_sha256/hmac_sha256.h"
+#include "base64.h"
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,6 +33,7 @@ static u32 *SOC_buffer = NULL;
 static Thread curl_multi_thread;
 static bool running = false;
 static u8 mac[6] = {0};
+static char* netpass_id;
 
 #define CURL_HANDLE_STATUS_FREE 0
 #define CURL_HANDLE_STATUS_RESERVED 1
@@ -90,6 +93,17 @@ size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	memcpy(r->ptr + r->len, data, size*nmemb);
 	r->ptr[new_len] = '\0';
 	r->len = new_len;
+	return size*nmemb;
+}
+
+size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
+	char buf[size*nmemb + 1];
+	memcpy(buf, data, size*nmemb);
+	buf[size*nmemb] = '\0';
+	static const char header_name[] = "3ds-netpass-msg: ";
+	if (strncmp(header_name, buf, strlen(header_name)) == 0) {
+		printf("%s\n", buf + strlen(header_name));
+	}
 	return size*nmemb;
 }
 
@@ -189,6 +203,12 @@ void curl_multi_loop_request_setup(int i) {
 		header_mac_i += sprintf(header_mac_i, "%02X", mac[j]);
 	}
 	headers = curl_slist_append(headers, header_mac);
+	char header_netpass_id[100];
+	snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
+	headers = curl_slist_append(headers, header_netpass_id);
+	char header_netpass_version[100];
+	snprintf(header_netpass_version, 100, "3ds-netpass-version: v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+	headers = curl_slist_append(headers, header_netpass_version);
 	if (h->title_name && !h->file_reply) {
 		char header_title_name[225];
 		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
@@ -216,6 +236,8 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
 	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
+	curl_easy_setopt(h->handle, CURLOPT_HEADERFUNCTION, curlHeader);
+	curl_easy_setopt(h->handle, CURLOPT_HEADERDATA, NULL);
 
 	if (h->file_reply) {
 		curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, fwrite);
@@ -288,8 +310,15 @@ Result curlInit(void) {
 	if (R_FAILED(res)) return res;
 	curl_global_init(CURL_GLOBAL_ALL);
 
+	u32 device_id;
+	res = AM_GetDeviceId(&device_id);
+	if (R_FAILED(res)) return res;
 	res = getMac(mac);
 	if (R_FAILED(res)) return res;
+
+	u8 netpass_id_buf[32];
+	hmac_sha256(&device_id, 4, mac, 6, netpass_id_buf, 32);
+	netpass_id = b64encode(netpass_id_buf, 32);
 
 	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, main_thread_prio()-1, -2, false);
 
@@ -299,6 +328,7 @@ Result curlInit(void) {
 void curlExit(void) {
 	running = false;
 	//threadFree(curl_multi_thread);
+	free(netpass_id);
 	curl_global_cleanup();
 	socExit();
 }

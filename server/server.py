@@ -57,6 +57,12 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.wfile.write(bytes(errmsg, "utf-8"))
 	def write_str(self, s):
 		self.wfile.write(bytes(s, "utf-8"))
+	def pong(self):
+		self.send_response(200)
+		self.send_header("Content-Type", "text/plain")
+		#self.send_header("3ds-netpass-msg", self.headers['3ds-netpass-version'])
+		self.end_headers()
+		self.write_str("pong")
 	def get_mac(self):
 		mac = self.headers['3ds-mac']
 		try:
@@ -70,6 +76,12 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			mac = struct.unpack('<q', mac + b'\x00\x00')[0]
 		except:
 			return self.write_response(400, "Invalid mac")
+		nid = self.headers['3ds-nid']
+		try:
+			if len(nid) < 50:
+				database.store_nid(mac, nid)
+		except:
+			pass
 		return mac
 	def upload_new_messages(self):
 		# first verify the headers needed
@@ -251,7 +263,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			if self.path == "/location/current":
 				return self.get_location()
 			if self.path == "/ping":
-				return self.write_response(200, "pong")
+				return self.pong()
 			if self.path == "/data":
 				return self.get_data()
 			self.write_response(404, "path not found")
