@@ -151,7 +151,7 @@ class Database:
 				ON CONFLICT (mac, message_id) DO UPDATE SET
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
-				if title_name is not NULL:
+				if title_name is not None:
 					cur.execute("""
 					INSERT INTO titles (title_id, title_name) VALUES (%s, %s)
 					ON CONFLICT (title_id, title_name) DO UPTDATE SET count = count + 1

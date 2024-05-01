@@ -93,7 +93,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		msg = RawMessage(buf)
 		if not msg.validate():
 			return self.write_response(400, "Bad Message")
-		title_name = NULL
+		title_name = None
 		try:
 			title_name = self.headers['3ds-title-name']
 			while len(title_name) % 4 > 0: title_name += "="
@@ -103,9 +103,9 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			except:
 				title_name = title_buf.decode("utf-8").strip("\x00").split("\x00")[0]
 			if len(title_name) > 50:
-				title_name = NULL
+				title_name = None
 		except:
-			title_name = NULL
+			title_name = None
 		# now we have to store the new outbox message
 		newmsg = database.store_outbox(mac, msg, title_name)
 		if not newmsg:
