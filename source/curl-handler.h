@@ -33,4 +33,4 @@ void deinitCurlReply(CurlReply* r);
 Result curlInit(void);
 void curlExit(void);
 void curlFreeHandler(int offset);
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply);
+Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name);

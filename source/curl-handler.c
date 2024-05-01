@@ -45,6 +45,7 @@ struct CurlHandle {
 	volatile int status;
 	char* method;
 	char* url;
+	char* title_name;
 	bool do_reply;
 	int size;
 	u8* body;
@@ -96,7 +97,7 @@ void curlFreeHandler(int offset) {
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply) {
+Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name) {
 	Result res = 0;
 	int curl_handle_slot = 0;
 	bool found_handle_slot = false;
@@ -116,6 +117,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	handles[curl_handle_slot].url = url;
 	handles[curl_handle_slot].size = size;
 	handles[curl_handle_slot].body = body;
+	handles[curl_handle_slot].title_name = title_name;
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
 	
@@ -173,6 +175,11 @@ void curl_multi_loop_request_setup(int i) {
 		header_mac_i += sprintf(header_mac_i, "%02X", mac[j]);
 	}
 	headers = curl_slist_append(headers, header_mac);
+	if (h->title_name) {
+		char header_title_name[225];
+		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
+		headers = curl_slist_append(headers, header_title_name);
+	}
 
 	if (h->body) {
 		curl_easy_setopt(h->handle, CURLOPT_POSTFIELDS, h->body);

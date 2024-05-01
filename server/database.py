@@ -90,12 +90,12 @@ class Database:
 			CREATE UNIQUE INDEX IF NOT EXISTS research_unique ON research (title_id, reason_id);
 			ALTER TABLE research ADD COLUMN IF NOT EXISTS count INT NOT NULL DEFAULT 1;
 
-			CREATE TABLE IF NOT EXISTS titles (
+			CREATE TABLE IF NOT EXISTS title (
 				title_id INT NOT NULL,
 				title_name VARCHAR(50) NOT NULL,
 				count INT NOT NULL DEFAULT 1
 			);
-			CREATE UNIQUE INDEX IF NOT EXISTS titles_unique ON titles (title_id, title_name);
+			CREATE UNIQUE INDEX IF NOT EXISTS title_unique ON title (title_id, title_name);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -115,8 +115,8 @@ class Database:
 
 	def store_research(self, cur, title_id, msg, research_id):
 		cur.execute("""
-		INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s)
-		ON CONFLICT (title_id, reason_id) DO UPDATE SET count = count + 1
+		INSERT INTO research AS r (title_id, reason, reason_id) VALUES (%s, %s, %s)
+		ON CONFLICT (title_id, reason_id) DO UPDATE SET count = r.count + 1
 		""", (title_id, msg, research_id))
 
 	def store_mboxlist(self, mac, mboxlist):
@@ -142,6 +142,11 @@ class Database:
 						ret = oldmsg
 						msg.send_count = oldmsg.send_count
 				curtime = math.floor(time.time())
+				if title_name is not None:
+					cur.execute("""
+					INSERT INTO title AS t (title_id, title_name) VALUES (%s, %s)
+					ON CONFLICT (title_id, title_name) DO UPDATE SET count = t.count + 1
+					""", (msg.title_id, title_name))
 				if msg.send_count == 0:
 					cur.execute("DELETE FROM outbox WHERE title_id = %s AND message_id = %s AND mac = %s", (msg.title_id, msg.message_id, mac))
 					return ret
@@ -151,11 +156,6 @@ class Database:
 				ON CONFLICT (mac, message_id) DO UPDATE SET
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
-				if title_name is not None:
-					cur.execute("""
-					INSERT INTO titles (title_id, title_name) VALUES (%s, %s)
-					ON CONFLICT (title_id, title_name) DO UPTDATE SET count = count + 1
-					""", (msg.title_id, title_name))
 				if msg.send_method not in (0, 1, 3):
 					self.store_research(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD)
 				if msg.send_count not in (0, 1, 0xFF):

@@ -18,6 +18,7 @@
 
 #include "api.h"
 #include "cecd.h"
+#include "base64.h"
 #include <stdlib.h>
 
 int location = -1;
@@ -31,7 +32,7 @@ Result uploadOutboxes(void) {
 	{
 		char url[50];
 		snprintf(url, 50, "%s/outbox/mboxlist", BASE_URL);
-		res = httpRequest("POST", url, sizeof(CecMboxListHeader), (u8*)&mbox_list, 0);
+		res = httpRequest("POST", url, sizeof(CecMboxListHeader), (u8*)&mbox_list, 0, 0);
 		if (R_FAILED(res)) return res;
 	}
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
@@ -46,37 +47,49 @@ Result uploadOutboxes(void) {
 				printf("ERROR: failed to allocate message\n");
 				return -1;
 			}
+			res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 100, msg);
+			if (R_FAILED(res)) {
+				free(msg);
+				continue;
+			}
+			char* title_name = b64encode(msg, 100);
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
 				free(msg);
+				free(title_name);
 				continue;
 			}
 			char url[50];
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			CurlReply* reply;
-			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply);
+			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply, title_name);
 			if (R_FAILED(res)) {
 				curlFreeHandler(reply->offset);
 				free(msg);
+				free(title_name);
 				continue;
 			}
 			if (res == 200) {
 				// our reply body has the new send count
 				CecMessageHeader* h = (CecMessageHeader*)msg;
-				h->send_count = reply->ptr[0];
-				res = cecdWriteMessage(
-					h->title_id, true,
-					h->message_size, msg,
-					h->message_id);
-				if (R_FAILED(res)) {
-					curlFreeHandler(reply->offset);
-					free(msg);
-					continue;
+				if (reply->ptr[0] < h->send_count) {
+					h->send_count = reply->ptr[0];
+					res = cecdWriteMessage(
+						h->title_id, true,
+						h->message_size, msg,
+						h->message_id);
+					if (R_FAILED(res)) {
+						curlFreeHandler(reply->offset);
+						free(msg);
+						free(title_name);
+						continue;
+					}
 				}
 			}
 			messages++;
 			curlFreeHandler(reply->offset);
 			free(msg);
+			free(title_name);
 		}
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
@@ -107,7 +120,7 @@ Result downloadInboxes(void) {
 		while (http_code == 200 && box_messages < box_header.max_num_messages-1) {
 			printf(".");
 			CurlReply* reply;
-			res = httpRequest("GET", url, 0, 0, &reply);
+			res = httpRequest("GET", url, 0, 0, &reply, 0);
 			if (R_FAILED(res)) break;
 
 			http_code = res;
@@ -134,7 +147,7 @@ Result getLocation(void) {
 	CurlReply* reply;
 	char url[80];
 	snprintf(url, 80, "%s/location/current", BASE_URL);
-	res = httpRequest("GET", url, 0, 0, &reply);
+	res = httpRequest("GET", url, 0, 0, &reply, 0);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	if (http_code == 200) {
@@ -151,7 +164,7 @@ Result setLocation(int location) {
 	Result res;
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
-	res = httpRequest("PUT", url, 0, 0, 0);
+	res = httpRequest("PUT", url, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
 		printf("ERROR: Failed to enter location %d: %ld\n", location, res);
 		return res;

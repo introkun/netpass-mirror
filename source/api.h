@@ -21,8 +21,8 @@
 #include <3ds.h>
 #include "curl-handler.h"
 
-#define BASE_URL "https://streetpass.sorunome.de"
-//#define BASE_URL "http://10.6.42.119:8080"
+//#define BASE_URL "https://streetpass.sorunome.de"
+#define BASE_URL "http://10.6.42.119:8080"
 
 #define lambda(return_type, function_body) \
 ({ \

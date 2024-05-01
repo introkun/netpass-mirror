@@ -27,6 +27,7 @@
 int main() {
 	gfxInitDefault();
 	cfguInit();
+	amInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 	stringsInit();
@@ -35,6 +36,10 @@ int main() {
 	C2D_Prepare();
 	romfsInit();
 	init_main_thread_prio();
+
+	u32 device_id;
+	AM_GetDeviceId(&device_id);
+	printf("Device ID: %ld\n", device_id);
 
 	cecdInit();
 	curlInit();
@@ -58,7 +63,7 @@ int main() {
 		char url[50];
 		snprintf(url, 50, "%s/ping", BASE_URL);
 	check_internet:
-		res = httpRequest("GET", url, 0, 0, 0);
+		res = httpRequest("GET", url, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -CURLE_COULDNT_RESOLVE_HOST) {
 				svcSleepThread((u64)1000000 * 100);
@@ -104,6 +109,7 @@ int main() {
 	C3D_Fini();
 	//curlExit();
 	romfsExit();
+	amExit();
 	cfguExit();
 	gfxExit();
 	return 0;
