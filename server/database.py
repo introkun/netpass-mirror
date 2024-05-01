@@ -169,11 +169,11 @@ class Database:
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
 				if msg.send_method not in (0, 1, 3):
-					self.store_research(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD)
+					self.store_research(cur, msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD)
 				if msg.send_count not in (0, 1, 0xFF):
-					self.store_research(msg.title_id, f'Interesting send_count {msg.send_count}', REASON_ID_SEND_COUNT)
+					self.store_research(cur, msg.title_id, f'Interesting send_count {msg.send_count}', REASON_ID_SEND_COUNT)
 				if msg.forward_count not in (1,):
-					self.store_research(msg.title_id, f'Interesting forward_count {msg.forward_count}', REASON_ID_FORWARD_COUNT)
+					self.store_research(cur, msg.title_id, f'Interesting forward_count {msg.forward_count}', REASON_ID_FORWARD_COUNT)
 			return ret
 		finally:
 			self.con().commit()
