@@ -25,7 +25,7 @@
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_home;
-	C2D_Text g_entries[4];
+	C2D_Text g_entries[5];
 	int cursor;
 } N(DataStruct);
 
@@ -38,13 +38,14 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_goto_plaza);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_goto_mall);
-	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_exit);
+	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_settings);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_exit);
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_home, C2D_AlignLeft, 10, 10, 0, 1, 1);
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
@@ -68,7 +69,11 @@ SceneResult N(process)(Scene* sc) {
 		if (_data->cursor < 0) _data->cursor = 0;
 		if (_data->cursor > 3) _data->cursor = 3;
 		if (kDown & KEY_A) {
-			if (_data->cursor == 3) return scene_stop;
+			if (_data->cursor == 3) {
+				sc->next_scene = getSettingsScene();
+				return scene_push;
+			}
+			if (_data->cursor == 4) return scene_stop;
 			// load location scene
 			location = _data->cursor;
 			sc->next_scene = getLoadingScene(getLocationScene(location), lambda(void, (void) {

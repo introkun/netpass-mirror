@@ -291,6 +291,31 @@ class Database:
 				return True
 		finally:
 			self.con().commit()
+	def get_mac_data(self, mac):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("SELECT title_id, message_id, message, time FROM outbox WHERE mac = %s", (mac,))
+				outbox = cur.fetchall()
+				cur.execute("SELECT title_id, message_id, message, sent, time FROM inbox WHERE from_mac = %s", (mac,))
+				inbox_from = cur.fetchall()
+				cur.execute("SELECT title_id, message_id, message, sent, time FROM inbox WHERE to_mac = %s", (mac,))
+				inbox_to = cur.fetchall()
+				cur.execute("SELECT location_id, time_start, time_end FROM location WHERE mac = %s", (mac,))
+				location = cur.fetchall()
+				cur.execute("SELECT title_id, time FROM mboxlist WHERE mac = %s", (mac,))
+				mboxlist = cur.fetchall()
+				return (outbox, inbox_from, inbox_to, location, mboxlist)
+		finally:
+			self.con().commit()
+	def delete_mac_data(self, mac):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("DELETE FROM outbox WHERE mac = %s", (mac,))
+				cur.execute("DELETE FROM inbox WHERE from_mac = %s OR to_mac = %s", (mac, mac))
+				cur.execute("DELETE FROM location WHERE mac = %s", (mac,))
+				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
+		finally:
+			self.con().commit()
 	def cleanup(self):
 		try:
 			with self.con().cursor() as cur:

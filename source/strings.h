@@ -40,6 +40,10 @@ extern LanguageString str_at_plaza;
 extern LanguageString str_goto_mall;
 extern LanguageString str_at_mall;
 extern LanguageString str_exit;
+extern LanguageString str_settings;
+extern LanguageString str_download_data;
+extern LanguageString str_delete_data;
+extern LanguageString str_back;
 
 void stringsInit(void);
 const char* _s(LanguageString s);

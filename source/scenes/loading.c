@@ -75,7 +75,10 @@ void N(exit)(Scene* sc) {
 }
 
 SceneResult N(process)(Scene* sc) {
-	if (_data && _data->thread_done) return scene_switch;
+	if (_data && _data->thread_done) {
+		if (sc->next_scene) return scene_switch;
+		return scene_pop;
+	}
 	return scene_continue;
 }
 

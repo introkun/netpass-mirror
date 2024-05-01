@@ -20,7 +20,7 @@ from threading import Timer
 from database import Database
 from config import Config
 from socketserver import ThreadingMixIn
-import struct, traceback, base64
+import datetime, struct, traceback, base64
 
 # From https://stackoverflow.com/a/38317060
 class RepeatedTimer(object):
@@ -55,6 +55,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.send_header("Content-Type", "text/plain");
 		self.end_headers()
 		self.wfile.write(bytes(errmsg, "utf-8"))
+	def write_str(self, s):
+		self.wfile.write(bytes(s, "utf-8"))
 	def get_mac(self):
 		mac = self.headers['3ds-mac']
 		try:
@@ -163,6 +165,59 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		#self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
 		self.end_headers()
 		self.wfile.write(msg.data)
+	def delete_data(self):
+		mac = self.get_mac()
+		if mac is None: return
+		database.delete_mac_data(mac)
+		self.write_response(200, "Success")
+	def get_data(self):
+		mac = self.get_mac()
+		if mac is None: return
+		(outbox, inbox_from, inbox_to, location, mboxlist) = database.get_mac_data(mac)
+		self.send_response(200)
+		self.send_header("Content-Type", "plain/text")
+		self.end_headers()
+		self.write_str("NetPass data dump\n")
+		self.write_str(f'Time: {datetime.datetime.now()}\n')
+		self.write_str(f'Mac Address: {struct.pack('<q', mac).hex()[0:12]}\n')
+		self.write_str("\n\n")
+		self.write_str("Outboxes\n")
+		for o in outbox:
+			self.write_str(f'  title_id: {struct.pack('<I', o[0]).hex()}\n')
+			self.write_str(f'  message_id: {struct.pack('<q', o[1]).hex()}\n')
+			self.write_str(f'  message: {o[2].hex()}\n')
+			self.write_str(f'  time: {o[3]}\n\n')
+		
+		def print_inbox(i):
+			self.write_str(f'  title_id: {struct.pack('<I', o[0]).hex()}\n')
+			self.write_str(f'  message_id: {struct.pack('<q', o[1]).hex()}\n')
+			self.write_str(f'  message: {o[2].hex()}\n')
+			self.write_str(f'  sent: {o[3]}\n')
+			self.write_str(f'  time: {o[4]}\n\n')
+		
+		self.write_str("Inboxes sent to others\n")
+		for i in inbox_from:
+			print_inbox(i)
+		self.write_str("Inboxes sent to yourself\n")
+		for i in inbox_to:
+			print_inbox(i)
+		self.write_str("Locations\n")
+		for l in location:
+			self.write_str(f'  location_id: {l[0]}\n')
+			self.write_str(f'  time_start: {l[1]}\n')
+			self.write_str(f'  time_end: {l[2]}\n\n')
+		
+		self.write_str("Activated message boxes\n")
+		for b in mboxlist:
+			self.write_str(f'  title_id: {struct.pack('<I', b[0]).hex()}\n')
+			self.write_str(f'  time: {b[1]}\n\n')
+	def do_DELETE(self):
+		try:
+			if self.path == "/data":
+				self.delete_data()
+		except:
+			print(traceback.format_exc())
+			self.write_response(500, "Internal Server Error")
 	def do_PUT(self):
 		try:
 			if self.path.startswith("/location/"):
@@ -178,8 +233,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 					if parts[3] == "enter":
 						return self.enter_location(location_id)
 			self.write_response(404, "path not found")
-		except Exception as e:
-			print(e)
+		except:
 			print(traceback.format_exc())
 			self.write_response(500, "Internal Server Error")
 	def do_GET(self):
@@ -198,9 +252,10 @@ class StreetPassServer(BaseHTTPRequestHandler):
 				return self.get_location()
 			if self.path == "/ping":
 				return self.write_response(200, "pong")
+			if self.path == "/data":
+				return self.get_data()
 			self.write_response(404, "path not found")
-		except Exception as e:
-			print(e)
+		except:
 			print(traceback.format_exc())
 			self.write_response(500, "Internal Server Error")
 	def do_POST(self):
@@ -210,8 +265,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			if self.path == "/outbox/upload":
 				return self.upload_new_messages()
 			self.write_response(404, "Path not found")
-		except Exception as e:
-			print(e)
+		except:
 			print(traceback.format_exc())
 			self.write_response(500, "Internal Server Error")
 

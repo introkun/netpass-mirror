@@ -46,11 +46,11 @@ struct CurlHandle {
 	char* method;
 	char* url;
 	char* title_name;
-	bool do_reply;
 	int size;
 	u8* body;
 	Result res;
 	CurlReply reply;
+	FILE* file_reply;
 };
 
 static struct CurlHandle handles[MAX_CONNECTIONS] = {0};
@@ -113,11 +113,24 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 		return -1;
 	}
 
+	FILE* file = 0;
+	if ((u32)reply == 1) {
+		// we have a file reply
+		file = fopen(title_name, "wb");
+		if (!file) {
+			return -2;
+		}
+	}
+	handles[curl_handle_slot].file_reply = file;
+
 	handles[curl_handle_slot].method = method;
 	handles[curl_handle_slot].url = url;
 	handles[curl_handle_slot].size = size;
 	handles[curl_handle_slot].body = body;
 	handles[curl_handle_slot].title_name = title_name;
+	if (handles[curl_handle_slot].file_reply) {
+		handles[curl_handle_slot].title_name = 0;
+	}
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
 	
@@ -127,11 +140,12 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 
 	res = handles[curl_handle_slot].res;
-	if (reply) {
+	if (reply && (u32)reply != 1) {
 		*reply = &handles[curl_handle_slot].reply;
 	} else {
 		curlFreeHandler(curl_handle_slot);
 	}
+	fclose(file);
 	return res;
 }
 
@@ -175,7 +189,7 @@ void curl_multi_loop_request_setup(int i) {
 		header_mac_i += sprintf(header_mac_i, "%02X", mac[j]);
 	}
 	headers = curl_slist_append(headers, header_mac);
-	if (h->title_name) {
+	if (h->title_name && !h->file_reply) {
 		char header_title_name[225];
 		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
 		headers = curl_slist_append(headers, header_title_name);
@@ -203,10 +217,15 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
 
-	curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, curlWrite);
-	h->reply.len = 0;
-	h->reply.offset = i;
-	curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
+	if (h->file_reply) {
+		curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, fwrite);
+		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, h->file_reply);
+	} else {
+		curl_easy_setopt(h->handle, CURLOPT_WRITEFUNCTION, curlWrite);
+		h->reply.len = 0;
+		h->reply.offset = i;
+		curl_easy_setopt(h->handle, CURLOPT_WRITEDATA, &h->reply);
+	}
 
 	h->status = CURL_HANDLE_STATUS_RUNNING;
 	curl_multi_add_handle(curl_multi_handle, h->handle);

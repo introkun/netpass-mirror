@@ -26,7 +26,7 @@
 #define SCREEN_TOP_WIDTH 400
 #define SCREEN_TOP_HEIGHT 240
 
-typedef enum {scene_stop, scene_continue, scene_switch} SceneResult;
+typedef enum {scene_stop, scene_continue, scene_switch, scene_push, scene_pop} SceneResult;
 
 typedef struct Scene Scene;
 
@@ -36,9 +36,11 @@ struct Scene {
 	void (*exit)(Scene*);
 	SceneResult (*process)(Scene*);
 	Scene* next_scene;
+	Scene* pop_scene;
 	u32 data;
 
 	void* d;
+	bool is_popup;
 	bool need_free;
 };
 
@@ -49,3 +51,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/home.h"
 #include "scenes/location.h"
 #include "scenes/connection_error.h"
+#include "scenes/settings.h"
