@@ -60,7 +60,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def pong(self):
 		self.send_response(200)
 		self.send_header("Content-Type", "text/plain")
-		#self.send_header("3ds-netpass-msg", self.headers['3ds-netpass-version'])
+		if self.headers["ds-netpass-version"] == "v0.2.3":
+			self.send_header("3ds-netpass-msg", "New version available, please update!")
 		self.end_headers()
 		self.write_str("pong")
 	def get_mac(self):

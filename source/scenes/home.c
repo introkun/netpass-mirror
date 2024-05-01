@@ -67,7 +67,7 @@ SceneResult N(process)(Scene* sc) {
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > 3) _data->cursor = 3;
+		if (_data->cursor > 4) _data->cursor = 4;
 		if (kDown & KEY_A) {
 			if (_data->cursor == 3) {
 				sc->next_scene = getSettingsScene();

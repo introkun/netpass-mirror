@@ -71,6 +71,20 @@ Result uploadOutboxes(void) {
 			}
 			if (res == 200) {
 				// our reply body has the new send count
+				free(msg);
+				msg = malloc(outbox.messages[j].message_size);
+				if (!msg) {
+					free(title_name);
+					curlFreeHandler(reply->offset);
+					continue;
+				}
+				res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
+				if (R_FAILED(res)) {
+					free(msg);
+					free(title_name);
+					curlFreeHandler(reply->offset);
+					continue;
+				}
 				CecMessageHeader* h = (CecMessageHeader*)msg;
 				if (reply->ptr[0] < h->send_count) {
 					h->send_count = reply->ptr[0];
