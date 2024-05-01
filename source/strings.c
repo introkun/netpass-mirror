@@ -144,7 +144,8 @@ LanguageString str_settings = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, 
+"Paramètres"},
 };
 LanguageString str_download_data = {
 	{CFG_LANGUAGE_EN, "Download personal data"},
@@ -153,7 +154,8 @@ LanguageString str_download_data = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, 
+"Télécharger les données personnelles"},
 };
 LanguageString str_delete_data = {
 	{CFG_LANGUAGE_EN, "Delete personal data"},
@@ -162,7 +164,8 @@ LanguageString str_delete_data = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, 
+"Supprimer les données personelles"},
 };
 LanguageString str_back = {
 	{CFG_LANGUAGE_EN, "Back"},
@@ -171,7 +174,8 @@ LanguageString str_back = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, 
+"Retour"},
 };
 
 static u8 _language;
