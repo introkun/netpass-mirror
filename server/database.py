@@ -84,9 +84,11 @@ class Database:
 			CREATE TABLE IF NOT EXISTS research (
 				title_id INT NOT NULL,
 				reason TEXT NOT NULL,
-				reason_id INT NOT NULL
+				reason_id INT NOT NULL,
+				count INT NOT NULL DEFAULT 1
 			);
 			CREATE UNIQUE INDEX IF NOT EXISTS research_unique ON research (title_id, reason_id);
+			ALTER TABLE research ADD COLUMN IF NOT EXISTS count INT NOT NULL DEFAULT 1;
 			COMMIT;
 			""")
 		self.con().commit()
@@ -104,6 +106,12 @@ class Database:
 		)
 		return self.connections[thread_id]
 
+	def store_research(self, cur, title_id, msg, research_id):
+		cur.execute("""
+		INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s)
+		ON CONFLICT (title_id, reason_id) DO UPDATE SET count = count + 1
+		""", (title_id, msg, research_id))
+
 	def store_mboxlist(self, mac, mboxlist):
 		try:
 			with self.con().cursor() as cur:
@@ -114,6 +122,7 @@ class Database:
 			print(e)
 		finally:
 			self.con().commit()
+
 	def store_outbox(self, mac, msg):
 		ret = None
 		try:
@@ -126,6 +135,9 @@ class Database:
 						ret = oldmsg
 						msg.send_count = oldmsg.send_count
 				curtime = math.floor(time.time())
+				if msg.send_count == 0:
+					cur.execute("DELETE FROM outbox WHERE title_id = %s AND message_id = %s AND mac = %s", (msg.title_id, msg.message_id, mac))
+					return ret
 				cur.execute("""
 				INSERT INTO outbox
 				(title_id, message_id, mac, message, time, send_count) VALUES (%s, %s, %s, %s, %s, %s)
@@ -133,14 +145,11 @@ class Database:
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
 				if msg.send_method not in (0, 1, 3):
-					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-						(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD))
-				if msg.send_count not in (1, 0xFF):
-					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-						(msg.title_id, f'Interesting send_count {msg.send_count}', REASON_ID_SEND_COUNT))
+					self.store_research(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD)
+				if msg.send_count not in (0, 1, 0xFF):
+					self.store_research(msg.title_id, f'Interesting send_count {msg.send_count}', REASON_ID_SEND_COUNT)
 				if msg.forward_count not in (1,):
-					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-						(msg.title_id, f'Interesting forward_count {msg.send_count}', REASON_ID_FORWARD_COUNT))
+					self.store_research(msg.title_id, f'Interesting forward_count {msg.forward_count}', REASON_ID_FORWARD_COUNT)
 			return ret
 		finally:
 			self.con().commit()
