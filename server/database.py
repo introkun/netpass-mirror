@@ -21,6 +21,9 @@ def get_current_timestamp():
 	now = time.localtime()
 	return struct.pack('<I6BH', now.tm_year, now.tm_mon, now.tm_mday, now.tm_wday, now.tm_hour, now.tm_min, now.tm_sec, 0)
 
+REASON_ID_SEND_METHOD = 1
+REASON_ID_SEND_COUNT = 2
+REASON_ID_FORWARD_COUNT = 3
 
 class Database:
 	def __init__(self, config):
@@ -77,6 +80,13 @@ class Database:
 			);
 			CREATE INDEX IF NOT EXISTS mboxlist_mac ON mboxlist (title_id);
 			CREATE UNIQUE INDEX IF NOT EXISTS mboxlist_unique ON mboxlist (mac, title_id);
+
+			CREATE TABLE IF NOT EXISTS research (
+				title_id INT NOT NULL,
+				reason TEXT NOT NULL,
+				reason_id INT NOT NULL
+			);
+			CREATE UNIQUE INDEX IF NOT EXISTS research_unique ON research (title_id, reason_id);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -122,6 +132,15 @@ class Database:
 				ON CONFLICT (mac, message_id) DO UPDATE SET
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
+				if msg.send_method not in (0, 1, 3):
+					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+						(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD))
+				if msg.send_count not in (1, 0xFF):
+					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+						(msg.title_id, f'Interesting send_count {msg.send_count}', REASON_ID_SEND_COUNT))
+				if msg.forward_count not in (1,):
+					cur.execute("INSERT INTO research (title_id, reason, reason_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+						(msg.title_id, f'Interesting forward_count {msg.send_count}', REASON_ID_FORWARD_COUNT))
 			return ret
 		finally:
 			self.con().commit()
