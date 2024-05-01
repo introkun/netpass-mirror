@@ -143,7 +143,7 @@ LanguageString str_settings = {
 	{CFG_LANGUAGE_JP, 0},
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Ustawienia"},
 	{CFG_LANGUAGE_FR, 0},
 };
 LanguageString str_download_data = {
@@ -152,7 +152,7 @@ LanguageString str_download_data = {
 	{CFG_LANGUAGE_JP, 0},
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Pobierz swoje dane"},
 	{CFG_LANGUAGE_FR, 0},
 };
 LanguageString str_delete_data = {
@@ -161,7 +161,7 @@ LanguageString str_delete_data = {
 	{CFG_LANGUAGE_JP, 0},
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Usuń swoje dane"},
 	{CFG_LANGUAGE_FR, 0},
 };
 LanguageString str_back = {
@@ -170,7 +170,7 @@ LanguageString str_back = {
 	{CFG_LANGUAGE_JP, 0},
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Cofnij"},
 	{CFG_LANGUAGE_FR, 0},
 };
 
