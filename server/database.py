@@ -89,6 +89,13 @@ class Database:
 			);
 			CREATE UNIQUE INDEX IF NOT EXISTS research_unique ON research (title_id, reason_id);
 			ALTER TABLE research ADD COLUMN IF NOT EXISTS count INT NOT NULL DEFAULT 1;
+
+			CREATE TABLE IF NOT EXISTS titles (
+				title_id INT NOT NULL,
+				title_name VARCHAR(50) NOT NULL,
+				count INT NOT NULL DEFAULT 1
+			);
+			CREATE UNIQUE INDEX IF NOT EXISTS titles_unique ON titles (title_id, title_name);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -123,7 +130,7 @@ class Database:
 		finally:
 			self.con().commit()
 
-	def store_outbox(self, mac, msg):
+	def store_outbox(self, mac, msg, title_name):
 		ret = None
 		try:
 			with self.con().cursor() as cur:
@@ -144,6 +151,11 @@ class Database:
 				ON CONFLICT (mac, message_id) DO UPDATE SET
 					message = %s, time = %s, send_count = %s, modified = false
 				""", (msg.title_id, msg.message_id, mac, msg.data, curtime, msg.send_count, msg.data, curtime, msg.send_count))
+				if title_name is not NULL:
+					cur.execute("""
+					INSERT INTO titles (title_id, title_name) VALUES (%s, %s)
+					ON CONFLICT (title_id, title_name) DO UPTDATE SET count = count + 1
+					""", (msg.title_id, title_name))
 				if msg.send_method not in (0, 1, 3):
 					self.store_research(msg.title_id, f'Unknown msg send_method {msg.send_method}', REASON_ID_SEND_METHOD)
 				if msg.send_count not in (0, 1, 0xFF):

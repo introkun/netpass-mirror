@@ -20,7 +20,7 @@ from threading import Timer
 from database import Database
 from config import Config
 from socketserver import ThreadingMixIn
-import struct, traceback
+import struct, traceback, base64
 
 # From https://stackoverflow.com/a/38317060
 class RepeatedTimer(object):
@@ -93,8 +93,21 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		msg = RawMessage(buf)
 		if not msg.validate():
 			return self.write_response(400, "Bad Message")
+		title_name = NULL
+		try:
+			title_name = self.headers['3ds-title-name']
+			while len(title_name) % 4 > 0: title_name += "="
+			title_buf = base64.b64decode(title_name, b'+-')
+			try:
+				title_name = title_buf.decode("utf-16").strip("\x00").split("\x00")[0]
+			except:
+				title_name = title_buf.decode("utf-8").strip("\x00").split("\x00")[0]
+			if len(title_name) > 50:
+				title_name = NULL
+		except:
+			title_name = NULL
 		# now we have to store the new outbox message
-		newmsg = database.store_outbox(mac, msg)
+		newmsg = database.store_outbox(mac, msg, title_name)
 		if not newmsg:
 			return self.write_response(204, "Success")
 		self.send_response(200)
