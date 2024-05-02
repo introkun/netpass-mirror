@@ -27,7 +27,7 @@ LanguageString str_loading = {
 	{CFG_LANGUAGE_ES, "Cargando    "},
 	{CFG_LANGUAGE_RU, "Загрузка    "},
 	{CFG_LANGUAGE_PL, "Ładowanie    "},
-	{CFG_LANGUAGE_FR, "Chargement	"},
+	{CFG_LANGUAGE_FR, "Chargement    "},
 };
 LanguageString str_libcurl_error = {
 	{CFG_LANGUAGE_EN, "libCURL error (%d): %s"},
