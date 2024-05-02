@@ -7,6 +7,7 @@ RUN apt install -y libpq-dev
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY server .
+COPY version.env .
 
 EXPOSE 8080
 

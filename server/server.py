@@ -20,7 +20,8 @@ from threading import Timer
 from database import Database
 from config import Config
 from socketserver import ThreadingMixIn
-import datetime, struct, traceback, base64
+from dotenv import dotenv_values
+import datetime, struct, traceback, base64, semver
 
 # From https://stackoverflow.com/a/38317060
 class RepeatedTimer(object):
@@ -40,7 +41,7 @@ class RepeatedTimer(object):
 
 	def start(self):
 		if not self.is_running:
-			self.function(*self.args, **self.kwargs)
+			#self.function(*self.args, **self.kwargs)
 			self._timer = Timer(self.interval, self._run)
 			self._timer.start()
 			self.is_running = True
@@ -50,6 +51,17 @@ class RepeatedTimer(object):
 		self.is_running = False
 
 class StreetPassServer(BaseHTTPRequestHandler):
+	_ver = None
+	def get_version(self):
+		if self._ver is not None:
+			return self._ver
+		version = dotenv_values(config.get("version_env"))
+		self._ver = semver.Version(
+			major = version["NETPASS_VERSION_MAJOR"],
+			minor = version["NETPASS_VERSION_MINOR"],
+			patch = version["NETPASS_VERSION_MICRO"],
+		)
+		return self._ver
 	def write_response(self, httpcode, errmsg):
 		self.send_response(httpcode)
 		self.send_header("Content-Type", "text/plain");
@@ -60,8 +72,14 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def pong(self):
 		self.send_response(200)
 		self.send_header("Content-Type", "text/plain")
-		if self.headers["3ds-netpass-version"] == "v0.2.3":
-			self.send_header("3ds-netpass-msg", "New version available, please update!")
+		try:
+			newest_ver = self.get_version()
+			client_ver = semver.Version.parse(self.headers["3ds-netpass-version"][1:])
+			if client_ver.compare(newest_ver) < 0:
+				self.send_header("3ds-netpass-msg", f'New version available (v{newest_ver}), please update!')
+		except:
+			print(traceback.format_exc())
+			pass
 		self.end_headers()
 		self.write_str("pong")
 	def get_mac(self):

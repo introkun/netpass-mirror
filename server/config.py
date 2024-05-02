@@ -26,7 +26,8 @@ class Config:
 			"host": "localhost",
 			"port": 5432,
 		},
-		"num_locations": 3
+		"num_locations": 3,
+		"version_env": "./version.env"
 	}
 	def __init__(self, filepath):
 		with open(filepath, "r") as f:
