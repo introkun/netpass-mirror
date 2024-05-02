@@ -259,9 +259,20 @@ Result addStreetpassMessage(u8* msgbuf) {
 		getCurrentTime(&(msgheader->received));
 	}
 
+	// first fetch how large the boxbuf is
+	u8* boxbuf = malloc(sizeof(CecBoxInfoHeader));
+	if (!boxbuf) {
+		return -3;
+	}
+	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, sizeof(CecBoxInfoHeader), boxbuf);
+	if (R_FAILED(res)) {
+		res = -2; // cecd fild not found
+		goto cleanup_box;
+	}
 	// let's open the box buffer to see if we can even accept a new message, or if the message has already been accepted
-	const int max_boxbuf_size = sizeof(CecBoxInfoHeader) + sizeof(CecMessageHeader)*10;
-	u8* boxbuf = malloc(max_boxbuf_size);
+	int max_boxbuf_size = sizeof(CecBoxInfoHeader) + sizeof(CecMessageHeader) * ((CecBoxInfoHeader*)boxbuf)->max_num_messages;
+	free(boxbuf);
+	boxbuf = malloc(max_boxbuf_size);
 	if (!boxbuf) {
 		return -3;
 	}

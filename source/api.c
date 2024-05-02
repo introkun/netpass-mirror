@@ -20,6 +20,7 @@
 #include "cecd.h"
 #include "base64.h"
 #include <stdlib.h>
+#include <string.h>
 
 int location = -1;
 
@@ -47,6 +48,7 @@ Result uploadOutboxes(void) {
 				printf("ERROR: failed to allocate message\n");
 				return -1;
 			}
+			memset(msg, 0, 100);
 			res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 100, msg);
 			if (R_FAILED(res)) {
 				free(msg);
