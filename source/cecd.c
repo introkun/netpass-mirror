@@ -246,6 +246,77 @@ Handle cecdGetServHandle(void) {
 	return cecdHandle;
 }
 
+Result updateStreetpassOutbox(u8* msgbuf) {
+	Result res = 0;
+	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
+	// sanity checks
+	if (msgheader->magic != 0x6060) return -1; // bad magic
+	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return -1;
+	if (msgheader->message_size > MAX_MESSAGE_SIZE) return -1; // prooobably too large
+
+	// first fetch how large the boxbuf is
+	u8* boxbuf = malloc(sizeof(CecBoxInfoHeader));
+	if (!boxbuf) {
+		return -3;
+	}
+	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoHeader), boxbuf);
+	if (R_FAILED(res)) {
+		res = -2; // cecd fild not found
+		goto cleanup_box;
+	}
+	// let's open the box buffer to update the metadata in there
+	int max_boxbuf_size = sizeof(CecBoxInfoHeader) + sizeof(CecMessageHeader) * ((CecBoxInfoHeader*)boxbuf)->max_num_messages;
+	free(boxbuf);
+	boxbuf = malloc(max_boxbuf_size);
+	if (!boxbuf) {
+		return -3;
+	}
+	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_OUTBOX_INFO, max_boxbuf_size, boxbuf);
+	if (R_FAILED(res)) {
+		res = -2; // cecd fild not found
+		goto cleanup_box;
+	}
+	CecBoxInfoHeader* boxheader = (CecBoxInfoHeader*)boxbuf;
+	CecMessageHeader* boxmsgs = (CecMessageHeader*)(boxbuf + sizeof(CecBoxInfoHeader));
+
+	int found_i = -1;
+	for (int i = 0; i < boxheader->num_messages; i++) {
+		if (0 == memcmp(boxmsgs[i].message_id, msgheader->message_id, sizeof(CecMessageId))){
+			found_i = i;
+			break;
+		}
+	}
+	if (found_i < 0) {
+		res = -4; // not found
+		goto cleanup_box;
+	}
+	memcpy(&boxmsgs[found_i], msgheader, sizeof(CecMessageHeader));
+
+	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_OUTBOX_INFO, boxheader->file_size, boxbuf);
+	if (R_FAILED(res)) {
+		res = -2; // cecd fild not found
+		goto cleanup_box;
+	}
+	free(boxbuf);
+
+	// now let's fetch the hmac and store the update
+	CecMBoxInfoHeader mboxheader;
+	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
+	if (R_FAILED(res)) return -2;
+
+	// great,we have all the bits we need now
+	res = cecdWriteMessageWithHMAC(
+		msgheader->title_id, true,
+		msgheader->message_size, msgbuf,
+		msgheader->message_id, mboxheader.hmac_key);
+	if (R_FAILED(res)) return res;
+
+	return res;
+cleanup_box:
+	free(boxbuf);
+	return res;
+}
+
 Result addStreetpassMessage(u8* msgbuf) {
 	Result res = 0;
 	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;

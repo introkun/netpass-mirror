@@ -90,10 +90,7 @@ Result uploadOutboxes(void) {
 				CecMessageHeader* h = (CecMessageHeader*)msg;
 				if (reply->ptr[0] < h->send_count) {
 					h->send_count = reply->ptr[0];
-					res = cecdWriteMessage(
-						h->title_id, true,
-						h->message_size, msg,
-						h->message_id);
+					res = updateStreetpassOutbox(msg);
 					if (R_FAILED(res)) {
 						curlFreeHandler(reply->offset);
 						free(msg);
