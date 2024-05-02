@@ -140,7 +140,7 @@ LanguageString str_exit = {
 LanguageString str_settings = {
 	{CFG_LANGUAGE_EN, "Settings"},
 	{CFG_LANGUAGE_DE, "Einstellungen"},
-	{CFG_LANGUAGE_JP, 0},
+	{CFG_LANGUAGE_JP, "設定"},
 	{CFG_LANGUAGE_ES, "Ajustes"},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
@@ -149,7 +149,7 @@ LanguageString str_settings = {
 LanguageString str_download_data = {
 	{CFG_LANGUAGE_EN, "Download personal data"},
 	{CFG_LANGUAGE_DE, "Persönliche Daten herunterladen"},
-	{CFG_LANGUAGE_JP, 0},
+	{CFG_LANGUAGE_JP, "サーバーから自分のデータをダウンロードする"},
 	{CFG_LANGUAGE_ES, "Descargar datos personales"},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
@@ -158,7 +158,7 @@ LanguageString str_download_data = {
 LanguageString str_delete_data = {
 	{CFG_LANGUAGE_EN, "Delete personal data"},
 	{CFG_LANGUAGE_DE, "Persönliche Daten löschen"},
-	{CFG_LANGUAGE_JP, 0},
+	{CFG_LANGUAGE_JP, "サーバーから自分のデータを消去する"},
 	{CFG_LANGUAGE_ES, "Borrar datos personales"},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
@@ -167,7 +167,7 @@ LanguageString str_delete_data = {
 LanguageString str_back = {
 	{CFG_LANGUAGE_EN, "Back"},
 	{CFG_LANGUAGE_DE, "Zurück"},
-	{CFG_LANGUAGE_JP, 0},
+	{CFG_LANGUAGE_JP, "戻る"},
 	{CFG_LANGUAGE_ES, "Atrás"},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
