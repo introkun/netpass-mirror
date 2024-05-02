@@ -81,7 +81,7 @@ LanguageString str_goto_train_station = {
 	{CFG_LANGUAGE_ES, "Ir a la Estación de Tren"},
 	{CFG_LANGUAGE_RU, "Отправиться на Вокзал"},
 	{CFG_LANGUAGE_PL, "Idź na Stacje Kolejową"},
-	{CFG_LANGUAGE_FR, "Se rendre à la gare"},
+	{CFG_LANGUAGE_FR, "Se rendre à la Gare"},
 };
 LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_EN, "You are at the Train Station"},
@@ -90,7 +90,7 @@ LanguageString str_at_train_station = {
 	{CFG_LANGUAGE_ES, "Estás en la Estación de Tren"},
 	{CFG_LANGUAGE_RU, "Вы находитесь на Вокзале"},
 	{CFG_LANGUAGE_PL, "Jesteś na Stacji Kolejowej"},
-	{CFG_LANGUAGE_FR, "Vous êtes à la gare"},
+	{CFG_LANGUAGE_FR, "Vous êtes à la Gare"},
 };
 LanguageString str_goto_plaza = {
 	{CFG_LANGUAGE_EN, "Go to Plaza"},
@@ -99,7 +99,7 @@ LanguageString str_goto_plaza = {
 	{CFG_LANGUAGE_ES, "Ir a la Plaza"},
 	{CFG_LANGUAGE_RU, "Отправиться на Площадь"},
 	{CFG_LANGUAGE_PL, "Idź na Rynek"},
-	{CFG_LANGUAGE_FR, "Se rendre à la place"},
+	{CFG_LANGUAGE_FR, "Se rendre à la Place"},
 };
 LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_EN, "You are at the Plaza"},
@@ -108,7 +108,7 @@ LanguageString str_at_plaza = {
 	{CFG_LANGUAGE_ES, "Estás en la Plaza"},
 	{CFG_LANGUAGE_RU, "Вы находитесь на Площади"},
 	{CFG_LANGUAGE_PL, "Jesteś na Rynku"},
-	{CFG_LANGUAGE_FR, "Vous êtes à la place"},
+	{CFG_LANGUAGE_FR, "Vous êtes à la Place"},
 };
 LanguageString str_goto_mall = {
 	{CFG_LANGUAGE_EN, "Go to Mall"},
@@ -117,7 +117,7 @@ LanguageString str_goto_mall = {
 	{CFG_LANGUAGE_ES, "Ir al Centro Comercial"},
 	{CFG_LANGUAGE_RU, "Отправиться в Торговый Центр"},
 	{CFG_LANGUAGE_PL, "Idź do Centrum Handlowego"},
-	{CFG_LANGUAGE_FR, "Se rendre au supermarché"},
+	{CFG_LANGUAGE_FR, "Se rendre au Supermarché"},
 };
 LanguageString str_at_mall = {
 	{CFG_LANGUAGE_EN, "You are at the Mall"},
@@ -126,7 +126,7 @@ LanguageString str_at_mall = {
 	{CFG_LANGUAGE_ES, "Estás en el Centro Comercial"},
 	{CFG_LANGUAGE_RU, "Вы находитесь в Торговом Центре"},
 	{CFG_LANGUAGE_PL, "Jesteś w Centrum Handlowym"},
-	{CFG_LANGUAGE_FR, "Vous êtes au supermarché"},
+	{CFG_LANGUAGE_FR, "Vous êtes au Supermarché"},
 };
 LanguageString str_exit = {
 	{CFG_LANGUAGE_EN, "Exit"},
@@ -144,7 +144,7 @@ LanguageString str_settings = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, "Paramètres"},
 };
 LanguageString str_download_data = {
 	{CFG_LANGUAGE_EN, "Download personal data"},
@@ -153,7 +153,7 @@ LanguageString str_download_data = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, "Télécharger les données personnelles"},
 };
 LanguageString str_delete_data = {
 	{CFG_LANGUAGE_EN, "Delete personal data"},
@@ -162,7 +162,7 @@ LanguageString str_delete_data = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, "Supprimer les données personelles"},
 };
 LanguageString str_back = {
 	{CFG_LANGUAGE_EN, "Back"},
@@ -171,7 +171,7 @@ LanguageString str_back = {
 	{CFG_LANGUAGE_ES, 0},
 	{CFG_LANGUAGE_RU, 0},
 	{CFG_LANGUAGE_PL, 0},
-	{CFG_LANGUAGE_FR, 0},
+	{CFG_LANGUAGE_FR, "Retour"},
 };
 
 static u8 _language;
