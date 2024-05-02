@@ -143,7 +143,7 @@ LanguageString str_settings = {
 	{CFG_LANGUAGE_JP, "設定"},
 	{CFG_LANGUAGE_ES, "Ajustes"},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Ustawienia"},
 	{CFG_LANGUAGE_FR, "Paramètres"},
 };
 LanguageString str_download_data = {
@@ -152,7 +152,7 @@ LanguageString str_download_data = {
 	{CFG_LANGUAGE_JP, "サーバーから自分のデータをダウンロードする"},
 	{CFG_LANGUAGE_ES, "Descargar datos personales"},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Pobierz swoje dane"},
 	{CFG_LANGUAGE_FR, "Télécharger les données personnelles"},
 };
 LanguageString str_delete_data = {
@@ -161,7 +161,7 @@ LanguageString str_delete_data = {
 	{CFG_LANGUAGE_JP, "サーバーから自分のデータを消去する"},
 	{CFG_LANGUAGE_ES, "Borrar datos personales"},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Usuń swoje dane"},
 	{CFG_LANGUAGE_FR, "Supprimer les données personelles"},
 };
 LanguageString str_back = {
@@ -170,7 +170,7 @@ LanguageString str_back = {
 	{CFG_LANGUAGE_JP, "戻る"},
 	{CFG_LANGUAGE_ES, "Atrás"},
 	{CFG_LANGUAGE_RU, 0},
-	{CFG_LANGUAGE_PL, 0},
+	{CFG_LANGUAGE_PL, "Cofnij"},
 	{CFG_LANGUAGE_FR, "Retour"},
 };
 
