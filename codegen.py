@@ -8,7 +8,8 @@ SRCDIR = basepath + "/" + SRCDIR
 DESTDIR = basepath + "/" + DESTDIR
 
 language_map = {
-	"ja": "jp"
+	"ja": "jp",
+	"zh_Hant": "tw",
 }
 
 def l(s):
