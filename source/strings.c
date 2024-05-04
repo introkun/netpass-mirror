@@ -39,8 +39,12 @@ void stringsInit(void) {
 }
 
 const char* _s(LanguageString s) {
+	return string_in_language(s, _language);
+}
+
+const char* string_in_language(LanguageString s, int lang) {
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		if (s[i].language == _language && s[i].text) {
+		if (s[i].language == lang && s[i].text) {
 			return s[i].text;
 		}
 	}

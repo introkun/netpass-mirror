@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import yaml
+from dotenv import dotenv_values
 
 class Config:
 	default_yaml = {
@@ -32,6 +33,7 @@ class Config:
 	def __init__(self, filepath):
 		with open(filepath, "r") as f:
 			self.yaml = yaml.safe_load(f)
+		default_yaml["num_locations"] = dotenv_values(self.get("version_env"))["NETPASS_NUM_LOCATIONS"]
 	def get(self, param):
 		this_yaml = self.yaml
 		this_default_yaml = self.default_yaml

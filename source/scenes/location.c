@@ -28,10 +28,13 @@ typedef struct {
 	int cursor;
 } N(DataStruct);
 
-LanguageString* N(locations)[3] = {
+LanguageString* N(locations)[NUM_LOCATIONS] = {
 	&str_at_train_station,
 	&str_at_plaza,
 	&str_at_mall,
+	&str_at_beach,
+	&str_at_arcade,
+	&str_at_catcafe,
 };
 
 void N(init)(Scene* sc) {

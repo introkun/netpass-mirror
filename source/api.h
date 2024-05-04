@@ -24,6 +24,8 @@
 #define BASE_URL "https://streetpass.sorunome.de"
 //#define BASE_URL "http://10.6.42.119:8080"
 
+#define NUM_LOCATIONS 6
+
 #define lambda(return_type, function_body) \
 ({ \
 	return_type __fn__ function_body \

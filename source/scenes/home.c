@@ -22,10 +22,12 @@
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 
+#define NUM_ENTRIES NUM_LOCATIONS + 2
+
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_home;
-	C2D_Text g_entries[5];
+	C2D_Text g_entries[NUM_ENTRIES];
 	int cursor;
 } N(DataStruct);
 
@@ -38,20 +40,23 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_goto_plaza);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_goto_mall);
-	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_settings);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_exit);
+	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_goto_beach);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_goto_arcade);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_goto_catcafe);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_exit);
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_home, C2D_AlignLeft, 10, 10, 0, 1, 1);
-	for (int i = 0; i < 5; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
+	for (int i = 0; i < NUM_ENTRIES; i++) {
+		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 35 + i*14, 0, 0.5, 0.5);
 	}
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
-	int x = 10;
-	int y = 10 + (_data->cursor + 1)*25 + 5;
-	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+	int x = 22;
+	int y = 35 + _data->cursor*14 + 3;
+	C2D_DrawTriangle(x, y, clr, x, y +10, clr, x + 8, y + 5, clr, 1);
 }
 
 void N(exit)(Scene* sc) {
@@ -67,13 +72,13 @@ SceneResult N(process)(Scene* sc) {
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > 4) _data->cursor = 4;
+		if (_data->cursor > (NUM_ENTRIES-1)) _data->cursor = (NUM_ENTRIES-1);
 		if (kDown & KEY_A) {
-			if (_data->cursor == 3) {
+			if (_data->cursor == NUM_ENTRIES-2) {
 				sc->next_scene = getSettingsScene();
 				return scene_push;
 			}
-			if (_data->cursor == 4) return scene_stop;
+			if (_data->cursor == NUM_ENTRIES-1) return scene_stop;
 			// load location scene
 			location = _data->cursor;
 			sc->next_scene = getLoadingScene(getLocationScene(location), lambda(void, (void) {
