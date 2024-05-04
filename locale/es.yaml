@@ -20,5 +20,7 @@ str_goto_beach: 'Ir a la Playa'
 str_at_beach: 'Estás en la Playa'
 str_goto_arcade: 'Ir al Arcade'
 str_at_arcade: 'Estás en el Arcade'
-str_goto_catcafe: ''
-str_at_catcafe: ''
+str_goto_catcafe: 'Ir al Café de Gatos'
+str_at_catcafe: 'Estás en el Café de Gatos'
+str_system_language: Idioma del Sistema
+str_language_pick: Idioma
