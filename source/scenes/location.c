@@ -25,6 +25,7 @@ typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_location;
 	C2D_Text g_entries[2];
+	C2D_SpriteSheet spr;
 	int cursor;
 } N(DataStruct);
 
@@ -45,10 +46,15 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[sc->data]);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_exit);
+	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) return;
+	if (C2D_SpriteSheetCount(_data->spr) > sc->data) {
+		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, sc->data);
+		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
+	}
 	C2D_DrawText(&_data->g_location, C2D_AlignLeft, 10, 10, 0, 1, 1);
 	for (int i = 0; i < 2; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
@@ -62,6 +68,7 @@ void N(render)(Scene* sc) {
 void N(exit)(Scene* sc) {
 	if (_data) {
 		C2D_TextBufDelete(_data->g_staticBuf);
+		C2D_SpriteSheetFree(_data->spr);
 		free(_data);
 	}
 }
