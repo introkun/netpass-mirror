@@ -89,6 +89,7 @@ Scene* getConnectionErrorScene(Result res) {
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)res;
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }

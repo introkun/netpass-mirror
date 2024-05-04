@@ -91,6 +91,7 @@ Scene* getLoadingScene(Scene* next_scene, void(*func)(void)) {
 	scene->process = N(process);
 	scene->next_scene = next_scene;
 	scene->data = (u32)func;
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }

@@ -66,6 +66,8 @@ void N(exit)(Scene* sc) {
 	}
 }
 
+Result N(location_res);
+
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
@@ -80,9 +82,16 @@ SceneResult N(process)(Scene* sc) {
 			}
 			if (_data->cursor == NUM_ENTRIES-1) return scene_stop;
 			// load location scene
+			if (_data->cursor == config.last_location) {
+				sc->next_scene = getInfoScene(str_no_location_twice);
+				return scene_push;
+			}
 			location = _data->cursor;
-			sc->next_scene = getLoadingScene(getLocationScene(location), lambda(void, (void) {
-				setLocation(location);
+			sc->next_scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+				if (R_FAILED(N(location_res))) return getHomeScene();
+				return getLocationScene(location);
+			})), lambda(void, (void) {
+				N(location_res) = setLocation(location);
 				triggerDownloadInboxes();
 			}));
 			return scene_switch;
@@ -99,6 +108,7 @@ Scene* getHomeScene(void) {
 	scene->render = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }

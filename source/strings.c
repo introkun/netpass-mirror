@@ -17,6 +17,7 @@
  */
 
 #include "strings.h"
+#include "config.h"
 
 static u8 _language;
 
@@ -24,7 +25,11 @@ C2D_Font font_default;
 C2D_Font font_local;
 
 void stringsInit(void) {
-	CFGU_GetSystemLanguage(&_language);
+	if (config.language == -1) {
+		CFGU_GetSystemLanguage(&_language);
+	} else {
+		_language = config.language;
+	}
 	printf("Got language %d\n", _language);
 	font_default = C2D_FontLoadSystem(CFG_REGION_USA);
 	if (_language == CFG_LANGUAGE_ZH) {

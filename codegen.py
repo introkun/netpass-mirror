@@ -40,11 +40,17 @@ typedef const struct {
 } LanguageString[NUM_LANGUAGES];
 
 extern const int all_languages[];
+extern const char* all_languages_str[];
 """
 
 outfile += f"const int all_languages[{len(translations.keys())}] = {{"
 for lang in translations.keys():
 	outfile += f"CFG_LANGUAGE_{l(lang)}, "
+outfile += "};\n"
+
+outfile += f"const char* all_languages_str[{len(translations.keys())}] = {{"
+for lang in translations.keys():
+	outfile += f"\"{l(lang)}\", "
 outfile += "};\n"
 
 for key in translations["en"].keys():

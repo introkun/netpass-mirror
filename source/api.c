@@ -19,6 +19,7 @@
 #include "api.h"
 #include "cecd.h"
 #include "base64.h"
+#include "config.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -175,6 +176,7 @@ cleanup:
 
 Result setLocation(int location) {
 	Result res;
+	if (config.last_location == location) return -1;
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0);
@@ -182,6 +184,8 @@ Result setLocation(int location) {
 		printf("ERROR: Failed to enter location %d: %ld\n", location, res);
 		return res;
 	}
+	config.last_location = location;
+	configWrite();
 	printf("Entered location %d!\n", location);
 	return res;
 }

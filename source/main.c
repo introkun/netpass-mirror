@@ -23,6 +23,7 @@
 #include "api.h"
 #include "cecd.h"
 #include "curl-handler.h"
+#include "config.h"
 
 int main() {
 	gfxInitDefault();
@@ -30,6 +31,7 @@ int main() {
 	amInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+	configInit();
 	stringsInit();
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
@@ -95,6 +97,10 @@ int main() {
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(top, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
 		C2D_SceneBegin(top);
+		if (scene->is_popup) {
+			scene->pop_scene->render(scene->pop_scene);
+			C2D_Flush();
+		}
 		scene->render(scene);
 		C3D_FrameEnd(0);
 		svcSleepThread(1);

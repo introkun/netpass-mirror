@@ -93,6 +93,7 @@ Scene* getLocationScene(int location) {
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = location;
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }

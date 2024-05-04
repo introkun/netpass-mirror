@@ -88,6 +88,7 @@ Scene* getSettingsScene(void) {
 	scene->render = N(render);
 	scene->exit = N(exit);
 	scene->process = N(process);
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }
