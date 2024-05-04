@@ -23,3 +23,5 @@ str_goto_arcade: 'Пойти в игровой зал'
 str_at_arcade: 'Вы в игровом зале'
 str_goto_catcafe: 'Пойти в котокафе'
 str_at_catcafe: 'Вы в котокафе'
+str_system_language: Язык системы
+str_language_pick: Язык
