@@ -22,3 +22,5 @@ str_goto_arcade: Go to the Arcade
 str_at_arcade: You are at the Arcade
 str_goto_catcafe: Go to the Cat Café
 str_at_catcafe: You are at the Cat Café
+str_system_language: System Language
+str_language_pick: Language
