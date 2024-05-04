@@ -349,7 +349,7 @@ Result addStreetpassMessage(u8* msgbuf) {
 	}
 	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, max_boxbuf_size, boxbuf);
 	if (R_FAILED(res)) {
-		res = -2; // cecd fild not found
+		res = -2; // cecd file not found
 		goto cleanup_box;
 	}
 	CecBoxInfoHeader* boxheader = (CecBoxInfoHeader*)boxbuf;
@@ -365,38 +365,93 @@ Result addStreetpassMessage(u8* msgbuf) {
 		res = -5; // box already full
 		goto cleanup_box;
 	}
-	// ok, let's add the message to the box
-	boxheader->num_messages++;
-	boxheader->file_size += sizeof(CecMessageHeader);
-	memcpy(&boxmsgs[boxheader->box_size], msgbuf, sizeof(CecMessageHeader));
-	boxheader->box_size += msgheader->message_size;
-	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_INBOX_INFO, boxheader->file_size, boxbuf);
+
+	// let's see if the message is too large for this box
+	if (boxheader->max_message_size < msgheader->message_size) {
+		res = -1;
+		goto cleanup_box;
+	}
+
+	// now let's check if the box would overflow
+	if (boxheader->box_size + msgheader->message_size > boxheader->max_box_size) {
+		res = -1;
+		goto cleanup_box;
+	}
+
+	// cool, the checks passed. Let's free the buffer for now, add our message, and then check if we gotta update the box
+	free(boxbuf);
+
+	{
+		// box stuffs is done, let's fetch the mbox, to fetch the hmac key
+		CecMBoxInfoHeader mboxheader;
+		res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
+		if (R_FAILED(res)) return -2;
+
+		msgheader->unopened = true;
+		msgheader->new_flag = true;
+		// great,we have all the bits we need now
+		res = cecdWriteMessageWithHMAC(
+			msgheader->title_id, false,
+			msgheader->message_size, msgbuf,
+			msgheader->message_id, mboxheader.hmac_key);
+		if (R_FAILED(res)) return res;
+
+		// check if the message was actually added...
+		res = cecdReadMessage(msgheader->title_id, false, 0, 0, msgheader->message_id);
+		if (R_FAILED(res)) return res;
+	}
+
+	// let's see if we gotta update the metadata
+	boxbuf = malloc(max_boxbuf_size);
+	if (!boxbuf) {
+		return -3;
+	}
+	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_INBOX_INFO, max_boxbuf_size, boxbuf);
 	if (R_FAILED(res)) {
 		res = -2; // cecd fild not found
 		goto cleanup_box;
 	}
-	free(boxbuf);
 
-	// box stuffs is done, let's fetch the mbox, to fetch the hmac key
-	CecMBoxInfoHeader mboxheader;
-	res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-	if (R_FAILED(res)) return -2;
+	boxheader = (CecBoxInfoHeader*)boxbuf;
+	boxmsgs = (CecMessageHeader*)(boxbuf + sizeof(CecBoxInfoHeader));
+	bool found_box = false;
+	for (int i = 0; i < boxheader->num_messages; i++) {
+		if (0 == memcmp(boxmsgs[i].message_id, msgheader->message_id, sizeof(CecMessageId))){
+			found_box = true;
+			break;
+		}
+	}
+	
+	if (!found_box) {
+		// ok, let's add the message to the box
+		boxheader->num_messages++;
+		boxheader->file_size += sizeof(CecMessageHeader);
+		memcpy(&boxmsgs[boxheader->box_size], msgbuf, sizeof(CecMessageHeader));
+		boxheader->box_size += msgheader->message_size;
+		res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_INBOX_INFO, boxheader->file_size, boxbuf);
+		if (R_FAILED(res)) {
+			res = -2; // cecd fild not found
+			goto cleanup_box;
+		}
+		free(boxbuf);
+	}
 
-	// great,we have all the bits we need now
-	res = cecdWriteMessageWithHMAC(
-		msgheader->title_id, false,
-		msgheader->message_size, msgbuf,
-		msgheader->message_id, mboxheader.hmac_key);
-	if (R_FAILED(res)) return res;
 
-	// now set the green notification dot
-	getCurrentTime(&(mboxheader.last_received));
-	mboxheader.flag3 = 1; // set the new notification dot
-	mboxheader.flag4 = 1;
-	mboxheader.flag5 = 1;
-	mboxheader.flag6 = 1;
-	res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
-	if (R_FAILED(res)) return -2;
+	{
+		// now set the green notification dot
+		// gotta re-fetch the mbox header, in case it changed
+		CecMBoxInfoHeader mboxheader;
+		res = cecdOpenAndRead(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
+		if (R_FAILED(res)) return -2;
+
+		getCurrentTime(&(mboxheader.last_received));
+		mboxheader.flag3 = 1; // set the new notification dot
+		//mboxheader.flag4 = 1;
+		//mboxheader.flag5 = 1;
+		//mboxheader.flag6 = 1;
+		res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), (u8*)&mboxheader);
+		if (R_FAILED(res)) return -2;
+	}
 
 	return res;
 cleanup_box:
