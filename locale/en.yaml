@@ -15,3 +15,10 @@ str_settings: Settings
 str_download_data: Download personal data
 str_delete_data: Delete personal data
 str_back: Back
+str_language: English
+str_goto_beach: Go to the Beach
+str_at_beach: You are at the Beach
+str_goto_arcade: Go to the Arcade
+str_at_arcade: You are at the Arcade
+str_goto_catcafe: You are at the Cat Café
+str_at_catcafe: You are at the Cat Café
