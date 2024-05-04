@@ -14,5 +14,11 @@ str_at_mall: 'Vous êtes au supermarché'
 str_exit: 'Quitter l''application'
 str_settings: 'Paramètres'
 str_download_data: 'Téléchargez vos données personnelles'
-str_delete_data: 'Effacer vos données personnelles.'
-str_back: ''
+str_delete_data: 'Effacer vos données personnelles'
+str_back: 'Retour'
+str_goto_beach: Aller à la plage
+str_at_beach: Vous êtes à la plage
+str_goto_arcade: Aller à l'arcade
+str_at_arcade: Vous êtes à l'arcade
+str_goto_catcafe: Vous êtes au café des chats
+str_at_catcafe: Vous êtes au café des chats
