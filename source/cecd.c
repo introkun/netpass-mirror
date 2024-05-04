@@ -39,8 +39,8 @@ void getCurrentTime(CecTimestamp* cts) {
 	cts->second = ts->tm_sec;
 	cts->millisecond = 0;
 	cts->year = ts->tm_year + 1900;
-	cts->month = ts->tm_mon + 1;
-	cts->day = ts->tm_mday + 1;
+	cts->month = ts->tm_mon;
+	cts->day = ts->tm_mday;
 	cts->weekday = 0; // TODO
 }
 
