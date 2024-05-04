@@ -1,5 +1,7 @@
 # NetPass: a new way to experience StreetPass
 
+[![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
+
 ![qr code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png)  
 Scan QR code to download!
 
@@ -12,6 +14,9 @@ Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you ca
 The source code of this project is licensed under GPLv3 or later. See the included `LICENSE`.
 
 Other assets, such as images and sounds, are licensed under CC-BY-NC. See the included `LICENSE-assets`.
+
+## Translations
+If you want to contribute to translations, we are doing that on [our weblate](https://weblate.sorunome.de/projects/netpass)!
 
 ## Prerequisites
 
@@ -28,7 +33,13 @@ In other words, you'll need to run the following command in a Terminal/command p
 dkp-pacman -S 3ds-dev 3ds-curl
 ```
 
-Furthermore you need to have `ffmpeg` installed.
+Furthermore you need to have `ffmpeg` and `python` and `python-pyyaml` installed.
+
+Be sure to run `make codegen` first.
+```bash
+make codegen
+make
+```
 
 ### Additional prerequisites to build the `.CIA`
  - Makerom: You need the `makerom` executable in your `$PATH`

@@ -18,32 +18,10 @@
 
 #pragma once
 #include <3ds.h>
+#pragma once
+
 #include <citro2d.h>
-
-#define NUM_LANGUAGES 7
-
-typedef const struct {
-	const CFG_Language language;
-	const char* text;
-} LanguageString[NUM_LANGUAGES];
-
-extern LanguageString str_loading;
-extern LanguageString str_libcurl_error;
-extern LanguageString str_libcurl_date_and_time;
-extern LanguageString str_httpstatus_error;
-extern LanguageString str_3ds_error;
-extern LanguageString str_at_home;
-extern LanguageString str_goto_train_station;
-extern LanguageString str_at_train_station;
-extern LanguageString str_goto_plaza;
-extern LanguageString str_at_plaza;
-extern LanguageString str_goto_mall;
-extern LanguageString str_at_mall;
-extern LanguageString str_exit;
-extern LanguageString str_settings;
-extern LanguageString str_download_data;
-extern LanguageString str_delete_data;
-extern LanguageString str_back;
+#include "../codegen/lang_strings.h"
 
 void stringsInit(void);
 const char* _s(LanguageString s);

@@ -9,3 +9,4 @@ netpass.cia
 netpass.cia.txt
 config.yaml
 romfs/gfx
+codegen/

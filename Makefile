@@ -34,7 +34,7 @@ include $(DEVKITARM)/3ds_rules
 TARGET			:=	netpass
 OUTDIR			:=	out
 BUILD			:=	build
-SOURCES			:=	source source/scenes source/hmac_sha256
+SOURCES			:=	source codegen source/scenes source/hmac_sha256
 DATA			:=	data
 INCLUDES		:=	include
 GRAPHICS		:=	gfx
@@ -152,6 +152,7 @@ export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
 
 BANNERTOOL	?=	bannertool
 FFMPEG		?=	ffmpeg
+PYTHON		?=	python
 
 ifeq ($(strip $(NO_SMDH)),)
 	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
@@ -161,24 +162,27 @@ ifneq ($(ROMFS),)
 	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: all clean
+.PHONY: all clean translations
 
 MAKEROM		?=	makerom
 
 MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSION_MAJOR} -minor ${NETPASS_VERSION_MINOR} -micro ${NETPASS_VERSION_MICRO} -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
 
 #---------------------------------------------------------------------------------
-3dsx: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
+3dsx: codegen $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
+
+codegen:
+	@$(PYTHON) $(TOPDIR)/codegen.py
 
 cia: 3dsx
 	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_IMAGE) -vf scale=256:128 $(TOPDIR)/$(BUILD)/banner.png
 	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_AUDIO) -c:a pcm_s16le $(TOPDIR)/$(BUILD)/banner.wav
 	@$(BANNERTOOL) makebanner -i "$(TOPDIR)/$(BUILD)/banner.png" -a "$(TOPDIR)/$(BUILD)/banner.wav" -o "$(BUILD)/banner.bnr"
 	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
-	$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
+	@$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
 
 $(BUILD):
 	@mkdir -p $@
@@ -200,7 +204,7 @@ $(OUTDIR):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(GFXBUILD) $(DEPSDIR) $(OUTDIR)
+	@rm -fr $(BUILD) $(GFXBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
