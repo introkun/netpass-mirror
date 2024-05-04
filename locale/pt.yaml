@@ -1,6 +1,7 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
+str_loading: "Carregando    "
+str_libcurl_error: "Erro libCURL (%d): %s"
+str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sistema
+  esteja correto!'
 str_httpstatus_error: ''
 str_3ds_error: ''
 str_at_home: ''
