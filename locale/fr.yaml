@@ -7,13 +7,13 @@ str_3ds_error: ''
 str_at_home: 'Vous êtes chez vous.'
 str_goto_train_station: 'Aller à la gare'
 str_at_train_station: 'Vous êtes à la gare'
-str_goto_plaza: ''
-str_at_plaza: ''
+str_goto_plaza: 'Aller à la place'
+str_at_plaza: 'Vous êtes à la place'
 str_goto_mall: 'Aller au supermarché'
 str_at_mall: 'Vous êtes au supermarché'
 str_exit: 'Quitter l''application'
 str_settings: 'Paramètres'
-str_download_data: 'Téléchargez vos données personnelles'
+str_download_data: 'Télécharger vos données personnelles'
 str_delete_data: 'Effacer vos données personnelles'
 str_back: 'Retour'
 str_goto_beach: Aller à la plage
@@ -22,3 +22,4 @@ str_goto_arcade: Aller à l'arcade
 str_at_arcade: Vous êtes à l'arcade
 str_goto_catcafe: Vous êtes au café des chats
 str_at_catcafe: Vous êtes au café des chats
+str_language: Français
