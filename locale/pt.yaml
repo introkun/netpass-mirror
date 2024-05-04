@@ -23,3 +23,5 @@ str_at_arcade: Você está no fliperama
 str_goto_catcafe: Ir para o café de gatos
 str_language: Português
 str_at_catcafe: Você está no café de gatos
+str_system_language: Idioma do Console
+str_language_pick: Idioma
