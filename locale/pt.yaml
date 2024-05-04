@@ -2,17 +2,24 @@ str_loading: "Carregando    "
 str_libcurl_error: "Erro libCURL (%d): %s"
 str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sistema
   esteja correto!'
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
+str_httpstatus_error: 'Código de status HTTP %d'
+str_3ds_error: 'Erro de código 3DS %08lx'
+str_at_home: 'Você está em casa.'
+str_goto_train_station: 'Ir para a estação de trem'
+str_at_train_station: 'Você está na estação de trem'
+str_goto_plaza: 'Ir para a praça'
+str_at_plaza: 'Você está na praça'
+str_goto_mall: 'Ir para o shopping'
+str_at_mall: 'Você está no shopping'
+str_exit: 'Sair'
+str_settings: 'Configurações'
+str_download_data: 'Baixar dados pessoais'
+str_delete_data: 'Deletar dados pessoais'
+str_back: 'Voltar'
+str_goto_beach: Ir para a praia
+str_at_beach: Você está na praia
+str_goto_arcade: Ir para o fliperama
+str_at_arcade: Você está no fliperama
+str_goto_catcafe: Ir para o café de gatos
+str_language: Português
+str_at_catcafe: Você está no café de gatos
