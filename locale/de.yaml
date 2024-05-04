@@ -1,17 +1,18 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
+str_loading: "Laden    "
+str_libcurl_error: "libCURL Fehler (%d): %s"
+str_libcurl_date_and_time: 'Stelle sicher, dass die Systemszeit und -datum richtig
+  gesetzt sind!'
 str_httpstatus_error: ''
 str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
+str_at_home: 'Du bist zuhause.'
+str_goto_train_station: 'Gehe zum Bahnhof'
+str_at_train_station: 'Du bist am Bahnhof'
+str_goto_plaza: 'Gehe zum Plaza'
+str_at_plaza: 'Du bist am Plaza'
+str_goto_mall: 'Gehe zum Einkaufszentrum'
+str_at_mall: 'Du bist im Einkaufszentrum'
+str_exit: 'Verlassen'
+str_settings: 'Einstellungen'
+str_download_data: 'Persönliche Daten herunterladen'
+str_delete_data: 'Persönliche Daten löschen'
+str_back: 'Zurück'
