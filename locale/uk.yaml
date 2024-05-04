@@ -1,4 +1,4 @@
-str_loading: "Завантаження...    "
+str_loading: "Завантаження    "
 str_libcurl_error: "Помилка libCURL (%d): %s"
 str_libcurl_date_and_time: 'Переконайтеся, що на вашій системі встановлено правильну
   дату та час!'
