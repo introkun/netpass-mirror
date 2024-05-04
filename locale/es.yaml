@@ -1,14 +1,14 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
+str_loading: "Cargando    "
+str_libcurl_error: "Error de libCURL (%d): %s"
+str_libcurl_date_and_time: 'Asegúrate de que la fecha y hora del sistema sean correctas!'
+str_httpstatus_error: 'Código de estado HTTP %d'
+str_3ds_error: 'Código de error de 3DS %08lx'
+str_at_home: 'Estás en casa.'
+str_goto_train_station: 'Ir a la Estación de Tren'
+str_at_train_station: 'Estás en la Estación de Tren'
+str_goto_plaza: 'Ir a la Plaza'
+str_at_plaza: 'Estás en la Plaza'
+str_goto_mall: 'Ir al Centro Comercial'
 str_at_mall: ''
 str_exit: ''
 str_settings: ''
