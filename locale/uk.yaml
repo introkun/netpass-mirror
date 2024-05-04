@@ -23,3 +23,5 @@ str_goto_arcade: 'Піти до ігрового залу'
 str_at_arcade: 'Ви в ігровому залі'
 str_goto_catcafe: 'Піти до котячої кав''ярні'
 str_at_catcafe: 'Ви в котячій кав''ярні'
+str_system_language: Мова системи
+str_language_pick: Мова
