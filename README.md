@@ -5,9 +5,10 @@
 ![QR Code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png)  
 Scan QR code to download!
 
-GBAtemp thread: https://gbatemp.net/threads/a-new-way-to-experience-streetpass.653810/
+GBAtemp thread: https://gbatemp.net/threads/a-new-way-to-experience-streetpass.653810/  
+Discord guild: https://discord.gg/netpass
 
-Introducing NetPass:   
+Introducing NetPass:
 
 In the current state of the world, the 3DS is, sadly, on decline. That makes getting StreetPasses harder and harder, due to fewer and fewer people taking their 3DS with them on a walk. This is where NetPass comes in!  
 Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you can pick various locations to go to, i.e. the train station, or a town plaza. Upon entering a location, you get passes of others who are in the same location! And, while you are at the location, others who enter it can get passes with you. But beware! You can only switch locations once every 10 hours!
@@ -73,9 +74,13 @@ To build `.cia` files, run
 ### Translations
  - English: Sorunome
  - German: Sorunome
- - Russian: [Rednorka](https://gbatemp.net/members/rednorka.575239/)
+ - Russian: [Rednorka](https://gbatemp.net/members/rednorka.575239/), Geo
  - Japanese: [Akira SUNADUKA](https://gitlab.com/Akira-SN)
  - Polish: [DanteyPL](https://gitlab.com/DanteyPL)
  - Spanish: [Gato-kun](https://gitlab.com/Gato-kun), [Amnesia1000](https://gitlab.com/Amnesia1000)
- - French: [Straky](https://gitlab.com/str4ky), [Esse Peius](https://gitlab.com/Essepeius)
+ - French: [Straky](https://gitlab.com/str4ky), [Esse Peius](https://gitlab.com/Essepeius), Tourneur
  - Italian: [LNLenost](https://github.com/LNLenost)
+ - Chinese (Traditional): ManLok Ho
+ - Ukrainian: Geo
+ - Portugese: Lia, arth
+ - Dutch: Robbin12391, aiydn
