@@ -28,3 +28,4 @@ const char* _s(LanguageString s);
 const char* string_in_language(LanguageString s, int lang);
 C2D_Font _font(LanguageString s);
 void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s);
+void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s, int l);
