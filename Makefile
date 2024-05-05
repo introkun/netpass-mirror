@@ -148,7 +148,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-export _3DSXDEPS	:=	$(if $(NO_SMDH),,$(OUTPUT).smdh)
+#export _3DSXDEPS	:=	$(if $(NO_SMDH),,$(OUTPUT).smdh)
 
 export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
 
@@ -171,13 +171,16 @@ MAKEROM		?=	makerom
 MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSION_MAJOR} -minor ${NETPASS_VERSION_MINOR} -micro ${NETPASS_VERSION_MICRO} -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
 
 #---------------------------------------------------------------------------------
-3dsx: codegen $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR)
+3dsx: codegen $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR) smdh
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
 
 codegen:
 	@$(PYTHON) $(TOPDIR)/codegen.py
+
+smdh:
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)"  -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d -o $(OUTPUT).smdh
 
 cia: 3dsx
 #	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_IMAGE) -vf scale=256:128 $(TOPDIR)/$(BUILD)/banner.png
