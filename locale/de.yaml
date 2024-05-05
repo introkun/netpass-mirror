@@ -1,9 +1,9 @@
 str_loading: "Laden    "
 str_libcurl_error: "libCURL Fehler (%d): %s"
 str_libcurl_date_and_time: 'Stelle sicher, dass die Systemszeit und -datum richtig
-  gesetzt sind!'
-str_httpstatus_error: ''
-str_3ds_error: ''
+  eingestellt sind!'
+str_httpstatus_error: 'HTTP Status Code %d'
+str_3ds_error: '3DS Fehler Code %08lx'
 str_at_home: 'Du bist zuhause.'
 str_goto_train_station: 'Gehe zum Bahnhof'
 str_at_train_station: 'Du bist am Bahnhof'
@@ -17,3 +17,12 @@ str_download_data: 'Persönliche Daten herunterladen'
 str_delete_data: 'Persönliche Daten löschen'
 str_back: 'Zurück'
 str_language: Deutsch
+str_system_language: Systemsprache
+str_language_pick: Sprache
+str_goto_beach: Gehe zum Strand
+str_at_beach: Du bist am Strand
+str_goto_arcade: Gehe zur Spielhalle
+str_at_arcade: Du bist in der Spielhalle
+str_at_catcafe: Du bist im Katzencafé
+str_no_location_twice: Du kannst denselben Ort nicht zweimal hintereinander betreten!
+str_goto_catcafe: Gehe zum Katzencafé
