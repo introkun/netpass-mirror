@@ -1,13 +1,15 @@
-# NetPass: a new way to experience StreetPass
+# NetPass: a new way to experience StreetPass!
 
 [![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
 
-![qr code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png)  
+![QR Code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png)  
 Scan QR code to download!
 
 GBAtemp thread: https://gbatemp.net/threads/a-new-way-to-experience-streetpass.653810/
 
-Introducing NetPass: In the current state of the world, the 3DS is, sadly, on decline. That makes getting StreetPass'es harder and harder, due to fewer and fewer people taking their 3DS with them on a walk. This is where NetPass comes in!  
+Introducing NetPass:   
+
+In the current state of the world, the 3DS is, sadly, on decline. That makes getting StreetPasses harder and harder, due to fewer and fewer people taking their 3DS with them on a walk. This is where NetPass comes in!  
 Unlike StreetPass, NetPass works over the internet. Upon opening NetPass, you can pick various locations to go to, i.e. the train station, or a town plaza. Upon entering a location, you get passes of others who are in the same location! And, while you are at the location, others who enter it can get passes with you. But beware! You can only switch locations once every 10 hours!
 
 ## Licenses
@@ -16,7 +18,7 @@ The source code of this project is licensed under GPLv3 or later. See the includ
 Other assets, such as images and sounds, are licensed under CC-BY-NC. See the included `LICENSE-assets`.
 
 ## Translations
-If you want to contribute to translations, we are doing that on [our weblate](https://weblate.sorunome.de/projects/netpass)!
+If you want to contribute to translations, we are doing that on [our Weblate](https://weblate.sorunome.de/projects/netpass)!
 
 ## Prerequisites
 
@@ -76,3 +78,4 @@ To build `.cia` files, run
  - Polish: [DanteyPL](https://gitlab.com/DanteyPL)
  - Spanish: [Gato-kun](https://gitlab.com/Gato-kun), [Amnesia1000](https://gitlab.com/Amnesia1000)
  - French: [Straky](https://gitlab.com/str4ky), [Esse Peius](https://gitlab.com/Essepeius)
+ - Italian: [LNLenost](https://github.com/LNLenost)
