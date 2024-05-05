@@ -25,4 +25,4 @@ str_goto_catcafe: 'Vai al Cat Café'
 str_at_catcafe: 'Sei al Cat Café'
 str_system_language: Lingua di sistema
 str_language_pick: Lingua
-str_no_location_twice: Non puoi entrare nello stesso luogo 2 volte di fila!
+str_no_location_twice: Non puoi entrare nello stesso luogo due volte di fila!
