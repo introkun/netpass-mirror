@@ -55,11 +55,16 @@ void N(render)(Scene* sc) {
 		C2D_Image img = C2D_SpriteSheetGetImage(_data->spr, sc->data);
 		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	}
-	C2D_DrawText(&_data->g_location, C2D_AlignLeft, 10, 10, 0, 1, 1);
+	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
+	float width;
+	float height;
+	C2D_TextGetDimensions(&_data->g_location, 1, 1, &width, &height);
+	C2D_DrawRectSolid(8, 8, 0, width + 4, 10 + 3*25, bgclr);
+	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
+	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	for (int i = 0; i < 2; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
+		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 10 + (i+1)*25, 0, 1, 1, clr);
 	}
-	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
 	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
