@@ -1,6 +1,6 @@
 str_loading: "Loading    "
 str_libcurl_error: "libCURL error (%d): %s"
-str_libcurl_date_and_time: Make sure that your systems date and time are set correctly!
+str_libcurl_date_and_time: Make sure that your system's date and time are set correctly!
 str_httpstatus_error: HTTP status code %d
 str_3ds_error: 3DS error code %08lx
 str_at_home: You are at home.
@@ -23,5 +23,5 @@ str_at_arcade: You are at the Arcade
 str_goto_catcafe: Go to the Cat Café
 str_at_catcafe: You are at the Cat Café
 str_system_language: System Language
-str_language_pick: Language
+str_language_pick: 'Language:'
 str_no_location_twice: You cannot enter the same location twice in a row!
