@@ -10,19 +10,19 @@ str_at_train_station: 'Você está na estação de trem'
 str_goto_plaza: 'Ir para a praça'
 str_at_plaza: 'Você está na praça'
 str_goto_mall: 'Ir para o shopping'
-str_at_mall: 'Você está no shopping'
+str_at_mall: 'Você está no Shopping'
 str_exit: 'Sair'
 str_settings: 'Configurações'
 str_download_data: 'Baixar dados pessoais'
 str_delete_data: 'Deletar dados pessoais'
 str_back: 'Voltar'
-str_goto_beach: Ir para a praia
-str_at_beach: Você está na praia
-str_goto_arcade: Ir para o fliperama
-str_at_arcade: Você está no fliperama
-str_goto_catcafe: Ir para o café de gatos
+str_goto_beach: Ir para a Praia
+str_at_beach: Você está na Praia
+str_goto_arcade: Ir para o Fliperama
+str_at_arcade: Você está no Fliperama
+str_goto_catcafe: Ir para o Cat Café
 str_language: Português
-str_at_catcafe: Você está no café de gatos
+str_at_catcafe: Você está no Cat Café
 str_system_language: Idioma do Console
 str_language_pick: 'Idioma:'
 str_no_location_twice: Você não pode entrar na mesma localização duas vezes seguidas!
