@@ -183,10 +183,8 @@ smdh:
 	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)"  -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d -o $(OUTPUT).smdh
 
 cia: 3dsx
-#	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_IMAGE) -vf scale=256:128 $(TOPDIR)/$(BUILD)/banner.png
 	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_AUDIO) -c:a pcm_s16le $(TOPDIR)/$(BUILD)/banner.wav
 	@$(BANNERTOOL) makebanner -ci "$(TOPDIR)/$(BANNER_IMAGE)" -a "$(TOPDIR)/$(BUILD)/banner.wav" -o "$(BUILD)/banner.bnr"
-#	@$(BANNERTOOL) makebanner -i "$(TOPDIR)/$(BUILD)/banner.png" -a "$(TOPDIR)/$(BUILD)/banner.wav" -o "$(BUILD)/banner.bnr"
 	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
 	@$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
 
