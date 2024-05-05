@@ -23,5 +23,5 @@ str_at_arcade: 'Estás en el Arcade'
 str_goto_catcafe: 'Ir al Café de Gatos'
 str_at_catcafe: 'Estás en el Café de Gatos'
 str_system_language: Idioma del Sistema
-str_language_pick: Idioma
+str_language_pick: 'Idioma:'
 str_no_location_twice: ¡No puede entrar dos veces seguidas en el mismo sitio!
