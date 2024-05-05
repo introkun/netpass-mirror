@@ -23,5 +23,5 @@ str_at_arcade: 'Jesteś w Salonie Gier'
 str_goto_catcafe: 'Idź do Kociej Kawiarni'
 str_at_catcafe: 'Jesteś w Kociej Kawiarni'
 str_system_language: Język Systemu
-str_language_pick: Język
+str_language_pick: 'Język:'
 str_no_location_twice: Nie możesz wejść do tej samej lokalizacji dwa razy pod rząd!
