@@ -424,9 +424,9 @@ Result addStreetpassMessage(u8* msgbuf) {
 	
 	if (!found_box) {
 		// ok, let's add the message to the box
+		memcpy(boxbuf + sizeof(CecBoxInfoHeader) + sizeof(CecMessageHeader) * ((CecBoxInfoHeader*)boxbuf)->num_messages, msgbuf, sizeof(CecMessageHeader));
 		boxheader->num_messages++;
 		boxheader->file_size += sizeof(CecMessageHeader);
-		memcpy(&boxmsgs[boxheader->box_size], msgbuf, sizeof(CecMessageHeader));
 		boxheader->box_size += msgheader->message_size;
 		res = cecdOpenAndWrite(msgheader->title_id, CEC_PATH_INBOX_INFO, boxheader->file_size, boxbuf);
 		if (R_FAILED(res)) {
