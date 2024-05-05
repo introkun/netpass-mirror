@@ -18,7 +18,7 @@ str_delete_data: 'Persönliche Daten löschen'
 str_back: 'Zurück'
 str_language: Deutsch
 str_system_language: Systemsprache
-str_language_pick: Sprache
+str_language_pick: 'Sprache:'
 str_goto_beach: Gehe zum Strand
 str_at_beach: Du bist am Strand
 str_goto_arcade: Gehe zur Spielhalle
