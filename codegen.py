@@ -57,7 +57,9 @@ outfile += "};\n"
 for key in translations["en"].keys():
 	outfile += f"LanguageString {key} = {{\n"
 	headerfile += f"extern LanguageString {key};\n"
-	for lang in translations.keys():
+	lang_keys = list(translations.keys())
+	lang_keys.sort(key=lambda x: 0 if x == "en" else 1)
+	for lang in lang_keys:
 		s = "0"
 		if key in translations[lang] and translations[lang][key] != "":
 			s = json.dumps(translations[lang][key], ensure_ascii=False)

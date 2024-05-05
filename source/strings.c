@@ -68,8 +68,9 @@ C2D_Font _font(LanguageString s) {
 void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s) {
 	const char* text = 0;
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		if (s[i].language == _language) {
+		if (s[i].language == _language && s[i].text) {
 			text = s[i].text;
+			break;
 		}
 	}
 	C2D_Font font = font_local;
