@@ -17,10 +17,10 @@ str_delete_data: 'サーバーから自分のデータを消去する'
 str_back: '戻る'
 str_language: '日本語'
 str_goto_beach: 'ビーチへ出かける'
-str_at_beach: ''
+str_at_beach: 'ビーチに滞在中'
 str_goto_arcade: '商店街へ出かける'
-str_at_arcade: ''
+str_at_arcade: '商店街に滞在中'
 str_goto_catcafe: '猫カフェへ出かける'
-str_at_catcafe: ''
+str_at_catcafe: '猫カフェに滞在中'
 str_system_language: システム言語
 str_language_pick: 言語

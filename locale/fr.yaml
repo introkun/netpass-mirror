@@ -1,9 +1,9 @@
 str_loading: "Chargement    "
-str_libcurl_error: ""
+str_libcurl_error: "Erreur libCURL (%d) : %s"
 str_libcurl_date_and_time: 'Soyez certain que la date et l''heure soient correctes
   !'
-str_httpstatus_error: ''
-str_3ds_error: ''
+str_httpstatus_error: 'Code d''erreur HTTP %d'
+str_3ds_error: 'Code erreur 3DS %08lx'
 str_at_home: 'Vous êtes chez vous.'
 str_goto_train_station: 'Aller à la gare'
 str_at_train_station: 'Vous êtes à la gare'
@@ -23,3 +23,7 @@ str_at_arcade: Vous êtes à l'arcade
 str_goto_catcafe: Aller au Café Félin
 str_at_catcafe: Vous êtes au Café Félin
 str_language: Français
+str_system_language: Langue Système
+str_language_pick: Langue
+str_no_location_twice: Vous ne pouvez pas entrer dans le même lieu deux fois d'affilée
+  !

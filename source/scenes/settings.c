@@ -57,7 +57,7 @@ SceneResult N(process)(Scene* sc) {
 						return;
 					}
 					printf("Successfully downloaded all data!\n");
-					printf("File stored at sd:/netpass_data.txt\n");
+					printf("File stored at sdmc:/netpass_data.txt\n");
 				}));
 				return scene_push;
 			}
