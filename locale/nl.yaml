@@ -24,5 +24,5 @@ str_at_arcade: 'Je bent in de Arcadehal'
 str_goto_catcafe: 'Ga naar het Kattencafé'
 str_at_catcafe: 'Je bent in het Kattencafé'
 str_system_language: 'Systeemtaal'
-str_language_pick: 'Taal'
+str_language_pick: 'Taal:'
 str_no_location_twice: Je kan niet twee keer achter elkaar naar dezelfde locatie gaan!
