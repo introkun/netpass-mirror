@@ -44,9 +44,8 @@ APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS			:=	romfs
 GFXBUILD		:=	$(ROMFS)/gfx
 ICON			:=	meta/icon.png
-BANNER_AUDIO	:=	meta/netpass.ogg
+BANNER_AUDIO	:=	meta/banner.wav
 BANNER_IMAGE	:=	meta/banner.cgfx
-#BANNER_IMAGE	:=	meta/banner.png
 
 #---------------------------------------------------------------------------------
 # options for code generation
