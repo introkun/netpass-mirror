@@ -16,11 +16,11 @@ str_download_data: 'Téléch. données pers.'
 str_delete_data: 'Effacer données pers.'
 str_back: 'Retour'
 str_goto_beach: Aller à la Plage
-str_at_beach: Vous êtes à la Plage
+str_at_beach: Vous êtes à la Plage.
 str_goto_arcade: Aller à la Salle d'Arcade
-str_at_arcade: Vous êtes à la Salle d'Arcade
+str_at_arcade: Vous êtes à la Salle d'Arcade.
 str_goto_catcafe: Aller au Café Félin
-str_at_catcafe: Vous êtes au Café Félin
+str_at_catcafe: Vous êtes au Café Félin.
 str_language: Français
 str_system_language: Langue Système
 str_language_pick: 'Langue:'
