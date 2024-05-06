@@ -1,7 +1,7 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
+str_loading: "жүктеп алу    "
+str_libcurl_error: "қателік libCURL (%d): %s"
+str_libcurl_date_and_time: 'Жүйенің күні мен уақыты дұрыс орнатылғанын тексеріңіз!'
+str_httpstatus_error: 'HTTP күй коды %d'
 str_3ds_error: ''
 str_at_home: ''
 str_goto_train_station: ''
