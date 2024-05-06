@@ -1,4 +1,4 @@
-str_loading: "Carregant....    "
+str_loading: "Carregant    "
 str_libcurl_error: "Error libCURL (%d): %s"
 str_libcurl_date_and_time: 'Asseguri que l''hora i la data del sistema estan ajustades
   correctament!'
@@ -16,7 +16,7 @@ str_settings: 'Configuració'
 str_download_data: 'Descarregar dades personals'
 str_delete_data: 'Esborrar dades personals'
 str_back: 'Enrere'
-str_language: 'Anglès'
+str_language: 'Català'
 str_goto_beach: 'Vés a la Platja'
 str_at_beach: 'Ets a la Platja'
 str_goto_arcade: 'Vés al Saló Recreatiu'
