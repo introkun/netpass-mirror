@@ -10,6 +10,7 @@ typedef struct {
 	C2D_Text g_entries[4];
 	C2D_Text g_languages[NUM_LANGUAGES + 1];
 	int cursor;
+	int selected_language;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -26,6 +27,14 @@ void N(init)(Scene* sc) {
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
 	}
+	_data->selected_language = -1;
+	if (config.language != -1) {
+		for (int i = 0; i < NUM_LANGUAGES; i++) {
+			if (all_languages[i] == config.language) {
+				_data->selected_language = i;
+			}
+		}
+	}
 }
 void N(render)(Scene* sc) {
 	if (!_data) return;
@@ -35,7 +44,7 @@ void N(render)(Scene* sc) {
 	}
 	float width;
 	C2D_TextGetDimensions(&_data->g_entries[0], 1, 1, &width, 0);
-	C2D_DrawText(&_data->g_languages[config.language + 1], C2D_AlignLeft, 35 + width, 35, 0, 1, 1);
+	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + width, 35, 0, 1, 1);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -56,9 +65,10 @@ SceneResult N(process)(Scene* sc) {
 		if (_data->cursor < 0) _data->cursor = 0;
 		if (_data->cursor > 3) _data->cursor = 3;
 		if (_data->cursor == 0) {
-			config.language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
-			if (config.language < -1) config.language = -1;
-			if (config.language > NUM_LANGUAGES-1) config.language = NUM_LANGUAGES-1;
+			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
+			if (_data->selected_language < -1) _data->selected_language = -1;
+			if (_data->selected_language > NUM_LANGUAGES-1) _data->selected_language = NUM_LANGUAGES-1;
+			config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
 			configWrite();
 		}
 		if (kDown & KEY_A) {

@@ -1,4 +1,4 @@
-import os, yaml, json
+import os, yaml, json, struct
 
 SRCDIR = "locale"
 DESTDIR = "codegen"
@@ -27,12 +27,16 @@ headerfile = "#pragma once\n\n#include <3ds.h>\n"
 
 outfile = "#include <3ds.h>\n#include \"lang_strings.h\"\n";
 
+lang_keys = list(translations.keys())
+lang_keys.sort(key=lambda x: 0 if x == "en" else struct.unpack(">H", x.encode("utf-8")[:2])[0])
+
+
 lang_i = 0
-for lang in translations.keys():
+for lang in lang_keys:
 	if l(lang) not in ("JP", "EN", "FR", "DE", "IT", "ES", "ZH", "KO", "NL", "PT", "RU", "TW"):
 		lang_i += 1
 		headerfile += f"#define CFG_LANGUAGE_{l(lang)} {20+lang_i}\n"
-headerfile += f"#define NUM_LANGUAGES {len(translations.keys())}\n"
+headerfile += f"#define NUM_LANGUAGES {len(lang_keys)}\n"
 
 headerfile += """
 typedef const struct {
@@ -44,21 +48,19 @@ extern const int all_languages[];
 extern const char* all_languages_str[];
 """
 
-outfile += f"const int all_languages[{len(translations.keys())}] = {{"
-for lang in translations.keys():
+outfile += f"const int all_languages[{len(lang_keys)}] = {{"
+for lang in lang_keys:
 	outfile += f"CFG_LANGUAGE_{l(lang)}, "
 outfile += "};\n"
 
-outfile += f"const char* all_languages_str[{len(translations.keys())}] = {{"
-for lang in translations.keys():
+outfile += f"const char* all_languages_str[{len(lang_keys)}] = {{"
+for lang in lang_keys:
 	outfile += f"\"{l(lang)}\", "
 outfile += "};\n"
 
 for key in translations["en"].keys():
 	outfile += f"LanguageString {key} = {{\n"
 	headerfile += f"extern LanguageString {key};\n"
-	lang_keys = list(translations.keys())
-	lang_keys.sort(key=lambda x: 0 if x == "en" else 1)
 	for lang in lang_keys:
 		s = "0"
 		if key in translations[lang] and translations[lang][key] != "":
