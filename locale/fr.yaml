@@ -1,6 +1,6 @@
 str_loading: "Chargement    "
 str_libcurl_error: "Erreur libCURL (%d): %s"
-str_libcurl_date_and_time: 'Faites en sorte que la date et l''heure soient bien réglées!'
+str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées !'
 str_httpstatus_error: 'Code de statut HTTP %d'
 str_3ds_error: 'Code d''erreur 3DS %08lx'
 str_at_home: 'Vous êtes chez vous.'
@@ -8,12 +8,12 @@ str_goto_train_station: 'Aller à la Gare'
 str_at_train_station: 'Vous êtes à la Gare.'
 str_goto_plaza: 'Aller à la Place'
 str_at_plaza: 'Vous êtes à la Place.'
-str_goto_mall: 'Aller aux Commerces'
-str_at_mall: 'Vous êtes aux Commerces.'
+str_goto_mall: 'Aller au Supermarché'
+str_at_mall: 'Vous êtes au Supermarché.'
 str_exit: 'Quitter'
 str_settings: 'Paramètres'
-str_download_data: 'Téléch. données pers.'
-str_delete_data: 'Effacer données pers.'
+str_download_data: 'Téléch. vos données pers.'
+str_delete_data: 'Effacer vos données pers.'
 str_back: 'Retour'
 str_goto_beach: Aller à la Plage
 str_at_beach: Vous êtes à la Plage.
@@ -24,4 +24,5 @@ str_at_catcafe: Vous êtes au Café Félin.
 str_language: Français
 str_system_language: Langue Système
 str_language_pick: 'Langue:'
-str_no_location_twice: Le même lieu ne peut être choisi deux fois d'affilée!
+str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois d'affilée
+  !
