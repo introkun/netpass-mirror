@@ -1,4 +1,4 @@
-str_loading: ""
+str_loading: "Carregant....    "
 str_libcurl_error: ""
 str_libcurl_date_and_time: ''
 str_httpstatus_error: ''
