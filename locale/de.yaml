@@ -1,7 +1,7 @@
 str_loading: "Laden    "
 str_libcurl_error: "libCURL Fehler (%d): %s"
-str_libcurl_date_and_time: 'Stelle sicher, dass die Systemszeit und -datum richtig
-  eingestellt sind!'
+str_libcurl_date_and_time: 'Stelle sicher, dass Systemzeit und -datum richtig eingestellt
+  sind!'
 str_httpstatus_error: 'HTTP Status Code %d'
 str_3ds_error: '3DS Fehler Code %08lx'
 str_at_home: 'Du bist zuhause.'
