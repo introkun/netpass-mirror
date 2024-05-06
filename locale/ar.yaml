@@ -1,13 +1,13 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
+str_loading: "تحميل....    "
+str_libcurl_error: "libCURL (%d): %s عطل ال"
+str_libcurl_date_and_time: 'تأكد من ضبط التاريخ والوقت على نظامك الصحيح!'
+str_httpstatus_error: 'رمز حالة HTTP %d'
+str_3ds_error: 'رمز فشل 3DS %08lx'
+str_at_home: 'انت في البيت.'
+str_goto_train_station: 'اذهب الى محطة القطار'
+str_at_train_station: 'انت في محطة القطار'
+str_goto_plaza: 'اذهب الى ساحة'
+str_at_plaza: 'انت في الساحة'
 str_goto_mall: ''
 str_at_mall: ''
 str_exit: ''
