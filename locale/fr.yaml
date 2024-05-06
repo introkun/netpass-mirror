@@ -1,29 +1,27 @@
 str_loading: "Chargement    "
-str_libcurl_error: "Erreur libCURL (%d) : %s"
-str_libcurl_date_and_time: 'Soyez certain que la date et l''heure soient correctes
-  !'
-str_httpstatus_error: 'Code d''erreur HTTP %d'
-str_3ds_error: 'Code erreur 3DS %08lx'
+str_libcurl_error: "Erreur libCURL (%d): %s"
+str_libcurl_date_and_time: 'Faites en sorte que la date et l''heure soient bien réglées!'
+str_httpstatus_error: 'Code de statut HTTP %d'
+str_3ds_error: 'Code d''erreur 3DS %08lx'
 str_at_home: 'Vous êtes chez vous.'
-str_goto_train_station: 'Aller à la gare'
-str_at_train_station: 'Vous êtes à la gare'
-str_goto_plaza: 'Aller à la place'
-str_at_plaza: 'Vous êtes à la place'
-str_goto_mall: 'Aller au Centre Commercial'
-str_at_mall: 'Vous êtes au supermarché'
-str_exit: 'Quitter l''application'
+str_goto_train_station: 'Aller à la Gare'
+str_at_train_station: 'Vous êtes à la Gare'
+str_goto_plaza: 'Aller à la Place'
+str_at_plaza: 'Vous êtes à la Place'
+str_goto_mall: 'Aller aux Commerces'
+str_at_mall: 'Vous êtes aux Commerces'
+str_exit: 'Quitter'
 str_settings: 'Paramètres'
-str_download_data: 'Télécharger vos données personnelles'
-str_delete_data: 'Effacer vos données personnelles'
+str_download_data: 'Téléch. données pers.'
+str_delete_data: 'Effacer données pers.'
 str_back: 'Retour'
-str_goto_beach: Aller à la plage
-str_at_beach: Vous êtes à la plage
-str_goto_arcade: Aller à l'arcade
-str_at_arcade: Vous êtes à l'arcade
+str_goto_beach: Aller à la Plage
+str_at_beach: Vous êtes à la Plage
+str_goto_arcade: Aller à la Salle d'Arcade
+str_at_arcade: Vous êtes à la Salle d'Arcade
 str_goto_catcafe: Aller au Café Félin
 str_at_catcafe: Vous êtes au Café Félin
 str_language: Français
 str_system_language: Langue Système
-str_language_pick: 'Langue :'
-str_no_location_twice: Vous ne pouvez pas entrer dans le même lieu deux fois d'affilée
-  !
+str_language_pick: 'Langue:'
+str_no_location_twice: Le même lieu ne peut être choisi deux fois d'affilée!
