@@ -26,6 +26,7 @@
 void stringsInit(void);
 const char* _s(LanguageString s);
 const char* string_in_language(LanguageString s, int lang);
+void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* width, float* height);
 C2D_Font _font(LanguageString s);
 void TextLangParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s);
 void TextLangSpecificParse(C2D_Text* staticText, C2D_TextBuf staticBuf, LanguageString s, int l);

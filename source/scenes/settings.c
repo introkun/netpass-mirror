@@ -43,7 +43,7 @@ void N(render)(Scene* sc) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
 	float width;
-	C2D_TextGetDimensions(&_data->g_entries[0], 1, 1, &width, 0);
+	get_text_dimensions(&_data->g_entries[0], 1, 1, &width, 0);
 	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + width, 35, 0, 1, 1);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;

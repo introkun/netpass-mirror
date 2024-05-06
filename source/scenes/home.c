@@ -55,8 +55,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	float width;
-	float height;
-	C2D_TextGetDimensions(&_data->g_home, 1, 1, &width, &height);
+	get_text_dimensions(&_data->g_home, 1, 1, &width, 0);
 	C2D_DrawRectSolid(8, 8, 0, width + 4, 35 + NUM_ENTRIES*14, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	C2D_DrawText(&_data->g_home, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);

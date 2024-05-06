@@ -45,7 +45,7 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_loading, _data->g_staticBuf, str_loading);
 	C2D_TextParse(&_data->g_dots, _data->g_staticBuf, "...");
 	float height;
-	C2D_TextGetDimensions(&_data->g_loading, 1, 1, &_data->text_width, &height);
+	get_text_dimensions(&_data->g_loading, 1, 1, &_data->text_width, &height);
 	_data->text_x = (SCREEN_TOP_WIDTH - _data->text_width) / 2;
 	_data->text_y = (SCREEN_TOP_HEIGHT - height) / 2;
 

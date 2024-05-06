@@ -71,6 +71,33 @@ const char* string_in_language(LanguageString s, int lang) {
 	return s[0].text;
 }
 
+static const float font_scale_map[4][4] = {
+	{1.f, 1.f   , 1.f   , 1.f   },
+	{1.f, 1.f   , 1.299f, 0.866f},
+	{1.f, 0.768f, 1.f   , 0.666f},
+	{1.f, 1.145f, 1.5f  , 1.f   },
+};
+void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* width, float* height) {
+	C2D_TextGetDimensions(text, scale_x, scale_y, width, height);
+	// got local font, nothing to do
+	if (!text->font) return;
+	int local_font_offset = 0;
+	int need_font_offset = 0;
+	for (int i = 0; i < 4; i++) {
+		__f(i);
+		if (_cache_fonts_loaded[i] == 0) {
+			local_font_offset = i;
+		}
+		if (text->font == _cache_fonts_loaded[i]) {
+			need_font_offset = i;
+		}
+	}
+	float scale = font_scale_map[local_font_offset][need_font_offset];
+	if (width) {
+		*width = *width * scale;
+	}
+}
+
 C2D_Font _font(LanguageString s) {
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		if (s[i].language == _language && s[i].text) {
