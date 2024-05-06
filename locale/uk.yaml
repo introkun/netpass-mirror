@@ -1,6 +1,6 @@
 str_loading: "Завантаження    "
 str_libcurl_error: "Помилка libCURL (%d): %s"
-str_libcurl_date_and_time: 'Переконайтеся, що на вашій системі встановлено правильну
+str_libcurl_date_and_time: 'Переконайтеся, що на вашій системі встановлено правильні
   дату та час!'
 str_httpstatus_error: 'Код статусу HTTP %d'
 str_3ds_error: 'Код помилки 3DS %08lx'
