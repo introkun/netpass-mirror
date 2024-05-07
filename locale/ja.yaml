@@ -3,7 +3,7 @@ str_libcurl_error: "libCURL エラー (%d): %s"
 str_libcurl_date_and_time: '本体設定から日付と時刻が正しく設定されているか確認してください！'
 str_httpstatus_error: 'HTTP ステータスコード %d'
 str_3ds_error: '3DS エラーコード %08lx'
-str_at_home: 'あなたは今、家にいます'
+str_at_home: 'あなたは今、家にいます.'
 str_goto_train_station: '駅へ出かける'
 str_at_train_station: '駅に滞在中.'
 str_goto_plaza: 'プラザへ出かける'
