@@ -1,14 +1,14 @@
-str_loading: ""
-str_libcurl_error: ""
+str_loading: "Ag lodáil    "
+str_libcurl_error: "Earraid libCURL (%d): %s"
 str_libcurl_date_and_time: ''
 str_httpstatus_error: ''
 str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
+str_at_home: 'Tá tú sa bhaile.'
+str_goto_train_station: 'Téigh go dtí an Stáisiún Traenach'
+str_at_train_station: 'Tá tú ag an Stáisiún Traenach.'
+str_goto_plaza: 'Téigh go dtí an Plás'
+str_at_plaza: 'Tá tú ag an bPlás.'
+str_goto_mall: 'Téigh go dtí an Ionad Siopadóireachta'
 str_at_mall: ''
 str_exit: ''
 str_settings: ''
