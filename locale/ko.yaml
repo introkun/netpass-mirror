@@ -1,8 +1,8 @@
 str_loading: "로딩중    "
-str_libcurl_error: ""
+str_libcurl_error: "libCURL 오류 (%d): %s"
 str_libcurl_date_and_time: '시스템의 날짜와 시간이 올바르게 설정되어 있는지 확인하세요!'
-str_httpstatus_error: ''
-str_3ds_error: ''
+str_httpstatus_error: 'HTTP 상태 코드 %d'
+str_3ds_error: '3DS 오류 코드 %08lx'
 str_at_home: '집에 왔습니다.'
 str_goto_train_station: '기차역으로 갑니다'
 str_at_train_station: '당신은 기차역에 있습니다.'
