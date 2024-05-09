@@ -27,5 +27,7 @@ typedef struct {
 
 void configInit(void);
 void configWrite(void);
+int rmdir_r(char *path);
+void mkdir_p(char* orig_path);
 
 extern Config config;

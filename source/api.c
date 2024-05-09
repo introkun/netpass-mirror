@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_LOG_LEN 128
+
 int location = -1;
 
 Result uploadOutboxes(void) {
@@ -114,6 +116,68 @@ Result uploadOutboxes(void) {
 	return messages;
 }
 
+void saveMsgInLog(CecMessageHeader* msg) {
+	int max_size, cur_size;
+	mkdir_p("/config/netpass/log/");
+	FILE* f = fopen("/config/netpass/log/batch_ids.list", "rb");
+	if (!f) {
+		// ok, file is empty, we have to create it
+		f = fopen("/config/netpass/log/batch_ids.list", "wb");
+		if (!f) return;
+		u32 create_data[MAX_LOG_LEN + 2];
+		memset(&create_data, 0, (MAX_LOG_LEN + 2) * sizeof(u32));
+		create_data[0] = MAX_LOG_LEN;
+		fwrite(&create_data, (MAX_LOG_LEN + 2) * sizeof(u32), 1, f);
+		max_size = MAX_LOG_LEN;
+		fclose(f);
+		f = fopen("/config/netpass/log/batch_ids.list", "rb");
+		if (!f) return;
+	}
+	fread(&max_size, sizeof(int), 1, f);
+	fread(&cur_size, sizeof(int), 1, f);
+	u32 entries[max_size];
+	fread(&entries, sizeof(u32) * max_size, 1, f);
+	fclose(f);
+
+	bool found = false;
+	// find if the batch already exists
+	for (int i = 0; i < cur_size; i++) {
+		if (entries[i] == msg->batch_id) {
+			found = true;
+			break;
+		}
+	}
+	char* b64name = b64encode(msg->message_id, 8);
+	char filename[100];
+	snprintf(filename, 100, "/config/netpass/log/%ld/_%s", msg->batch_id, b64name);
+	free(b64name);
+	if (!found) {
+		// we have to add a new entry!
+		if (max_size == cur_size) {
+			// uho, all is full, gotta pop the first one of the list
+			u32 rm_batch = entries[0];
+			char rm_dirname[100];
+			snprintf(rm_dirname, 100, "/config/netpass/log/%ld", rm_batch);
+			rmdir_r(rm_dirname);
+			cur_size--;
+			memmove(entries, entries + 4, cur_size * sizeof(u32));
+		}
+		mkdir_p(filename);
+		entries[cur_size] = msg->batch_id;
+		cur_size++;
+		f = fopen("/config/netpass/log/batch_ids.list", "wb");
+		if (!f) return;
+		fwrite(&max_size, 4, 1, f);
+		fwrite(&cur_size, 4, 1, f);
+		fwrite(&entries, max_size * sizeof(u32), 1, f);
+		fclose(f);
+	}
+	f = fopen(filename, "wb");
+	if (!f) return;
+	fwrite(msg, msg->message_size, 1, f);
+	fclose(f);
+}
+
 Result downloadInboxes(void) {
 	Result res = 0;
 	Result messages = 0;
@@ -143,6 +207,7 @@ Result downloadInboxes(void) {
 				if (!R_FAILED(res)) {
 					messages++;
 					box_messages++;
+					saveMsgInLog((CecMessageHeader*)reply->ptr);
 				}
 			}
 			curlFreeHandler(reply->offset);

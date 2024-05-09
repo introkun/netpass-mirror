@@ -64,7 +64,7 @@
 // only a made-up number that is prolly large enough for existing streetpass messages
 #define MAX_MESSAGE_SIZE 0x20000
 
-typedef char CecMessageId[8];
+typedef u8 CecMessageId[8];
 
 Result cecdInit(void);
 Result cecdGetState(u32* state);

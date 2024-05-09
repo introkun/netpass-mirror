@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <ctype.h>
+#include <dirent.h>
+#include <unistd.h>
 
 static const char config_path[] = "/config/netpass/netpass.cfg";
 
@@ -33,9 +35,7 @@ Config config = {
 
 void load(void) {
 	FILE* f = fopen(config_path, "r");
-	if (!f) {
-		return;
-	}
+	if (!f) return;
 	char line[200];
 	while (fgets(line, 200, f)) {
 		char* separator = strchr(line, '=');
@@ -91,9 +91,54 @@ void configWrite(void) {
 	fclose(f);
 }
 
-void configInit(void) {
-	char path[strlen(config_path) + 1];
-	memcpy(path, config_path, strlen(config_path) + 1);
+// from https://stackoverflow.com/a/2256974
+int rmdir_r(char *path) {
+	DIR *d = opendir(path);
+	size_t path_len = strlen(path);
+	int r = -1;
+
+	if (d) {
+		struct dirent *p;
+
+		r = 0;
+		while (!r && (p=readdir(d))) {
+			int r2 = -1;
+			char *buf;
+			size_t len;
+
+			/* Skip the names "." and ".." as we don't want to recurse on them. */
+			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, ".."))
+				continue;
+
+			len = path_len + strlen(p->d_name) + 2; 
+			buf = malloc(len);
+
+			if (buf) {
+				struct stat statbuf;
+
+				snprintf(buf, len, "%s/%s", path, p->d_name);
+				if (!stat(buf, &statbuf)) {
+					if (S_ISDIR(statbuf.st_mode))
+						r2 = rmdir_r(buf);
+					else
+						r2 = unlink(buf);
+				}
+				free(buf);
+			}
+			r = r2;
+		}
+		closedir(d);
+	}
+
+	if (!r)
+		r = rmdir(path);
+
+	return r;
+}
+
+void mkdir_p(char* orig_path) {
+	char path[strlen(orig_path) + 1];
+	memcpy(path, orig_path, strlen(orig_path) + 1);
 	int pos = 0;
 	do {
 		char* found = strchr(path + pos + 1, '/');
@@ -105,5 +150,9 @@ void configInit(void) {
 		*found = '/';
 		pos = (int)found - (int)path;
 	} while(1);
+}
+
+void configInit(void) {
+	mkdir_p((char*)config_path);
 	load();
 }
