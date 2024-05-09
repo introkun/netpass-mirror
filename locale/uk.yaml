@@ -23,6 +23,6 @@ str_goto_arcade: 'Пiти до iгрового залу'
 str_at_arcade: 'Ви в iгровому залi.'
 str_goto_catcafe: 'Пiти до котячоï кав''ярнi'
 str_at_catcafe: 'Ви в котячiй кав''ярнi.'
-str_system_language: Мова системи
+str_system_language: Системна мова
 str_language_pick: 'Мова:'
 str_no_location_twice: Не можна вiдвiдувати одну й ту саму локацiю двiчi поспiль!
