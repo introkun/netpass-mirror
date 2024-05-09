@@ -175,6 +175,13 @@ class RawMessage(GeneralClass):
 	@property
 	def batch_id(self):
 		return struct.unpack('<I', self.data[0x18:0x18+4])[0]
+	@batch_id.setter
+	def batch_id(self, value):
+		b = value
+		if type(b) is int:
+			b = struct.pack('<I', b)
+		for i in range(4):
+			self.data[0x18 + i] = b[i]
 	@property
 	def message_id(self):
 		return struct.unpack('<q', self.data[0x20:0x20+8])[0]

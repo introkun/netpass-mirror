@@ -252,6 +252,9 @@ class Database:
 	def streetpass_mac(self, mac1, mac2):
 		if mac1 == mac2:
 			return False
+		batch_id = random.randbytes(4)
+		while batch_id == b'\0\0\0\0':
+			batch_id = random.randbytes(4)
 		try:
 			with self.con().cursor() as cur:
 				cur.execute("""
@@ -297,6 +300,7 @@ class Database:
 								(msg.send_count, msg.data, mac_send, msg.message_id))
 						msg.forward_count -= 1
 						msg.ts_sent = get_current_timestamp()
+						msg.batch_id = batch_id
 						
 						cur.execute("INSERT INTO inbox (title_id, message_id, from_mac, to_mac, message, time) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING",
 							(msg.title_id, msg.message_id, mac_send, mac_recv, msg.data, math.floor(time.time())))
