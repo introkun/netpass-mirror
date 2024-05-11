@@ -54,3 +54,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/connection_error.h"
 #include "scenes/settings.h"
 #include "scenes/info.h"
+#include "scenes/report_list.h"

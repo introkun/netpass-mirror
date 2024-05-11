@@ -82,6 +82,20 @@ Handle cecdGetServHandle(void);
 Result updateStreetpassOutbox(u8* msgbuf);
 Result addStreetpassMessage(u8* buf);
 
+typedef struct {
+	u32 magic; // 0x42504643 CFPB
+	u8 unknown[0x14];
+	union {
+		u8 nonce[0x8];
+		struct{
+			u32 mii_id;
+			u8 top_mac[4];
+		};
+	};
+	u8 ciphertext[0x58];
+	u8 mac[0x10];
+} CFPB;
+
 typedef struct CecTimestamp {
 	u32 year;
 	u8 month;

@@ -25,3 +25,4 @@ str_at_catcafe: You are at the Cat Café.
 str_system_language: System Language
 str_language_pick: 'Language:'
 str_no_location_twice: You cannot enter the same location twice in a row!
+str_report_user: Report a user

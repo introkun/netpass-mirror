@@ -137,8 +137,10 @@ int rmdir_r(char *path) {
 }
 
 void mkdir_p(char* orig_path) {
-	char path[strlen(orig_path) + 1];
-	memcpy(path, orig_path, strlen(orig_path) + 1);
+	int maxlen = strlen(orig_path) + 1;
+	char path[maxlen];
+	memcpy(path, orig_path, maxlen);
+	path[maxlen - 1] = 0;
 	int pos = 0;
 	do {
 		char* found = strchr(path + pos + 1, '/');
@@ -149,7 +151,7 @@ void mkdir_p(char* orig_path) {
 		mkdir(path, 777);
 		*found = '/';
 		pos = (int)found - (int)path;
-	} while(1);
+	} while(pos < maxlen);
 }
 
 void configInit(void) {

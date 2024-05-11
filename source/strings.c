@@ -24,9 +24,9 @@ static u8 _language;
 C2D_Font font_default;
 
 C2D_Font _cache_fonts_loaded[4] = {0};
-const int fontLoadArr[4] = {CFG_REGION_CHN, CFG_REGION_KOR, CFG_REGION_TWN, CFG_REGION_USA};
+const int fontLoadArr[4] = {CFG_REGION_USA, CFG_REGION_CHN, CFG_REGION_KOR, CFG_REGION_TWN};
 
-C2D_Font __f(int i) {
+C2D_Font getFontIndex(int i) {
 	if (_cache_fonts_loaded[i]) {
 		return _cache_fonts_loaded[i];
 	}
@@ -37,13 +37,13 @@ C2D_Font __f(int i) {
 C2D_Font _get_local_font(int lang) {
 	C2D_Font font;
 	if (lang == CFG_LANGUAGE_ZH) {
-		font = __f(0);
+		font = getFontIndex(1);
 	} else if (lang == CFG_LANGUAGE_KO) {
-		font = __f(1);
+		font = getFontIndex(2);
 	} else if (lang == CFG_LANGUAGE_TW) {
-		font = __f(2);
+		font = getFontIndex(3);
 	} else {
-		font = __f(3);
+		font = getFontIndex(0);
 	}
 	return font;
 }
@@ -55,7 +55,7 @@ void stringsInit(void) {
 		_language = config.language;
 	}
 	printf("Got language %d\n", _language);
-	font_default = __f(3);
+	font_default = getFontIndex(0);
 }
 
 const char* _s(LanguageString s) {
@@ -72,10 +72,10 @@ const char* string_in_language(LanguageString s, int lang) {
 }
 
 static const float font_scale_map[4][4] = {
-	{1.f, 1.f   , 1.f   , 1.f   },
-	{1.f, 1.f   , 1.299f, 0.866f},
-	{1.f, 0.768f, 1.f   , 0.666f},
-	{1.f, 1.145f, 1.5f  , 1.f   },
+	{1.f   , 1.f, 1.145f, 1.5f   },
+	{   1.f, 1.f, 1.f   , 1.f   },
+	{0.866f, 1.f, 1.f   , 1.299f},
+	{0.666f, 1.f, 0.768f, 1.f   },
 };
 void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* width, float* height) {
 	C2D_TextGetDimensions(text, scale_x, scale_y, width, height);
@@ -84,7 +84,7 @@ void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* wi
 	int local_font_offset = 0;
 	int need_font_offset = 0;
 	for (int i = 0; i < 4; i++) {
-		__f(i);
+		getFontIndex(i);
 		if (_cache_fonts_loaded[i] == 0) {
 			local_font_offset = i;
 		}

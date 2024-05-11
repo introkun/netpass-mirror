@@ -25,10 +25,14 @@
 #include "curl-handler.h"
 #include "config.h"
 
+#include "report.h"
+
 int main() {
 	gfxInitDefault();
 	cfguInit();
 	amInit();
+	nsInit();
+	aptInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 	configInit();
@@ -42,6 +46,8 @@ int main() {
 	cecdInit();
 	curlInit();
 	srand(time(NULL));
+
+	test_stuffs();
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
@@ -111,6 +117,8 @@ int main() {
 	C3D_Fini();
 	//curlExit();
 	romfsExit();
+	aptExit();
+	nsExit();
 	amExit();
 	cfguExit();
 	gfxExit();
