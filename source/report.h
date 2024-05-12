@@ -36,7 +36,5 @@ typedef struct {
 	ReportListEntry entries[MAX_REPORT_ENTRIES_LEN];
 } ReportList;
 
-void test_stuffs(void);
-
 void saveMsgInLog(CecMessageHeader* msg);
 bool loadReportList(ReportList* reports);

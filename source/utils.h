@@ -19,13 +19,15 @@
 #pragma once
 
 #include <3ds.h>
+#include <3ds/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
 
-typedef struct {
-	int last_location;
-	int language;
-} Config;
-
-void configInit(void);
-void configWrite(void);
-
-extern Config config;
+char* b64encode(u8* in, size_t len);
+int rmdir_r(char *path);
+void mkdir_p(char* orig_path);
+Result APT_Wrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out);
+Result APT_Unwrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out);
+u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val);
+Result decryptMii(void* data, MiiData* mii);

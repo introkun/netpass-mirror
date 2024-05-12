@@ -18,7 +18,7 @@
 
 #include "api.h"
 #include "cecd.h"
-#include "base64.h"
+#include "utils.h"
 #include "config.h"
 #include "report.h"
 #include <stdlib.h>

@@ -18,79 +18,13 @@
 
 #include "report.h"
 #include "config.h"
-#include "base64.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 #define LOG_DIR "/config/netpass/log/"
 #define LOG_INDEX "/config/netpass/log/batch_ids.list"
-
-Result APT_Wrap(u32 in_size, u8* in, u32 nonce_offset, u32 nonce_size, u32 out_size, u8* out) {
-	u32 *cmdbuf = getThreadCommandBuffer();
-	cmdbuf[0] = IPC_MakeHeader(0x46,4,2); // 0x001F0084
-	cmdbuf[1] = out_size;
-	cmdbuf[2] = in_size;
-	cmdbuf[3] = nonce_offset;
-	cmdbuf[4] = nonce_size;
-
-	cmdbuf[5] = IPC_Desc_Buffer(in_size, IPC_BUFFER_R);
-	cmdbuf[6] = (u32)in;
-	cmdbuf[7] = IPC_Desc_Buffer(out_size, IPC_BUFFER_W);
-	cmdbuf[8] = (u32)out;
-
-	Result res = aptSendCommand(cmdbuf);
-	if (R_FAILED(res)) return res;
-	res = (Result)cmdbuf[1];
-
-	return res;
-}
-
-Result APT_Unwrap(u32 in_size, u8* in, u32 nonce_offset, u32 nonce_size, u32 out_size, u8* out) {
-	u32 *cmdbuf = getThreadCommandBuffer();
-	cmdbuf[0] = IPC_MakeHeader(0x47,4,2); // 0x001F0084
-	cmdbuf[1] = out_size;
-	cmdbuf[2] = in_size;
-	cmdbuf[3] = nonce_offset;
-	cmdbuf[4] = nonce_size;
-
-	cmdbuf[5] = IPC_Desc_Buffer(in_size, IPC_BUFFER_R);
-	cmdbuf[6] = (u32)in;
-	cmdbuf[7] = IPC_Desc_Buffer(out_size, IPC_BUFFER_W);
-	cmdbuf[8] = (u32)out;
-
-	Result res = aptSendCommand(cmdbuf);
-	if (R_FAILED(res)) return res;
-	res = (Result)cmdbuf[1];
-
-	return res;
-}
-
-void test_stuffs(void) {
-	uint8_t data[112] = {
-		0x98, 0xF5, 0xB0, 0x39, 0x7C, 0xBB, 0x8A, 0x6C, 0x20, 0xA8, 0x6B, 0xFF, 0xFD, 0x53, 0x71, 0x67, 
-		0x2C, 0x7D, 0xDF, 0xB9, 0xFC, 0xC6, 0x5C, 0xAF, 0x81, 0x49, 0x30, 0xAE, 0xC2, 0x46, 0xAE, 0x44, 
-		0xF8, 0x64, 0xCC, 0xEF, 0xDF, 0xE7, 0x2C, 0x41, 0x93, 0x54, 0x6E, 0x43, 0xD6, 0x5B, 0xD4, 0x88, 
-		0x6C, 0xE6, 0x57, 0xD8, 0xB2, 0xFF, 0xD5, 0x62, 0xF2, 0x17, 0x4F, 0x0E, 0xF2, 0x59, 0xF8, 0x96, 
-		0x5F, 0x0F, 0x6F, 0x3A, 0xC0, 0x98, 0x69, 0xDA, 0x30, 0xD4, 0xD6, 0x58, 0xD8, 0xF7, 0xD5, 0x3C, 
-		0x93, 0x1E, 0xA5, 0x51, 0x2D, 0x9D, 0xEA, 0x7B, 0xE1, 0x62, 0x38, 0xDF, 0x5A, 0x73, 0x84, 0xC7, 
-		0x63, 0xD7, 0x6F, 0xAA, 0xD2, 0xA8, 0x48, 0xF7, 0xDB, 0x23, 0x78, 0x0F, 0x14, 0x51, 0x19, 0xA3, 
-	};
-
-	MiiData* out = malloc(0x70);
-	memset(out, 0, 0x70);
-	Result res = APT_Unwrap(0x70, data, 12, 10, 0x70, (u8*)out);
-	printf("Result: %lx\n", res);
-	FILE* f = fopen("/test.bin", "wb");
-	if (f) {
-		fwrite(out, 0x70, 1, f);
-		fclose(f);
-	} else {
-		printf("WTF, no file?\n");
-	}
-	printf("Mii magic: %d\nMii id: %lx\n", out->magic, out->mii_id);
-	free(out);
-}
 
 bool loadReportList(ReportList* reports) {
 	FILE* f = fopen(LOG_INDEX, "rb");
@@ -154,17 +88,14 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	}
 	if (msg->title_id == 0x20800) {
 		// mii plaza
-		printf("Mii Plaza detected!\n");
 		ReportListEntry* e = &list->entries[found_i];
 		static const int cfpb_offset = 0x36bc;
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
-			printf("Valid size!\n");
 			CFPB* cfpb = (CFPB*)((u8*)msg + msg->total_header_size + cfpb_offset);
 			if (cfpb->magic == 0x42504643) {
-				printf("Valid magic!\n");
-				APT_Unwrap(0x60, (u8*)&cfpb->mii_id, 12, 8, sizeof(MiiData), (u8*)&e->mii);
-				edited = true;
+				Result r = decryptMii(&cfpb->nonce, &e->mii);
+				if (!R_FAILED(r)) edited = true;
 			}
 		}
 	}

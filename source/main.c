@@ -25,8 +25,6 @@
 #include "curl-handler.h"
 #include "config.h"
 
-#include "report.h"
-
 int main() {
 	gfxInitDefault();
 	cfguInit();
@@ -46,8 +44,6 @@ int main() {
 	cecdInit();
 	curlInit();
 	srand(time(NULL));
-
-	test_stuffs();
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 

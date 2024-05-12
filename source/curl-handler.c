@@ -20,7 +20,7 @@
 #include "cecd.h"
 #include "api.h"
 #include "hmac_sha256/hmac_sha256.h"
-#include "base64.h"
+#include "utils.h"
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
