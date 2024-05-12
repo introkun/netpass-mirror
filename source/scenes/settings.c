@@ -49,6 +49,21 @@ void N(render)(Scene* sc) {
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
 	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+	u32 blue = C2D_Color32(0x2B, 0xCF, 0xFF, 0xFF);
+	u32 pink = C2D_Color32(0xF5, 0xAB, 0xB9, 0xFF);
+	u32 white = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
+	C2D_DrawRectSolid(400 - 90, 240 - 60, 0, 90, 12, blue);
+	C2D_DrawRectSolid(400 - 90, 240 - 60 + 12, 0, 90, 12, pink);
+	C2D_DrawRectSolid(400 - 90, 240 - 60 + 24, 0, 90, 12, white);
+	C2D_DrawRectSolid(400 - 90, 240 - 60 + 36, 0, 90, 12, pink);
+	C2D_DrawRectSolid(400 - 90, 240 - 60 + 48, 0, 90, 12, blue);
+
+	C2D_DrawRectSolid(400 - 180, 240 - 60, 0, 90, 10, C2D_Color32(0xE5, 0x00, 0x00, 0xFF));
+	C2D_DrawRectSolid(400 - 180, 240 - 50, 0, 90, 10, C2D_Color32(0xFF, 0x8D, 0x00, 0xFF));
+	C2D_DrawRectSolid(400 - 180, 240 - 40, 0, 90, 10, C2D_Color32(0xFF, 0xEE, 0x00, 0xFF));
+	C2D_DrawRectSolid(400 - 180, 240 - 30, 0, 90, 10, C2D_Color32(0x02, 0x81, 0x21, 0xFF));
+	C2D_DrawRectSolid(400 - 180, 240 - 20, 0, 90, 10, C2D_Color32(0x00, 0x4C, 0xFF, 0xFF));
+	C2D_DrawRectSolid(400 - 180, 240 - 10, 0, 90, 10, C2D_Color32(0x77, 0x00, 0x88, 0xFF));
 }
 void N(exit)(Scene* sc) {
 	if (_data) {
