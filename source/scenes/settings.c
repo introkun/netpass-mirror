@@ -11,12 +11,13 @@ typedef struct {
 	C2D_Text g_languages[NUM_LANGUAGES + 1];
 	int cursor;
 	int selected_language;
+	float lang_width;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(4000);
+	_data->g_staticBuf = C2D_TextBufNew(500  + 15*NUM_LANGUAGES);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_report_user);
@@ -36,6 +37,7 @@ void N(init)(Scene* sc) {
 			}
 		}
 	}
+	get_text_dimensions(&_data->g_entries[1], 1, 1, &_data->lang_width, 0);
 }
 void N(render)(Scene* sc) {
 	if (!_data) return;
@@ -43,9 +45,7 @@ void N(render)(Scene* sc) {
 	for (int i = 0; i < 5; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
-	float width;
-	get_text_dimensions(&_data->g_entries[1], 1, 1, &width, 0);
-	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + width, 35 + 25, 0, 1, 1);
+	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 25, 0, 1, 1);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -81,11 +81,14 @@ SceneResult N(process)(Scene* sc) {
 		if (_data->cursor < 0) _data->cursor = 0;
 		if (_data->cursor > 4) _data->cursor = 4;
 		if (_data->cursor == 1) {
+			int old_lang = _data->selected_language;
 			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
 			if (_data->selected_language < -1) _data->selected_language = -1;
 			if (_data->selected_language > NUM_LANGUAGES-1) _data->selected_language = NUM_LANGUAGES-1;
-			config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
-			configWrite();
+			if (old_lang != _data->selected_language) {
+				config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
+				configWrite();
+			}
 		}
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {

@@ -22,42 +22,70 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <malloc.h>
+#include <sys/stat.h>
+#include <ctype.h>
+#include <dirent.h>
 
 #define LOG_DIR "/config/netpass/log/"
-#define LOG_INDEX "/config/netpass/log/batch_ids.list"
+#define LOG_INDEX "/config/netpass/log/index.nrle"
 
-bool loadReportList(ReportList* reports) {
+#define MAX_REPORT_ENTRIES_LEN 128
+
+ReportList* loadReportList(void) {
 	FILE* f = fopen(LOG_INDEX, "rb");
-	if (!f) return false;
+	if (!f) return NULL;
 
-	fread(reports, sizeof(ReportList), 1, f);
+	ReportListHeader header;
+	fread(&header, sizeof(ReportListHeader), 1, f);
+	if (header.magic != 0x454C524e || header.version != 1) return NULL;
+	fseek(f, 0, SEEK_SET);
+	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
+	
+	ReportList* list = memalign(4, list_file_size);
+	if (!list) return NULL;
+	fread(list, list_file_size, 1, f);
 	fclose(f);
-	if (reports->max_size > MAX_REPORT_ENTRIES_LEN) return false;
-	return true;
+	return list;
 }
 
 void saveMsgInLog(CecMessageHeader* msg) {
-	ReportList* list = malloc(sizeof(ReportList));
-	if (!list) return;
+	ReportList* list;
 	mkdir_p(LOG_DIR);
 	FILE* f = fopen(LOG_INDEX, "rb");
 	if (!f) {
 		// ok, file is empty, we have to create it
 		f = fopen(LOG_INDEX, "wb");
-		if (!f) goto error;
-		memset(list, 0, sizeof(ReportList));
-		list->max_size = MAX_REPORT_ENTRIES_LEN;
+		if (!f) return;
+		list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
+		if (!list) return;
+		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
+		list->header.magic = 0x454C524e;
+		list->header.version = 1;
+		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
+		list->header.cur_size = 0;
 		fwrite(list, sizeof(ReportList), 1, f);
+		free(list);
 		fclose(f);
 		f = fopen(LOG_INDEX, "rb");
-		if (!f) goto error;
+		if (!f) return;
 	}
-	fread(list, sizeof(ReportList), 1, f);
-	fclose(f);
+	size_t list_file_size;
+	{
+		ReportListHeader header;
+		fread(&header, sizeof(ReportListHeader), 1, f);
+		if (header.magic != 0x454C524e || header.version != 1) return;
+		fseek(f, 0, SEEK_SET);
+		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
+		list = memalign(4, list_file_size);
+		if (!list) return;
+		fread(list, list_file_size, 1, f);
+		fclose(f);
+	}
 
 	int found_i = -1;
 	// find if the batch already exists
-	for (int i = 0; i < list->cur_size; i++) {
+	for (int i = 0; i < list->header.cur_size; i++) {
 		if (list->entries[i].batch_id == msg->batch_id) {
 			found_i = i;
 			break;
@@ -65,25 +93,25 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	}
 	char* b64name = b64encode(msg->message_id, 8);
 	char filename[100];
-	snprintf(filename, 100, "%s%lu/_%s", LOG_DIR, msg->batch_id, b64name);
+	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->batch_id, b64name);
 	free(b64name);
 	bool edited = false;
 	if (found_i < 0) {
 		// we have to add a new entry!
-		if (list->max_size == list->cur_size) {
+		if (list->header.max_size == list->header.cur_size) {
 			// uho, all is full, gotta pop the first one of the list
 			u32 rm_batch = list->entries[0].batch_id;
 			char rm_dirname[100];
-			snprintf(rm_dirname, 100, "%s/%ld", LOG_DIR, rm_batch);
+			snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
 			rmdir_r(rm_dirname);
-			list->cur_size--;
-			memmove(list->entries, list->entries + sizeof(ReportListEntry), list->cur_size * sizeof(ReportListEntry));
+			list->header.cur_size--;
+			memmove(list->entries, ((u8*)list->entries) + sizeof(ReportListEntry), list->header.cur_size * sizeof(ReportListEntry));
 		}
-		ReportListEntry* e = &list->entries[list->cur_size];
+		ReportListEntry* e = &list->entries[list->header.cur_size];
 		e->batch_id = msg->batch_id;
 		memcpy(&e->received, &msg->received, sizeof(CecTimestamp));
-		found_i = list->cur_size;
-		list->cur_size++;
+		found_i = list->header.cur_size;
+		list->header.cur_size++;
 		edited = true;
 	}
 	if (msg->title_id == 0x20800) {
@@ -103,7 +131,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	if (edited) {
 		f = fopen(LOG_INDEX, "wb");
 		if (!f) goto error;
-		fwrite(list, sizeof(ReportList), 1, f);
+		fwrite(list, list_file_size, 1, f);
 		fclose(f);
 	}
 	mkdir_p(filename);
@@ -114,4 +142,40 @@ void saveMsgInLog(CecMessageHeader* msg) {
 
 error:
 	free(list);
+}
+
+Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 batch_id) {
+	msg->magic = 0;
+
+	char dirname[100];
+	snprintf(dirname, 100, "%s%lx", LOG_DIR, batch_id);
+	size_t path_len = strlen(dirname);
+
+	DIR* d = opendir(dirname);
+	if (!d) return -1;
+
+	struct dirent *p;
+	int r = 0;
+	while (!r && (p=readdir(d))) {
+		int fname_len = path_len + strlen(p->d_name) + 2;
+		char* fname = malloc(fname_len);
+		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
+		// we found a file
+		FILE* f = fopen(fname, "rb");
+		if (f) {
+			fread(msg, sizeof(CecMessageHeader), 1, f);
+			fclose(f);
+			if (msg->magic == 0x6060 && msg->batch_id == batch_id) {
+				free(fname);
+				break;
+			} else {
+				msg->magic = 0;
+			}
+		}
+		free(fname);
+	}
+
+	if (!msg->magic) return -2; // nothing in directory
+
+	return 0;
 }

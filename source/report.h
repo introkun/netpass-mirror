@@ -20,8 +20,15 @@
 
 #include <3ds.h>
 #include "cecd.h"
+#include "hmac_sha256/sha256.h"
 
-#define MAX_REPORT_ENTRIES_LEN 128
+typedef struct {
+	u32 magic; // 0x5053524e "NRSP"
+	int version; // 1
+	CecMessageId message_id;
+	SHA256_HASH hash;
+	char msg[201];
+} ReportSendPayload;
 
 typedef struct {
 	MiiData mii;
@@ -29,12 +36,18 @@ typedef struct {
 	CecTimestamp received;
 } ReportListEntry;
 
+typedef struct {
+	u32 magic; // 0x454C524e "NRLE"
+	int version; // 1
+	size_t max_size;
+	size_t cur_size;
+} ReportListHeader;
 
 typedef struct {
-	int max_size;
-	int cur_size;
-	ReportListEntry entries[MAX_REPORT_ENTRIES_LEN];
+	ReportListHeader header;
+	ReportListEntry entries[];
 } ReportList;
 
 void saveMsgInLog(CecMessageHeader* msg);
-bool loadReportList(ReportList* reports);
+ReportList* loadReportList(void);
+Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 batch_id);
