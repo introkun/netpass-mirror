@@ -26,3 +26,7 @@ str_at_catcafe: 'Вы в котокафе.'
 str_system_language: Язык системы
 str_language_pick: 'Язык:'
 str_no_location_twice: Нельзя посещать одну и ту же локацию дважды подряд!
+str_report_user: Пожаловаться на пользователя
+str_report_user_hint: Пожаловаться на "%s"
+str_cancel: Отменить
+str_submit: Подтвердить
