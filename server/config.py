@@ -33,7 +33,10 @@ class Config:
 	def __init__(self, filepath):
 		with open(filepath, "r") as f:
 			self.yaml = yaml.safe_load(f)
-		self.default_yaml["num_locations"] = dotenv_values(self.get("version_env"))["NETPASS_NUM_LOCATIONS"]
+		try:
+			self.default_yaml["num_locations"] = int(dotenv_values(self.get("version_env"))["NETPASS_NUM_LOCATIONS"])
+		except:
+			pass
 	def get(self, param):
 		this_yaml = self.yaml
 		this_default_yaml = self.default_yaml

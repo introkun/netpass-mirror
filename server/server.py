@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from raw_types import RawMessage, MAX_MESSAGE_SIZE, MBOXLIST_SIZE, MBoxList
+from raw_types import RawMessage, MAX_MESSAGE_SIZE, MBOXLIST_SIZE, MBoxList, ReportSendPayload
 from threading import Timer
 from database import Database
 from config import Config
@@ -67,6 +67,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.send_header("Content-Type", "text/plain");
 		self.end_headers()
 		self.wfile.write(bytes(errmsg, "utf-8"))
+		if httpcode > 399:
+			print(f"ERROR {httpcode}: {errmsg}")
 	def write_str(self, s):
 		self.wfile.write(bytes(s, "utf-8"))
 	def pong(self):
@@ -86,33 +88,48 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		mac = self.headers['3ds-mac']
 		try:
 			if mac == None:
-				return self.write_response(400, "Missing mac")
+				self.write_response(400, "Missing mac")
+				return None
 			if len(mac) != 12:
-				return self.write_response(400, "Invalid mac")
+				self.write_response(400, "Invalid mac")
+				return None
 			mac = bytes.fromhex(mac)
 			if len(mac) != 6:
-				return self.write_response(400, "Invalid mac")
+				self.write_response(400, "Invalid mac")
+				return None
 			mac = struct.unpack('<q', mac + b'\x00\x00')[0]
 		except:
-			return self.write_response(400, "Invalid mac")
+			self.write_response(400, "Invalid mac")
+			return None
 		nid = self.headers['3ds-nid']
+		if nid is None:
+			self.write_response(400, "Missing nid")
+			return None
 		try:
 			if len(nid) < 50:
 				database.store_nid(mac, nid)
 		except:
-			pass
+			self.write_response(400, "Invalid nid")
+			return None
 		return mac
-	def upload_new_messages(self):
-		# first verify the headers needed
+	def content_length(self, l_min, l_max):
 		length = self.headers['content-length'];
 		try:
 			length = int(length)
-			if length < 4: #0x70:
-				return self.write_response(400, "Content too short")
-			if length > MAX_MESSAGE_SIZE:
-				return self.write_response(413, "Content too long")
+			if length < l_min:
+				self.write_response(400, "Content too short")
+				return None
+			if length > l_max:
+				self.write_response(413, "Content too long")
+				return None
 		except:
-			return self.write_response(411, "Invalid content-length error")
+			self.write_response(411, "Invalid content-length error")
+			return None
+		return length
+	def upload_new_messages(self):
+		# first verify the headers needed
+		length = self.content_length(4, MAX_MESSAGE_SIZE)
+		if length is None: return
 		mac = self.get_mac()
 		if mac is None: return
 		MSG_HEADER_SIZE = 0x70
@@ -148,16 +165,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		self.end_headers()
 		self.wfile.write(struct.pack('<B', msg.send_count))
 	def upload_mboxlist(self):
-		length = self.headers['content-length'];
-		try:
-			length = int(length)
-			if length < 4:
-				print("meow?")
-				return self.write_response(400, "Content too short")
-			if length > MBOXLIST_SIZE:
-				return self.write_response(413, "Content too long")
-		except:
-			return self.write_response(411, "Invalid content-length error")
+		length = self.content_length(4, MBOXLIST_SIZE)
+		if length is None: return
 		mac = self.get_mac()
 		if mac is None: return
 		buf = self.rfile.read(MBOXLIST_SIZE)
@@ -196,6 +205,22 @@ class StreetPassServer(BaseHTTPRequestHandler):
 		#self.send_header("3ds-mac", struct.pack('<q', from_mac).hex()[0:12])
 		self.end_headers()
 		self.wfile.write(msg.data)
+	def new_report(self):
+		mac = self.get_mac()
+		if mac is None: return
+		length = self.content_length(ReportSendPayload.SIZE, ReportSendPayload.SIZE)
+		if length is None: return
+		buf = self.rfile.read(length)
+		report = ReportSendPayload(buf)
+		if not report.validate():
+			return self.write_response(400, "Bad Report")
+		msg, reported_mac = database.get_inbox_for_report(mac, report.message_id)
+		if msg is None:
+			return self.write_response(404, "Message not found")
+		if not msg.validate_hash(report.hash):
+			return self.write_response(400, "Bad Message")
+		self.database.add_report(mac, reported_mac, msg.batch_id, report.msg)
+		self.write_response(200, "Success")
 	def delete_data(self):
 		mac = self.get_mac()
 		if mac is None: return
@@ -295,6 +320,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 				return self.upload_mboxlist()
 			if self.path == "/outbox/upload":
 				return self.upload_new_messages()
+			if self.path == "/report/new":
+				return self.new_report()
 			self.write_response(404, "Path not found")
 		except:
 			print(traceback.format_exc())

@@ -118,7 +118,7 @@ SceneResult N(process)(Scene* sc) {
 						printf("ERROR deleting all data: %ld\n", res);
 						return;
 					}
-					printf("Successfully deleted all data!\n");
+					printf("Successfully sent request to delete all data! This can take up to 15 days.\n");
 				}));
 				return scene_push;
 			}

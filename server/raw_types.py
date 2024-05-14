@@ -17,6 +17,7 @@
 from enum import Enum
 import struct
 import base64
+import hashlib
 
 MAX_MESSAGE_SIZE = 0x20000
 MBOXLIST_SIZE = (12 + 16*24)
@@ -68,7 +69,33 @@ class GeneralClass():
 				raise Exception("Wrong magic")
 	@property
 	def magic(self):
-		return struct.unpack('<H', self.data[0:2])[0]
+		if hasattr(self, "magic_len") and self.magic_len == 4:
+			return struct.unpack('<I', self.data[0:4])[0]
+		else:
+			return struct.unpack('<H', self.data[0:2])[0]
+
+class ReportSendPayload(GeneralClass):
+	MAGIC = 0x5053524e
+	SIZE = 0x30 + 201
+	magic_len = 4
+	@property
+	def version(self):
+		return struct.unpack('<I', self.data[4:8])[0]@property
+	@property
+	def message_id(self):
+		return struct.unpack('<q', self.data[0x8:0x8+8])[0]
+	@property
+	def hash(self):
+		return self.data[0x10:0x30]
+	@property
+	def msg(self):
+		return self.data[0x30:0x30 + 201].decode("utf-8").strip('\x00')
+	def validate(self):
+		try:
+			self.msg
+			return self.version == 1
+		except:
+			return False
 
 class MBoxList(GeneralClass):
 	FILENAME = "MBoxList____"
@@ -265,6 +292,12 @@ class RawMessage(GeneralClass):
 			return False
 	def validate(self):
 		return self.validate_header() and self.size == len(self.data)
+	def validate_hash(self, comp_hash):
+		header = self.data[0:0x70]
+		h = hashlib.sha256()
+		h.update(header)
+		digest = h.digest()
+		return digest == comp_hash
 
 class RawMessageExtraHeader(GeneralClass):
 	@property

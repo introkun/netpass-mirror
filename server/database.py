@@ -103,6 +103,18 @@ class Database:
 			);
 			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_mac ON map_mac_nid (mac);
 			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_nid ON map_mac_nid (nid);
+			
+			CREATE TABLE IF NOT EXISTS reports(
+				id BIGSERIAL PRIMARY KEY,
+				from_mac BIGINT NOT NULL,
+				reported_mac BIGINT NOT NULL,
+				report_message TEXT NOT NULL,
+				messages BYTEA[] NOT NULL,
+				closed BOOL NOT NULL DEFAULT false,
+				time BIGINT NOT NULL
+			);
+			CREATE INDEX IF NOT EXISTS reports_from_mac ON reports (from_mac);
+			CREATE INDEX IF NOT EXISTS reports_reported_mac ON reports (reported_mac);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -190,6 +202,33 @@ class Database:
 				return (msg, res[2])
 		finally:
 			self.con().commit()
+	def get_inbox_for_report(self, to_mac, message_id):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("SELECT from_mac, message FROM inbox WHERE to_mac = %s AND message_id = %s AND sent = true", (to_mac, message_id))
+				res = cur.fetchone()
+				if res is None: return (None, None)
+				msg = RawMessage(res[1])
+				if not msg.validate: return (None, None)
+				return (msg, res[0])
+		finally:
+			self.con().commit()
+	def add_report(self, from_mac, reported_mac, batch_id, report_message):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("SELECT message FROM inbox WHERE from_mac = %s AND to_mac = %s", (reported_mac, from_mac))
+				messages = []
+				for r in cur.fetchall():
+					msg = RawMessage(r[0])
+					if msg.validate() and msg.batch_id == batch_id:
+						messages.push(msg.data)
+				cur.execute("""
+				INSERT INTO reports (from_mac, reported_mac, reported_message, messages, time)
+				VALUES (%s, %s, %s, %s, %s)
+				""", (from_mac, reported_mac, reported_message, messages, math.floor(time.time())))
+		finally:
+			self.con().commit()
+
 	def enter_location(self, mac, location_id):
 		try:
 			with self.con().cursor() as cur:
@@ -327,8 +366,7 @@ class Database:
 		try:
 			with self.con().cursor() as cur:
 				cur.execute("DELETE FROM outbox WHERE mac = %s", (mac,))
-				cur.execute("DELETE FROM inbox WHERE from_mac = %s OR to_mac = %s", (mac, mac))
-				cur.execute("DELETE FROM location WHERE mac = %s", (mac,))
+				cur.execute("DELETE FROM inbox WHERE to_mac = %s", (mac,))
 				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
 		finally:
 			self.con().commit()
@@ -337,7 +375,7 @@ class Database:
 			with self.con().cursor() as cur:
 				curtime = math.floor(time.time())
 				cur.execute("DELETE FROM outbox WHERE time < %s", (curtime - 60*60*24*30,))
-				cur.execute("DELETE FROM inbox WHERE time < %s", (curtime - 60*60*24*30,))
+				cur.execute("DELETE FROM inbox WHERE time < %s", (curtime - 60*60*24*15,))
 				cur.execute("DELETE FROM mboxlist WHERE time < %s", (curtime - 60*60*24*30,))
 				cur.execute("DELETE FROM location WHERE time_end < %s", (curtime,))
 		finally:
