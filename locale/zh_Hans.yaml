@@ -25,3 +25,5 @@ str_at_catcafe: '你在猫咪咖啡馆。'
 str_system_language: '系统语言'
 str_language_pick: '语言：'
 str_no_location_twice: '你不能连续两次选择同一的地方！'
+str_report_user_hint: 举报 "%s"
+str_report_user: 举报个人
