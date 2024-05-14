@@ -31,3 +31,4 @@ Result APT_Wrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out
 Result APT_Unwrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out);
 u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val);
 Result decryptMii(void* data, MiiData* mii);
+u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);

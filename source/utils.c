@@ -216,3 +216,14 @@ error:
 	free(out);
 	return res;
 }
+
+u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len) {
+	u8* buf_orig = buf;
+	while (buf_len - ((int)(buf - buf_orig)) > 0 && (buf = memchr(buf, *(uint8_t*)cmp, buf_len - ((int)(buf - buf_orig))))) {
+		if (memcmp(buf, cmp, cmp_len) == 0) {
+			return buf;
+		}
+		buf++;
+	}
+	return NULL;
+}

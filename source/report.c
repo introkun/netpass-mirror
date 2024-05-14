@@ -114,17 +114,25 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		list->header.cur_size++;
 		edited = true;
 	}
+	ReportListEntry* e = &list->entries[found_i];
 	if (msg->title_id == 0x20800) {
 		// mii plaza
-		ReportListEntry* e = &list->entries[found_i];
 		static const int cfpb_offset = 0x36bc;
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
 			CFPB* cfpb = (CFPB*)((u8*)msg + msg->total_header_size + cfpb_offset);
 			if (cfpb->magic == 0x42504643) {
+				int prev_mii_id = e->mii.magic == 3 ? e->mii.mii_id : 0;
 				Result r = decryptMii(&cfpb->nonce, &e->mii);
-				if (!R_FAILED(r)) edited = true;
+				if (!R_FAILED(r) && prev_mii_id != e->mii.mii_id) edited = true;
 			}
+		}
+	} else if (e->mii.magic != 3) {
+		// search if there is a mii in this payload
+		CFPB* cfpb = (CFPB*)memsearch((u8*)msg, msg->message_size, (u8*)"CFPB", 4);
+		if (cfpb) {
+			Result r = decryptMii(&cfpb->nonce, &e->mii);
+			if (!R_FAILED(r)) edited = true;
 		}
 	}
 

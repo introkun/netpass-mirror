@@ -122,7 +122,7 @@ SceneResult N(process)(Scene* sc) {
 				}));
 				return scene_push;
 			}
-			if (_data->cursor == 3) return scene_pop;
+			if (_data->cursor == 4) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;
