@@ -27,3 +27,7 @@ str_system_language: 'Teanga Chórais'
 str_language_pick: 'Teanga:'
 str_no_location_twice: 'Ní féidir leat an suíomh céanna a chur faoi dhó i ndiaidh
   a chéile!'
+str_report_user: Tuairiscigh úsáideoir
+str_report_user_hint: Tuairiscigh "%s"
+str_cancel: Ceal
+str_submit: Cuir isteach
