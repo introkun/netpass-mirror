@@ -26,3 +26,7 @@ str_system_language: Langue Système
 str_language_pick: 'Langue :'
 str_no_location_twice: Vous ne pouvez pas choisir le même lieu deux fois d'affilée
   !
+str_report_user: Signaler un utilisateur
+str_report_user_hint: Signaler "%s"
+str_cancel: Annuler
+str_submit: Soumettre
