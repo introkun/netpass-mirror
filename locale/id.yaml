@@ -25,3 +25,7 @@ str_at_catcafe: 'Kamu di Kafe Kucing.'
 str_system_language: 'Bahasa Sistem'
 str_language_pick: 'Bahasa:'
 str_no_location_twice: 'Kamu tidak boleh masuk ke tempat yang sama dua kali berturut-turut!'
+str_cancel: Batal
+str_submit: Lapor
+str_report_user: Lapor pengguna
+str_report_user_hint: Pelaku "%s"
