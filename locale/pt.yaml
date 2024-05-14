@@ -26,3 +26,7 @@ str_at_catcafe: Você está no Cat Café.
 str_system_language: Idioma do Console
 str_language_pick: 'Idioma:'
 str_no_location_twice: Você não pode entrar na mesma localização duas vezes seguidas!
+str_report_user: Denunciar um usuário
+str_report_user_hint: Denunciar "%s"
+str_cancel: Cancelar
+str_submit: Enviar
