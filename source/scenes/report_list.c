@@ -70,7 +70,7 @@ SceneResult N(report)(Scene* sc, int i) {
 				goto exit;
 			}
 			SHA256_HASH hash;
-			Sha256Calculate(&msg, sizeof(CecMessageHeader), &hash);
+			Sha256Calculate(&msg, 0x28, &hash);
 			ReportSendPayload* data = malloc(sizeof(ReportSendPayload));
 			if (!data) goto exit;
 			

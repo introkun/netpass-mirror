@@ -208,7 +208,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def new_report(self):
 		mac = self.get_mac()
 		if mac is None: return
-		length = self.content_length(ReportSendPayload.SIZE, ReportSendPayload.SIZE)
+		length = self.content_length(ReportSendPayload.SIZE, ReportSendPayload.SIZE + 8)
 		if length is None: return
 		buf = self.rfile.read(length)
 		report = ReportSendPayload(buf)
@@ -219,7 +219,7 @@ class StreetPassServer(BaseHTTPRequestHandler):
 			return self.write_response(404, "Message not found")
 		if not msg.validate_hash(report.hash):
 			return self.write_response(400, "Bad Message")
-		self.database.add_report(mac, reported_mac, msg.batch_id, report.msg)
+		database.add_report(mac, reported_mac, msg.batch_id, report.msg)
 		self.write_response(200, "Success")
 	def delete_data(self):
 		mac = self.get_mac()

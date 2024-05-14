@@ -221,11 +221,11 @@ class Database:
 				for r in cur.fetchall():
 					msg = RawMessage(r[0])
 					if msg.validate() and msg.batch_id == batch_id:
-						messages.push(msg.data)
+						messages.append(msg.data)
 				cur.execute("""
-				INSERT INTO reports (from_mac, reported_mac, reported_message, messages, time)
+				INSERT INTO reports (from_mac, reported_mac, report_message, messages, time)
 				VALUES (%s, %s, %s, %s, %s)
-				""", (from_mac, reported_mac, reported_message, messages, math.floor(time.time())))
+				""", (from_mac, reported_mac, report_message, messages, math.floor(time.time())))
 		finally:
 			self.con().commit()
 

@@ -80,7 +80,7 @@ class ReportSendPayload(GeneralClass):
 	magic_len = 4
 	@property
 	def version(self):
-		return struct.unpack('<I', self.data[4:8])[0]@property
+		return struct.unpack('<I', self.data[4:8])[0]
 	@property
 	def message_id(self):
 		return struct.unpack('<q', self.data[0x8:0x8+8])[0]
@@ -93,7 +93,7 @@ class ReportSendPayload(GeneralClass):
 	def validate(self):
 		try:
 			self.msg
-			return self.version == 1
+			return self.magic == self.MAGIC and self.version == 1
 		except:
 			return False
 
@@ -293,7 +293,7 @@ class RawMessage(GeneralClass):
 	def validate(self):
 		return self.validate_header() and self.size == len(self.data)
 	def validate_hash(self, comp_hash):
-		header = self.data[0:0x70]
+		header = self.data[0:0x28]
 		h = hashlib.sha256()
 		h.update(header)
 		digest = h.digest()
