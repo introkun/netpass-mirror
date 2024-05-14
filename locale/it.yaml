@@ -26,3 +26,7 @@ str_at_catcafe: 'Sei al Bar dei Gatti.'
 str_system_language: Lingua di sistema
 str_language_pick: 'Lingua:'
 str_no_location_twice: Non puoi entrare nello stesso luogo due volte di fila!
+str_report_user: Segnala un utente
+str_report_user_hint: Segnala "%s"
+str_cancel: Annulla
+str_submit: Invia
