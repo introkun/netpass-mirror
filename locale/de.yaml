@@ -26,3 +26,7 @@ str_at_arcade: Du bist in der Spielhalle.
 str_at_catcafe: Du bist im Katzencafé.
 str_no_location_twice: Du kannst denselben Ort nicht zweimal hintereinander betreten!
 str_goto_catcafe: Gehe zum Katzencafé
+str_report_user_hint: Melde "%s"
+str_cancel: Abbrechen
+str_submit: Absenden
+str_report_user: Benutzer melden
