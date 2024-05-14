@@ -25,3 +25,7 @@ str_at_catcafe: '猫カフェに滞在中。'
 str_system_language: システム言語
 str_language_pick: '言語:'
 str_no_location_twice: 前回と同じ場所へ連続で出かけることは出来ません！
+str_cancel: キャンセル
+str_report_user: ユーザーを通報する
+str_report_user_hint: '"%s" を通報する'
+str_submit: 送信する
