@@ -26,3 +26,7 @@ str_at_catcafe: 'Du er i Kattecaféen.'
 str_system_language: 'Systemsprog'
 str_language_pick: 'Sprog:'
 str_no_location_twice: 'Du kan ikke tage til den samme destination to gange i træk!'
+str_report_user: Indrapportér en bruger
+str_report_user_hint: Rapport "%s"
+str_cancel: Annuller
+str_submit: Indsend
