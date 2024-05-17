@@ -120,7 +120,7 @@ class Database:
 				mac BIGINT NOT NULL,
 				time_end BIGINT NOT NULL,
 				reason TEXT NOT NULL,
-				notes TEXT NOT NULL DEFAULT ""
+				notes TEXT NOT NULL DEFAULT ''
 			);
 			CREATE INDEX IF NOT EXISTS bans_mac ON bans (mac);
 			COMMIT;
