@@ -104,7 +104,7 @@ class Database:
 			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_mac ON map_mac_nid (mac);
 			CREATE UNIQUE INDEX IF NOT EXISTS map_mac_nid_nid ON map_mac_nid (nid);
 			
-			CREATE TABLE IF NOT EXISTS reports(
+			CREATE TABLE IF NOT EXISTS reports (
 				id BIGSERIAL PRIMARY KEY,
 				from_mac BIGINT NOT NULL,
 				reported_mac BIGINT NOT NULL,
@@ -115,6 +115,14 @@ class Database:
 			);
 			CREATE INDEX IF NOT EXISTS reports_from_mac ON reports (from_mac);
 			CREATE INDEX IF NOT EXISTS reports_reported_mac ON reports (reported_mac);
+			
+			CREATE TABLE IF NOT EXISTS bans (
+				mac BIGINT NOT NULL,
+				time_end BIGINT NOT NULL,
+				reason TEXT NOT NULL,
+				notes TEXT NOT NULL DEFAULT ""
+			);
+			CREATE INDEX IF NOT EXISTS bans_mac ON bans (mac);
 			COMMIT;
 			""")
 		self.con().commit()
@@ -137,6 +145,17 @@ class Database:
 		INSERT INTO research AS r (title_id, reason, reason_id) VALUES (%s, %s, %s)
 		ON CONFLICT (title_id, reason_id) DO UPDATE SET count = r.count + 1
 		""", (title_id, msg, research_id))
+
+	def check_ban(self, mac):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("SELECT reason FROM bans WHERE mac = %s AND (time_end = 0 OR time_end > %s)", (mac, math.floor(time.time())))
+				res = cur.fetchone()
+				if res is None:
+					return None
+				return res[0]
+		finally:
+			self.con().commit()
 
 	def store_nid(self, mac, nid):
 		try:

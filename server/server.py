@@ -72,6 +72,8 @@ class StreetPassServer(BaseHTTPRequestHandler):
 	def write_str(self, s):
 		self.wfile.write(bytes(s, "utf-8"))
 	def pong(self):
+		mac = self.get_mac()
+		if mac is None: return
 		self.send_response(200)
 		self.send_header("Content-Type", "text/plain")
 		try:
@@ -110,6 +112,15 @@ class StreetPassServer(BaseHTTPRequestHandler):
 				database.store_nid(mac, nid)
 		except:
 			self.write_response(400, "Invalid nid")
+			return None
+		ban_reason = database.check_ban(mac)
+		if ban_reason is not None:
+			self.send_response(203)
+			self.send_header("Content-Type", "text/plain")
+			send_str = f"You are banned: {ban_reason}"
+			self.send_header("3ds-netpass-msg", send_str)
+			self.end_headers()
+			self.write_str(send_str)
 			return None
 		return mac
 	def content_length(self, l_min, l_max):
