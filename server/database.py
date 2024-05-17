@@ -153,6 +153,7 @@ class Database:
 				res = cur.fetchone()
 				if res is None:
 					return None
+				self.delete_mac_data_ban(mac)
 				return res[0]
 		finally:
 			self.con().commit()
@@ -310,6 +311,8 @@ class Database:
 	def streetpass_mac(self, mac1, mac2):
 		if mac1 == mac2:
 			return False
+		if self.check_ban(mac1) is not None or self.check_ban(mac2) is not None:
+			return False
 		batch_id = random.randbytes(4)
 		while batch_id == b'\0\0\0\0':
 			batch_id = random.randbytes(4)
@@ -387,6 +390,15 @@ class Database:
 				cur.execute("DELETE FROM outbox WHERE mac = %s", (mac,))
 				cur.execute("DELETE FROM inbox WHERE to_mac = %s", (mac,))
 				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
+		finally:
+			self.con().commit()
+	def delete_mac_data_ban(self, mac):
+		try:
+			with self.con().cursor() as cur:
+				cur.execute("DELETE FROM outbox WHERE mac = %s", (mac,))
+				cur.execute("DELETE FROM inbox WHERE to_mac = %s OR from_mac = %s", (mac, mac))
+				cur.execute("DELETE FROM mboxlist WHERE mac = %s", (mac,))
+				cur.execute("DELETE FROM location WHERE mac = %s", (mac,))
 		finally:
 			self.con().commit()
 	def cleanup(self):
