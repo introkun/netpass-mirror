@@ -46,7 +46,7 @@ Result uploadOutboxes(void) {
 		res = cecdOpenAndRead(title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoFull), (u8*)&outbox);
 		if (R_FAILED(res)) continue;
 		for (int j = 0; j < outbox.header.num_messages; j++) {
-			u8* msg = malloc(outbox.messages[j].message_size);
+			u8* msg = malloc(MAX(100, outbox.messages[j].message_size));
 			if (!msg) {
 				printf("ERROR: failed to allocate message\n");
 				return -1;

@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#define MAX(x, y) (x > y ? x : y)
+
 char* b64encode(u8* in, size_t len);
 int rmdir_r(char *path);
 void mkdir_p(char* orig_path);
