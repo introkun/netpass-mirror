@@ -78,7 +78,7 @@ To build `.cia` files, run
  - Japanese: [Akira SUNADUKA](https://gitlab.com/Akira-SN)
  - Polish: [DanteyPL](https://gitlab.com/DanteyPL)
  - Spanish: [Gato-kun](https://gitlab.com/Gato-kun), [Amnesia1000](https://gitlab.com/Amnesia1000)
- - French: [Straky](https://straky.fr/en), [Esse Peius](https://gitlab.com/Essepeius), Tourneur
+ - French: [Straky](https://straky.fr/en), [EssePeius](https://gitlab.com/Essepeius), Tourneur
  - Italian: [LNLenost](https://github.com/LNLenost)
  - Chinese (Traditional): ManLok Ho
  - Ukrainian: Geo
