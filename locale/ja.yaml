@@ -29,3 +29,6 @@ str_cancel: 取り消す
 str_report_user: ユーザーを通報する
 str_report_user_hint: '"%s" を通報する'
 str_submit: 送信する
+str_back_alley_message: もっとパスをハッスルしよう
+str_back_alley_pay: パスを購入する {playcoin}%d
+str_back_alley: 裏路地
