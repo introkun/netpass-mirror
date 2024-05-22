@@ -31,3 +31,5 @@ str_report_user: Tuairiscigh úsáideoir
 str_report_user_hint: Tuairiscigh "%s"
 str_cancel: Ceal
 str_submit: Cuir isteach
+str_back_alley: Caolsráid ar ais
+str_back_alley_pay: Ceannaigh pas {playcoin}%d
