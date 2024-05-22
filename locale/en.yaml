@@ -29,3 +29,6 @@ str_report_user: Report a user
 str_report_user_hint: Report "%s"
 str_cancel: Cancel
 str_submit: Submit
+str_back_alley: Back Alley
+str_back_alley_message: Let's hustle some more passes
+str_back_alley_pay: "Purchase a pass {playcoin}%d"
