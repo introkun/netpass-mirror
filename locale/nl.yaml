@@ -30,3 +30,6 @@ str_report_user: Gebruiker rapporteren
 str_report_user_hint: Rapporteer "%s"
 str_cancel: Annuleer
 str_submit: Verzenden
+str_back_alley: Steegje
+str_back_alley_message: Laten we nog wat passen opschudden
+str_back_alley_pay: Koop een pas {playcoin}%d
