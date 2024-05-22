@@ -30,3 +30,6 @@ str_report_user_hint: Melde "%s"
 str_cancel: Abbrechen
 str_submit: Absenden
 str_report_user: Benutzer melden
+str_back_alley: Hintergasse
+str_back_alley_message: Lass uns noch ein paar Pässe holen
+str_back_alley_pay: Kaufe einen Pass {playcoin}%d
