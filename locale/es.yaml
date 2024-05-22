@@ -24,7 +24,7 @@ str_goto_catcafe: 'Ir al Café de Gatos'
 str_at_catcafe: 'Estás en el Café de Gatos.'
 str_system_language: Idioma del Sistema
 str_language_pick: 'Idioma:'
-str_no_location_twice: ¡No puede entrar dos veces seguidas en el mismo sitio!
+str_no_location_twice: ¡No puedes entrar dos veces seguidas en el mismo sitio!
 str_report_user: Denuncia un usuario
 str_report_user_hint: Denuncia "%s"
 str_cancel: Cancelar
