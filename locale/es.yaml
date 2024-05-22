@@ -30,3 +30,5 @@ str_report_user_hint: Denuncia "%s"
 str_cancel: Cancelar
 str_submit: Enviar
 str_back_alley: Callejón
+str_back_alley_pay: Compra un pase {playcoin}%d
+str_back_alley_message: Vamos a pillar algún pase más
