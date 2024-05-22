@@ -30,3 +30,6 @@ str_report_user: Denunciar um usuário
 str_report_user_hint: Denunciar "%s"
 str_cancel: Cancelar
 str_submit: Enviar
+str_back_alley: Beco
+str_back_alley_message: Vamos pegar mais alguns passes
+str_back_alley_pay: Compre um passe {playcoin}%d
