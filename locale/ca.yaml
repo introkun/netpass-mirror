@@ -30,3 +30,6 @@ str_cancel: Cancel·lar
 str_report_user_hint: Denuncia "%s"
 str_submit: Enviar
 str_report_user: Denuncia un usuari
+str_back_alley_message: Afanyem alguns passis més
+str_back_alley_pay: Compra un passi {playcoin}%d
+str_back_alley: Carreró
