@@ -32,3 +32,7 @@ str_submit: Submit
 str_back_alley: Back Alley
 str_back_alley_message: Let's hustle some more passes
 str_back_alley_pay: "Purchase a pass {playcoin}%d"
+str_toggle_titles: Toggle Titles
+str_toggle_titles_message: "Press {a_button} to toggle."
+str_toggle_titles_on: "(ON) %s"
+str_toggle_titles_off: "(OFF) %s"
