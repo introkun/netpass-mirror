@@ -20,7 +20,7 @@ translations = {}
 for file in os.listdir(SRCDIR):
 	if file.endswith(".yaml"):
 		language = file[:-5]
-		with open(SRCDIR + "/" + file, "r") as f:
+		with open(SRCDIR + "/" + file, "r", encoding="utf-8") as f:
 			translations[language] = yaml.safe_load(f)
 
 headerfile = "#pragma once\n\n#include <3ds.h>\n"
@@ -69,8 +69,8 @@ for key in translations["en"].keys():
 	outfile += "};\n";
 
 os.makedirs(DESTDIR, exist_ok=True)
-with open(DESTDIR + "/lang_strings.h", "w") as f:
+with open(DESTDIR + "/lang_strings.h", "w", encoding="utf-8") as f:
 	f.write(headerfile)
 
-with open(DESTDIR + "/lang_strings.c", "w") as f:
+with open(DESTDIR + "/lang_strings.c", "w", encoding="utf-8") as f:
 	f.write(outfile)
