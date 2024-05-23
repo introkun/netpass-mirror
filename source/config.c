@@ -29,6 +29,10 @@ static const char config_path[] = "/config/netpass/netpass.cfg";
 Config config = {
 	.last_location = -1,
 	.language = -1,
+	.year = 0,
+	.month = 0,
+	.day = 0,
+	.price = 0,
 };
 
 void load(void) {
@@ -65,6 +69,18 @@ void load(void) {
 		if (strcmp(key, "LAST_LOCATION") == 0) {
 			config.last_location = atoi(value);
 		}
+		if (strcmp(key, "YEAR") == 0) {
+			config.year = atoi(value);
+		}
+		if (strcmp(key, "MONTH") == 0) {
+			config.month = atoi(value);
+		}
+		if (strcmp(key, "DAY") == 0) {
+			config.day = atoi(value);
+		}
+		if (strcmp(key, "PRICE") == 0) {
+			config.price = atoi(value);
+		}
 	}
 	fclose(f);
 }
@@ -73,6 +89,14 @@ void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
 	char line[200];
 	snprintf(line, 200, "last_location=%d\n", config.last_location);
+	fputs(line, f);
+	snprintf(line, 200, "year=%d\n", config.year);
+	fputs(line, f);
+	snprintf(line, 200, "month=%d\n", config.month);
+	fputs(line, f);
+	snprintf(line, 200, "day=%d\n", config.day);
+	fputs(line, f);
+	snprintf(line, 200, "price=%ld\n", config.price);
 	fputs(line, f);
 	if (config.language == -1) {
 		fputs("language=system\n", f);

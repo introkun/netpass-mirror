@@ -29,3 +29,6 @@ str_report_user_hint: 举报 "%s"
 str_report_user: 举报个人
 str_cancel: 取消
 str_submit: 提交
+str_back_alley_pay: 购买通行证 {playcoin}%d
+str_back_alley: 小巷
+str_back_alley_message: 再搞些通行证

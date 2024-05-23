@@ -45,6 +45,21 @@ int main() {
 	curlInit();
 	srand(time(NULL));
 
+	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
+	{
+		u32 extdata_lowpathdata[3];
+		memset(extdata_lowpathdata, 0, 0xc);
+		extdata_lowpathdata[0] = MEDIATYPE_NAND;
+		extdata_lowpathdata[1] = 0xf000000b;
+		FS_Path extdata_path = {
+			type: PATH_BINARY,
+			size: 0xC,
+			data: (u8*)extdata_lowpathdata,
+		};
+		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
+		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
+	}
+
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 	Scene* scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {

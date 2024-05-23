@@ -317,13 +317,31 @@ cleanup_box:
 	return res;
 }
 
+bool validateStreetpassMessage(u8* msgbuf) {
+	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
+	// sanity checks
+	if (msgheader->magic != 0x6060) return false; // bad magic
+	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return false;
+	if (msgheader->message_size > MAX_MESSAGE_SIZE) return false; // prooobably too large
+
+	if (msgheader->body_size <= 0x20) {
+		u8 b = 0;
+		u8* ptr = msgbuf + msgheader->total_header_size;
+		for (int i = 0; i < msgheader->body_size; i++) {
+			b |= *ptr;
+			ptr++;
+		}
+		if (b == 0) return false;
+	}
+
+	return true;
+}
+
 Result addStreetpassMessage(u8* msgbuf) {
 	Result res = 0;
 	CecMessageHeader* msgheader = (CecMessageHeader*)msgbuf;
 	// sanity checks
-	if (msgheader->magic != 0x6060) return -1; // bad magic
-	if (msgheader->message_size != msgheader->total_header_size + msgheader->body_size + 0x20) return -1;
-	if (msgheader->message_size > MAX_MESSAGE_SIZE) return -1; // prooobably too large
+	if (!validateStreetpassMessage(msgbuf)) return -1; // bad message
 
 	// update the msg header about the receive time
 	if (!msgheader->received.year) {

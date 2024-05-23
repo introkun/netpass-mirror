@@ -55,3 +55,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/settings.h"
 #include "scenes/info.h"
 #include "scenes/report_list.h"
+#include "scenes/back_alley.h"

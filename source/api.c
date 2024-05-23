@@ -25,6 +25,7 @@
 #include <string.h>
 
 int location = -1;
+FS_Archive sharedextdata_b = 0;
 
 Result uploadOutboxes(void) {
 	Result res = 0;
@@ -41,7 +42,7 @@ Result uploadOutboxes(void) {
 	}
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Uploading outbox %d/%ld...", i+1, mbox_list.num_boxes);
-		int title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
+		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
 		CecBoxInfoFull outbox;
 		res = cecdOpenAndRead(title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoFull), (u8*)&outbox);
 		if (R_FAILED(res)) continue;
@@ -65,6 +66,14 @@ Result uploadOutboxes(void) {
 				continue;
 			}
 			char url[50];
+			if (!validateStreetpassMessage(msg)) {
+				snprintf(url, 50, "%s/outbox/%lx", BASE_URL, title_id);
+				printf("Deleting ");
+				httpRequest("DELETE", url, 0, 0, 0, 0);
+				free(msg);
+				free(title_name);
+				continue;
+			}
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			CurlReply* reply;
 			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply, title_name);
@@ -133,7 +142,7 @@ Result downloadInboxes(void) {
 		char url[100];
 		snprintf(url, 100, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
 		u32 http_code = 200;
-		while (http_code == 200 && box_messages < box_header.max_num_messages-1) {
+		while (http_code == 200 && box_messages < box_header.max_num_messages) {
 			printf(".");
 			CurlReply* reply;
 			res = httpRequest("GET", url, 0, 0, &reply, 0);
