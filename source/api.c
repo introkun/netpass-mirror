@@ -134,7 +134,7 @@ Result downloadInboxes(void) {
 		char url[100];
 		snprintf(url, 100, "%s/inbox/%s/pop", BASE_URL, mbox_list.box_names[i]);
 		u32 http_code = 200;
-		while (http_code == 200 && box_messages < box_header.max_num_messages-1) {
+		while (http_code == 200 && box_messages < box_header.max_num_messages) {
 			printf(".");
 			CurlReply* reply;
 			res = httpRequest("GET", url, 0, 0, &reply, 0);
