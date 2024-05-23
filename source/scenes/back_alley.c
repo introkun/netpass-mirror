@@ -53,7 +53,14 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		char url[80];
 		snprintf(url, 80, "%s/pass/title_id/%lx", BASE_URL, N(buy_title_id));
 		Result res = httpRequest("PUT", url, 0, 0, 0, 0);
-		if (R_FAILED(res)) goto error;
+		if (R_FAILED(res)) {
+			if (res == -404) {
+				printf("ERROR: No fitting pass found!");
+				free(N(play_coins));
+				return;
+			}
+			goto error;
+		}
 		N(play_coins)->total_coins -= config.price;
 		config.price += 2;
 		configWrite();
