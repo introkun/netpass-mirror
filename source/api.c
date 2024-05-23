@@ -65,6 +65,12 @@ Result uploadOutboxes(void) {
 				free(title_name);
 				continue;
 			}
+			if (!validateStreetpassMessage(msg)) {
+				printf("Skipping ");
+				free(msg);
+				free(title_name);
+				continue;
+			}
 			char url[50];
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			CurlReply* reply;

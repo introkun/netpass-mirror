@@ -80,7 +80,8 @@ Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf);
 Handle cecdGetServHandle(void);
 
 Result updateStreetpassOutbox(u8* msgbuf);
-Result addStreetpassMessage(u8* buf);
+bool validateStreetpassMessage(u8* msgbuf);
+Result addStreetpassMessage(u8* msgbuf);
 
 typedef struct {
 	u32 magic; // 0x42504643 CFPB
