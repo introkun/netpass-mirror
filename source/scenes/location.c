@@ -24,7 +24,7 @@
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_location;
-	C2D_Text g_entries[2];
+	C2D_Text g_entries[3];
 	C2D_SpriteSheet spr;
 	int cursor;
 } N(DataStruct);
@@ -44,8 +44,9 @@ void N(init)(Scene* sc) {
 	_data->g_staticBuf = C2D_TextBufNew(2000);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[sc->data]);
-	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_settings);
-	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_exit);
+	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_back_alley);
+	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_settings);
+	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_exit);
 	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
 }
 
@@ -58,10 +59,10 @@ void N(render)(Scene* sc) {
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	float width;
 	get_text_dimensions(&_data->g_location, 1, 1, &width, 0);
-	C2D_DrawRectSolid(8, 8, 0, width + 4, 10 + 3*25, bgclr);
+	C2D_DrawRectSolid(8, 8, 0, width + 4, 10 + 4*25, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 10 + (i+1)*25, 0, 1, 1, clr);
 	}
 	int x = 10;
@@ -83,13 +84,17 @@ SceneResult N(process)(Scene* sc) {
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > 1) _data->cursor = 1;
+		if (_data->cursor > 2) _data->cursor = 2;
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
+				sc->next_scene = getBackAlleyScene();
+				return scene_push;
+			}
+			if (_data->cursor == 1) {
 				sc->next_scene = getSettingsScene();
 				return scene_push;
 			}
-			if (_data->cursor == 1) return scene_stop;
+			if (_data->cursor == 2) return scene_stop;
 		}
 	}
 	if (kDown & KEY_START) return scene_stop;

@@ -34,3 +34,14 @@ Result APT_Unwrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 o
 u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val);
 Result decryptMii(void* data, MiiData* mii);
 u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);
+
+typedef struct {
+	u32 magic; // 0x4F00
+	u16 total_coins;
+	u16 today_coins;
+	u32 total_step_count_last_coin;
+	u32 today_step_count_last_coin;
+	u16 year;
+	u8 month;
+	u8 day;
+} PlayCoins;

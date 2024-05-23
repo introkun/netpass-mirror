@@ -10,10 +10,27 @@ DESTDIR = basepath + "/" + DESTDIR
 language_map = {
 	"ja": "jp",
 	"zh_Hant": "tw",
+	"zh_Hans": "zh",
+}
+
+replace_map = {
+	"a_button": "\ue000",
+	"b_button": "\ue001",
+	"x_button": "\ue002",
+	"y_button": "\ue003",
+	"l_button": "\ue004",
+	"r_button": "\ue005",
+	"d_pad": "\ue006",
+	"playcoin": "\ue075",
 }
 
 def l(s):
 	return (language_map[s] if s in language_map else s).upper()
+
+def _s(s):
+	for r, p in replace_map.items():
+		s = s.replace(f"{{{r}}}", p)
+	return s
 
 translations = {}
 
@@ -65,7 +82,7 @@ for key in translations["en"].keys():
 		s = "0"
 		if key in translations[lang] and translations[lang][key] != "":
 			s = json.dumps(translations[lang][key], ensure_ascii=False)
-		outfile += f"\t{{CFG_LANGUAGE_{l(lang)}, {s}}},\n"
+		outfile += f"\t{{CFG_LANGUAGE_{l(lang)}, {_s(s)}}},\n"
 	outfile += "};\n";
 
 os.makedirs(DESTDIR, exist_ok=True)

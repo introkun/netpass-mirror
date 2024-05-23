@@ -25,6 +25,7 @@
 #include <string.h>
 
 int location = -1;
+FS_Archive sharedextdata_b = 0;
 
 Result uploadOutboxes(void) {
 	Result res = 0;
@@ -41,7 +42,7 @@ Result uploadOutboxes(void) {
 	}
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
 		printf("Uploading outbox %d/%ld...", i+1, mbox_list.num_boxes);
-		int title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
+		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
 		CecBoxInfoFull outbox;
 		res = cecdOpenAndRead(title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoFull), (u8*)&outbox);
 		if (R_FAILED(res)) continue;

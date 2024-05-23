@@ -23,6 +23,10 @@
 typedef struct {
 	int last_location;
 	int language;
+	u16 year;
+	u8 month;
+	u8 day;
+	u32 price;
 } Config;
 
 void configInit(void);
