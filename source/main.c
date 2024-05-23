@@ -57,12 +57,7 @@ int main() {
 			data: (u8*)extdata_lowpathdata,
 		};
 		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
-		// hax, do not reproduce at home
-		u32 *cmdbuf = getThreadCommandBuffer();
-		sharedextdata_b = cmdbuf[2] | ((u64) cmdbuf[3] << 32);
-		Result res = FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
-		printf("res %lx\n", res);
-		printf("meow %llx\n", sharedextdata_b);
+		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
 	}
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);

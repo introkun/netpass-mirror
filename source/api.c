@@ -65,13 +65,15 @@ Result uploadOutboxes(void) {
 				free(title_name);
 				continue;
 			}
+			char url[50];
 			if (!validateStreetpassMessage(msg)) {
-				printf("Skipping ");
+				snprintf(url, 50, "%s/outbox/%lx", BASE_URL, title_id);
+				printf("Deleting ");
+				httpRequest("DELETE", url, 0, 0, 0, 0);
 				free(msg);
 				free(title_name);
 				continue;
 			}
-			char url[50];
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			CurlReply* reply;
 			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply, title_name);
