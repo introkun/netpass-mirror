@@ -20,4 +20,4 @@
 
 #include "../scene.h"
 
-Scene* getToggleTitlesScene();
+Scene* getToggleTitlesScene(void);

@@ -22,5 +22,116 @@
 #define N(x) scenes_toggle_titles_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 
+typedef struct {
+    C2D_TextBuf g_staticBuf;
+    C2D_Text g_header;
+    C2D_Text g_game_titles[12];
+    u32 title_ids[12];
+    C2D_Text g_back;
+    int cursor;
+    int number_games;
+} N(DataStruct);
+
+bool N(is_game_on)(u32 title_id) {
+    // TODO: check this from config
+    return !(title_id % 200 / 100);
+}
+
+bool N(init_gamelist)(Scene* sc) {
+    Result res = 0;
+    CecMboxListHeader mbox_list;
+    res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
+    if (R_FAILED(res)) return false;
+    _data->number_games = mbox_list.num_boxes;
+    u16 title_name_utf16[50];
+    char title_name[50];
+    for (int i = 0; i < _data->number_games; i++) {
+        u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
+        memset(title_name_utf16, 0, sizeof(title_name_utf16));
+        memset(title_name, 0, sizeof(title_name));
+        res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, sizeof(title_name_utf16), (u8*)title_name_utf16);
+        if (R_FAILED(res)) return false;
+        utf16_to_utf8((u8*)title_name, title_name_utf16, sizeof(title_name));
+        char* ptr = title_name;
+        while (*ptr) {
+            if (*ptr == '\n') *ptr = ' ';
+            ptr++;
+        }
+        _data->title_ids[i] = title_id;
+        C2D_TextParse(&_data->g_game_titles[i], _data->g_staticBuf, title_name);
+    }
+    return true;
+}
+
+void N(init)(Scene* sc) {
+    sc->d = malloc(sizeof(N(DataStruct)));
+    if (!_data) return;
+
+    _data->g_staticBuf = C2D_TextBufNew(2000);
+    if (!N(init_gamelist)(sc)) {
+        C2D_TextBufDelete(_data->g_staticBuf);
+        free(_data);
+        sc->d = 0;
+        return;
+    }
+
+    _data->cursor = 0;
+    TextLangParse(&_data->g_header, _data->g_staticBuf, str_toggle_titles_message);
+    TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
+}
+
+void N(render)(Scene* sc) {
+    if (!_data) return;
+    u32 clr = C2D_Color32(0, 0, 0, 0xff);
+    u32 onClr = C2D_Color32(10, 200, 10, 0xff);
+    u32 offClr = C2D_Color32(200, 10, 10, 0xff);
+    C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
+    int i = 0;
+    for (; i < _data->number_games; i++) {
+        C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 30, 45 + (i * 14), 0, 0.5, 0.5, N(is_game_on)(_data->title_ids[i]) ? onClr : offClr);
+    }
+    C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 45 + (i*14), 0, 0.5, 0.5, clr);
+
+    int x = 22;
+    int y = _data->cursor*14 + 45 + 3;
+    C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 1);
+}
+
+void N(exit)(Scene* sc) {
+    if (_data) {
+        C2D_TextBufDelete(_data->g_staticBuf);
+        free(_data);
+    }
+}
+
+SceneResult N(process)(Scene* sc) {
+    hidScanInput();
+    u32 kDown = hidKeysDown();
+    if (_data) {
+        _data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
+        if (_data->cursor < 0) _data->cursor = 0;
+        if (_data->cursor > _data->number_games) _data->cursor = _data->number_games;
+        if (kDown & KEY_A) {
+            // "Back" is selected, exit this scene
+            if (_data->cursor == _data->number_games) return scene_pop;
+
+            // TODO: Toggle title in config
+            return scene_continue;
+        }
+        if (kDown & KEY_B) return scene_pop;
+    }
+    if (kDown & KEY_START) return scene_stop;
+    return scene_continue;
+}
+
 Scene* getToggleTitlesScene(void) {
+    Scene* scene = malloc(sizeof(Scene));
+    if (!scene) return NULL;
+    scene->init = N(init);
+    scene->render = N(render);
+    scene->exit = N(exit);
+    scene->process = N(process);
+    scene->is_popup = false;
+    scene->need_free = true;
+    return scene;
 }
