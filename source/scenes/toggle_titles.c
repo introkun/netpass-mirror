@@ -25,8 +25,8 @@
 typedef struct {
     C2D_TextBuf g_staticBuf;
     C2D_Text g_header;
-    C2D_Text g_game_titles[12];
-    u32 title_ids[12];
+    C2D_Text g_game_titles[24];
+    u32 title_ids[24];
     C2D_Text g_back;
     int cursor;
     int number_games;
