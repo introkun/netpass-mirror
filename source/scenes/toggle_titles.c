@@ -17,6 +17,7 @@
  */
 
 #include "toggle_titles.h"
+#include "../config.h"
 #include <stdlib.h>
 
 #define N(x) scenes_toggle_titles_namespace_##x
@@ -31,11 +32,6 @@ typedef struct {
 	int cursor;
 	int number_games;
 } N(DataStruct);
-
-bool N(is_game_on)(u32 title_id) {
-	// TODO: check this from config
-	return !(title_id % 200 / 100);
-}
 
 bool N(init_gamelist)(Scene* sc) {
 	Result res = 0;
@@ -88,7 +84,8 @@ void N(render)(Scene* sc) {
 	C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	int i = 0;
 	for (; i < _data->number_games; i++) {
-		C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 30, 45 + (i * 14), 0, 0.5, 0.5, N(is_game_on)(_data->title_ids[i]) ? onClr : offClr);
+		u32 correctClr = isTitleIgnored(_data->title_ids[i]) ? offClr : onClr;
+		C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 30, 45 + (i * 14), 0, 0.5, 0.5, correctClr);
 	}
 	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 45 + (i*14), 0, 0.5, 0.5, clr);
 	
@@ -115,12 +112,21 @@ SceneResult N(process)(Scene* sc) {
 			// "Back" is selected, exit this scene
 			if (_data->cursor == _data->number_games) return scene_pop;
 
-			// // TODO: Toggle title in config
+			// Add title to ignore list / Remove title from ignore list
+			u32 title_id = _data->title_ids[_data->cursor];
+			if (isTitleIgnored(title_id)) removeIgnoredTitle(title_id);
+			else addIgnoredTitle(title_id);
 			return scene_continue;
 		}
-		if (kDown & KEY_B) return scene_pop;
+		if (kDown & KEY_B) {
+			configWrite();
+			return scene_pop;
+		}
 	}
-	if (kDown & KEY_START) return scene_stop;
+	if (kDown & KEY_START) {
+		configWrite();
+		return scene_stop;
+	}
 	return scene_continue;
 }
 
