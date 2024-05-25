@@ -26,6 +26,8 @@
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_header;
+	C2D_Text g_subtext;
+	C2D_Text g_on_off[2];
 	C2D_Text g_game_titles[24];
 	u32 title_ids[24];
 	C2D_Text g_back;
@@ -72,8 +74,11 @@ void N(init)(Scene* sc) {
 	}
 	
 	_data->cursor = 0;
-	TextLangParse(&_data->g_header, _data->g_staticBuf, str_toggle_titles_message);
+	TextLangParse(&_data->g_header, _data->g_staticBuf, str_toggle_titles);
+	TextLangParse(&_data->g_subtext, _data->g_staticBuf, str_toggle_titles_message);
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_on_off[0], _data->g_staticBuf, str_toggle_titles_off);
+	TextLangParse(&_data->g_on_off[1], _data->g_staticBuf, str_toggle_titles_on);
 }
 
 void N(render)(Scene* sc) {
@@ -82,15 +87,18 @@ void N(render)(Scene* sc) {
 	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
 	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
 	C2D_DrawText(&_data->g_header, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
+	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WithColor, 11, 40, 0, 0.5, 0.5, clr);
 	int i = 0;
 	for (; i < _data->number_games; i++) {
-		u32 correctClr = isTitleIgnored(_data->title_ids[i]) ? offClr : onClr;
-		C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 30, 45 + (i * 14), 0, 0.5, 0.5, correctClr);
+		bool isIgnored = isTitleIgnored(_data->title_ids[i]);
+		u32 correctClr = isIgnored ? offClr : onClr;
+		C2D_DrawText(&_data->g_on_off[!isIgnored], C2D_AlignLeft | C2D_WithColor, 30, 60 + (i * 14), 0, 0.5, 0.5, correctClr);
+		C2D_DrawText(&_data->g_game_titles[i], C2D_AlignLeft | C2D_WithColor, 70, 60 + (i * 14), 0, 0.5, 0.5, correctClr);
 	}
-	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 45 + (i*14), 0, 0.5, 0.5, clr);
+	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 60 + (i*14), 0, 0.5, 0.5, clr);
 	
 	int x = 22;
-	int y = _data->cursor*14 + 45 + 3;
+	int y = _data->cursor*14 + 60 + 3;
 	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 1);
 }
 
