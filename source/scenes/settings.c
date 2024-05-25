@@ -78,8 +78,8 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > 4) _data->cursor = 4;
+		if (_data->cursor < 0) _data->cursor = 4;
+		if (_data->cursor > 4) _data->cursor = 0;
 		if (_data->cursor == 1) {
 			int old_lang = _data->selected_language;
 			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
