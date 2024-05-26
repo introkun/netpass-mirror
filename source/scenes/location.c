@@ -89,8 +89,10 @@ SceneResult N(process)(Scene* sc) {
 		if (_data->cursor > 2) _data->cursor = 2;
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
-				downloadInboxes();
-				return scene_continue;
+				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
+					downloadInboxes();
+				}));
+				return scene_push;
 			}
 			if (_data->cursor == 1) {
 				sc->next_scene = getBackAlleyScene();
