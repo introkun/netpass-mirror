@@ -118,7 +118,10 @@ SceneResult N(process)(Scene* sc) {
 		if (_data->cursor > _data->number_games) _data->cursor = 0;
 		if (kDown & KEY_A) {
 			// "Back" is selected, exit this scene
-			if (_data->cursor == _data->number_games) return scene_pop;
+			if (_data->cursor == _data->number_games) {
+				configWrite();
+				return scene_pop;
+			}
 
 			// Add title to ignore list / Remove title from ignore list
 			u32 title_id = _data->title_ids[_data->cursor];
