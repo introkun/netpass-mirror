@@ -114,8 +114,8 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > _data->number_games) _data->cursor = _data->number_games;
+		if (_data->cursor < 0) _data->cursor = _data->number_games;
+		if (_data->cursor > _data->number_games) _data->cursor = 0;
 		if (kDown & KEY_A) {
 			// "Back" is selected, exit this scene
 			if (_data->cursor == _data->number_games) return scene_pop;
