@@ -30,6 +30,8 @@
 		__fn__; \
 })
 
+void clearIgnoredTitles(CecMboxListHeader* mbox_list);
+
 Result uploadOutboxes(void);
 Result downloadInboxes(void);
 Result getLocation(void);

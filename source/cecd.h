@@ -179,5 +179,3 @@ typedef struct CecMboxListHeader {
 	u32 num_boxes;
 	u8 box_names[24][16]; // 12 used, but space for 24
 } CecMboxListHeader;
-
-void clearIgnoredTitles(CecMboxListHeader* mbox_list);

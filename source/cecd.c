@@ -21,7 +21,6 @@
 #include <3ds/srv.h>
 #include <3ds/synchronization.h>
 #include "cecd.h"
-#include "config.h"
 #include <3ds/ipc.h>
 
 #include <string.h>
@@ -476,17 +475,4 @@ Result addStreetpassMessage(u8* msgbuf) {
 cleanup_box:
 	free(boxbuf);
 	return res;
-}
-
-void clearIgnoredTitles(CecMboxListHeader* mbox_list) {
-	size_t pos = 0;
-	for (size_t i = 0; i < mbox_list->num_boxes; i++) {
-		u32 title_id = strtol((const char*)mbox_list->box_names[i], NULL, 16);
-		if (!isTitleIgnored(title_id)) {
-			if (pos != i) memcpy(mbox_list->box_names[pos], mbox_list->box_names[i], 16);
-			pos++;
-		}
-	}
-	memset(mbox_list->box_names[pos], 0, 16 * (mbox_list->num_boxes - pos));
-	mbox_list->num_boxes = pos;
 }
