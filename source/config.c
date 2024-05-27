@@ -116,7 +116,7 @@ void load(void) {
 			Result res = 0;
 			CecMboxListHeader mbox_list;
 			res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
-			if (R_FAILED(res)) break; // should something else happen here???
+			if (R_FAILED(res)) continue;
 			
 			// Read titles ids
 			for (size_t i = 0; i < 24; i++) {
