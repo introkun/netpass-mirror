@@ -122,8 +122,11 @@ SceneResult N(process)(Scene* sc) {
 
 			// Add title to ignore list / Remove title from ignore list
 			u32 title_id = _data->title_ids[_data->cursor];
-			if (isTitleIgnored(title_id)) removeIgnoredTitle(title_id);
-			else addIgnoredTitle(title_id);
+			if (isTitleIgnored(title_id)) {
+				removeIgnoredTitle(title_id);
+			} else {
+				addIgnoredTitle(title_id)
+			}
 			return scene_continue;
 		}
 		if (kDown & KEY_B) {
