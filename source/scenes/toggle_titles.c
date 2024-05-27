@@ -125,7 +125,7 @@ SceneResult N(process)(Scene* sc) {
 			if (isTitleIgnored(title_id)) {
 				removeIgnoredTitle(title_id);
 			} else {
-				addIgnoredTitle(title_id)
+				addIgnoredTitle(title_id);
 			}
 			return scene_continue;
 		}
