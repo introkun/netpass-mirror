@@ -16,7 +16,7 @@ str_download_data: 'サーバーから自分のデータをダウンロードす
 str_delete_data: 'サーバーから自分のデータを消去する'
 str_back: '戻る'
 str_language: '日本語'
-str_goto_beach: '浜へ出かける'
+str_goto_beach: 'ビーチへ出かける'
 str_at_beach: 'ビーチに滞在中。'
 str_goto_arcade: 'ゲームセンターへ出かける'
 str_at_arcade: 'ゲームセンターに滞在中。'
