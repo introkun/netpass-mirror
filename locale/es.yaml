@@ -32,3 +32,8 @@ str_submit: Enviar
 str_back_alley: Callejón
 str_back_alley_pay: Compra un pase por {playcoin}%d
 str_back_alley_message: Consigamos más pases
+str_check_inboxes: Comprobar buzones de entrada
+str_toggle_titles: Activar o desactivar juegos
+str_toggle_titles_on: (ENCENDIDO)
+str_toggle_titles_off: (APAGADO)
+str_toggle_titles_message: Pulsa {a_button} para comenzar o parar la búsqueda de pases.
