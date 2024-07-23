@@ -30,7 +30,7 @@ str_report_user: Signaler un utilisateur
 str_report_user_hint: Signaler "%s"
 str_cancel: Annuler
 str_submit: Soumettre
-str_back_alley_message: Allons obtenir plus de passes
+str_back_alley_message: Allons obtenir plus de rencontre
 str_back_alley: Ruelle
 str_back_alley_pay: Acheter un pass {playcoin}%d
 str_toggle_titles: Sélectionner les Jeux
