@@ -31,7 +31,7 @@ str_cancel: 'Nullañ'
 str_submit: 'Kinnig'
 str_back_alley: 'Karreg-vor'
 str_back_alley_message: 'Deomp da chaseal an emgavioù'
-str_back_alley_pay: "Prenañ ur pass {playcoin}%d"
+str_back_alley_pay: "Prenañ un alc’hhouez {playcoin}%d"
 str_check_inboxes: 'Kontrollañ Infoboks'
 str_toggle_titles: 'Diuzit ar c''hoarioù'
 str_toggle_titles_message: "Evit gweredekaat/diweredekaat ar Streetpass, pouezit war
