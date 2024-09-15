@@ -1,6 +1,6 @@
 str_loading: "Betöltés    "
 str_libcurl_error: "libCURL hiba (%d): %s"
-str_libcurl_date_and_time: 'Legyél biztos abban, hogy a rendszered dátum és óra beállítása
+str_libcurl_date_and_time: 'Ellenőrizd, hogy a rendszered dátum és óra beállítása
   megfelelő!'
 str_httpstatus_error: 'HTTP állapotkód %d'
 str_3ds_error: '3DS hibakód %08lx'
@@ -9,8 +9,8 @@ str_goto_train_station: 'Menj a Vasútállomásra'
 str_at_train_station: 'A Vasútállomáson vagy.'
 str_goto_plaza: 'Menj a Térre'
 str_at_plaza: 'A Téren vagy.'
-str_goto_mall: 'Menj a Bevásárlóközpontba'
-str_at_mall: 'A Bevásárlóközpontban vagy.'
+str_goto_mall: 'Menj a Mall-ba'
+str_at_mall: 'A Mall-ban vagy.'
 str_exit: 'Kilépés'
 str_settings: 'Beállítások'
 str_download_data: 'Személyes adatok letöltése'
@@ -26,3 +26,15 @@ str_at_catcafe: 'A Cat Caféban vagy.'
 str_system_language: 'Rendszernyelv'
 str_language_pick: 'Nyelv:'
 str_no_location_twice: 'Nem mehetsz ugyanarra a helyre kétszer egymás után!'
+str_back_alley: Hátsó sikátor
+str_back_alley_message: Szerezzünk még néhány pass-t
+str_back_alley_pay: Vásárolj egy pass-t {playcoin}%d
+str_report_user: Felhasználó jelentése
+str_report_user_hint: '"%s" jelentése'
+str_cancel: Mégsem
+str_submit: Küldés
+str_check_inboxes: Postaládák ellenőrzése
+str_toggle_titles_message: Nyomj {a_button} gombot a pass-ok cseréjéhez.
+str_toggle_titles_on: (BE)
+str_toggle_titles_off: (KI)
+str_toggle_titles: Játékok váltása
