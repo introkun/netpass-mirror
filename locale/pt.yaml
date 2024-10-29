@@ -3,7 +3,7 @@ str_libcurl_error: "Erro libCURL (%d): %s"
 str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sistema
   estejam corretos!'
 str_httpstatus_error: 'Código de status HTTP %d'
-str_3ds_error: 'Erro de código 3DS %08lx'
+str_3ds_error: 'Código de erro 3DS %08lx'
 str_at_home: 'Você está em casa.'
 str_goto_train_station: 'Ir para a Estação de Trem'
 str_at_train_station: 'Você está na Estação de Trem.'
