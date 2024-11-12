@@ -1,29 +1,38 @@
 str_loading: "Naglo-load    "
-str_libcurl_error: "libCURL mali (%d): %s"
+str_libcurl_error: "libCURL error (%d): %s"
 str_libcurl_date_and_time: 'Tiyaking nakatakda nang tama ang petsa at oras ng iyong
   system!'
 str_httpstatus_error: 'HTTP code ng katayuan %d'
 str_3ds_error: '3DS error sa code %08lx'
 str_at_home: 'Ikaw ay nasa bahay.'
 str_goto_train_station: 'Pumunta sa Train Station'
-str_at_train_station: 'Ikaw ay nasa istasyon ng tren.'
+str_at_train_station: 'Ikaw ay nasa Train Station.'
 str_goto_plaza: 'Pumunta sa Plaza'
-str_at_plaza: 'Nasa Plaza ka.'
+str_at_plaza: 'Ikaw ay nasa Plaza.'
 str_goto_mall: 'Pumunta sa Mall'
-str_at_mall: 'Nasa Mall ka.'
-str_exit: 'Labasan'
+str_at_mall: 'Ikaw ay nasa Mall.'
+str_exit: 'Umalis'
 str_settings: 'Mga Settings'
 str_download_data: 'Mag-download ng personal na data'
 str_delete_data: 'Tanggalin ang personal na data'
-str_back: 'Magsauli'
-str_language: 'Ingles'
+str_back: 'Bumalik'
+str_language: 'Tagalog'
 str_goto_beach: 'Pumunta sa Beach'
-str_at_beach: 'Nasa Beach ka.'
+str_at_beach: 'Ikaw as nasa Beach.'
 str_goto_arcade: 'Pumunta sa Arcade'
-str_at_arcade: 'Nasa Arcade ka.'
+str_at_arcade: 'Ikaw ay nasa Arcade.'
 str_goto_catcafe: 'Pumunta sa Cafe ng Pusa'
 str_at_catcafe: 'Nasa Cafe ng Pusa ka.'
 str_system_language: 'Wika ng Sistema'
 str_language_pick: 'Wika:'
-str_no_location_twice: 'Hindi ka maaaring pumasok sa parehong lokasyon nang dalawang
-  beses sa isang hilera!'
+str_no_location_twice: 'Hindi ikaw maaaring pumasok ulit sa lokasyon na ito nang dalawang
+  beses!'
+str_back_alley: Eskinita
+str_cancel: Ikansela
+str_report_user: Magsumbong ng isang user
+str_report_user_hint: Isumbong si "%s"
+str_toggle_titles_message: Pindutin ang {a_button} para isimula o itigil ang pagpalit
+  ng passes.
+str_check_inboxes: Tignan ang mga Inbox
+str_submit: Isumite
+str_back_alley_pay: Bumili ng pass {playcoin}%d
