@@ -1,9 +1,9 @@
 str_loading: "Naglo-load    "
-str_libcurl_error: "libCURL error (%d): %s"
+str_libcurl_error: "Error sa libCURL (%d): %s"
 str_libcurl_date_and_time: 'Tiyaking nakatakda nang tama ang petsa at oras ng iyong
   system!'
-str_httpstatus_error: 'HTTP code ng katayuan %d'
-str_3ds_error: '3DS error sa code %08lx'
+str_httpstatus_error: 'HTTP status code %d'
+str_3ds_error: '3DS error code %08lx'
 str_at_home: 'Ikaw ay nasa bahay.'
 str_goto_train_station: 'Pumunta sa Train Station'
 str_at_train_station: 'Ikaw ay nasa Train Station.'
@@ -21,8 +21,8 @@ str_goto_beach: 'Pumunta sa Beach'
 str_at_beach: 'Ikaw as nasa Beach.'
 str_goto_arcade: 'Pumunta sa Arcade'
 str_at_arcade: 'Ikaw ay nasa Arcade.'
-str_goto_catcafe: 'Pumunta sa Cafe ng Pusa'
-str_at_catcafe: 'Nasa Cafe ng Pusa ka.'
+str_goto_catcafe: 'Pumunta sa Cat Café'
+str_at_catcafe: 'Ikaw ay nasa Cat Café.'
 str_system_language: 'Wika ng Sistema'
 str_language_pick: 'Wika:'
 str_no_location_twice: 'Hindi ikaw maaaring pumasok ulit sa lokasyon na ito nang dalawang
@@ -36,3 +36,7 @@ str_toggle_titles_message: Pindutin ang {a_button} para isimula o itigil ang pag
 str_check_inboxes: Tignan ang mga Inbox
 str_submit: Isumite
 str_back_alley_pay: Bumili ng pass {playcoin}%d
+str_back_alley_message: Kumuha pa tayo ng mga passes
+str_toggle_titles_on: (ON)
+str_toggle_titles_off: (OFF)
+str_toggle_titles: I-toggle ang mga laro
