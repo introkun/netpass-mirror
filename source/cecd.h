@@ -117,7 +117,7 @@ typedef struct CecMessageHeader {
 	u32 title_id;
 	u32 title_id2;
 	u32 batch_id;
-	u32 unknown_1;
+	u32 transfer_id;
 	CecMessageId message_id;
 	u32 message_version;
 	CecMessageId message_id2;
@@ -157,14 +157,14 @@ typedef struct CecMBoxInfoHeader {
 	u16 padding1;
 	u32 program_id;
 	u32 private_id;
-	u8 flag;
-	u8 flag2;
+	u8 box_type_flags; // 0x01: normal programs, 0x06: system programs, 0x80: silent notif
+	bool enabled; // if we should send/receive things
 	u16 padding2;
 	u8 hmac_key[32];
-	u32 padding3;
+	u32 padding3; // mbox info size
 	CecTimestamp last_accessed;
-	u8 flag3;
-	u8 flag4;
+	u8 flag_unread; // unread
+	u8 flag_new; // new
 	u8 flag5;
 	u8 flag6;
 	CecTimestamp last_received;
@@ -179,3 +179,9 @@ typedef struct CecMboxListHeader {
 	u32 num_boxes;
 	u8 box_names[24][16]; // 12 used, but space for 24
 } CecMboxListHeader;
+
+// This is our own custom thing to add capacities
+typedef struct CecMboxListHeaderWithCapacities {
+	CecMboxListHeader header;
+	u32 capacities[24];
+} CecMboxListHeaderWithCapacities;

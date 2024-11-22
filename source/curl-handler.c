@@ -49,6 +49,7 @@ struct CurlHandle {
 	char* method;
 	char* url;
 	char* title_name;
+	char* hmac_key;
 	int size;
 	u8* body;
 	Result res;
@@ -111,7 +112,7 @@ void curlFreeHandler(int offset) {
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name) {
+Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name, char* hmac_key) {
 	Result res = 0;
 	int curl_handle_slot = 0;
 	bool found_handle_slot = false;
@@ -142,8 +143,10 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	handles[curl_handle_slot].size = size;
 	handles[curl_handle_slot].body = body;
 	handles[curl_handle_slot].title_name = title_name;
+	handles[curl_handle_slot].hmac_key = hmac_key;
 	if (handles[curl_handle_slot].file_reply) {
 		handles[curl_handle_slot].title_name = 0;
+		handles[curl_handle_slot].hmac_key = 0;
 	}
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
@@ -186,6 +189,16 @@ cleanup:
 	h->status = CURL_HANDLE_STATUS_DONE;
 }
 
+void getMacStr(char value[13]) {
+	for (int i = 0; i < 6; i++) {
+		value += sprintf(value, "%02X", mac[i]);
+	}
+}
+
+void getNetpassId(char* value, u32 size) {
+	snprintf(value, size, "%s", netpass_id);
+}
+
 void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
@@ -198,10 +211,9 @@ void curl_multi_loop_request_setup(int i) {
 
 	// add mac header
 	char header_mac[25];
-	char* header_mac_i = header_mac + snprintf(header_mac, 25 - 12, "3ds-mac: ");
-	for (int j = 0; j < 6; j++) {
-		header_mac_i += sprintf(header_mac_i, "%02X", mac[j]);
-	}
+	char header_mac_value[13];
+	getMacStr(header_mac_value);
+	snprintf(header_mac, sizeof(header_mac), "3ds-mac: %s", header_mac_value);
 	headers = curl_slist_append(headers, header_mac);
 	char header_netpass_id[100];
 	snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
@@ -209,10 +221,26 @@ void curl_multi_loop_request_setup(int i) {
 	char header_netpass_version[100];
 	snprintf(header_netpass_version, 100, "3ds-netpass-version: v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 	headers = curl_slist_append(headers, header_netpass_version);
+	char header_friend_key[100];
+	FriendKey friend_key;
+	Result res = FRD_GetMyFriendKey(&friend_key);
+	if (R_SUCCEEDED(res)) {
+		u64 fc;
+		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
+		if (R_SUCCEEDED(res)) {
+			snprintf(header_friend_key, 100, "3ds-friend-code: %016llX", (fc ^ friend_key.localFriendCode) & 0x0000ffffffffffffll);
+			headers = curl_slist_append(headers, header_friend_key);
+		}
+	}
 	if (h->title_name && !h->file_reply) {
 		char header_title_name[225];
 		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
 		headers = curl_slist_append(headers, header_title_name);
+	}
+	if (h->hmac_key && !h->file_reply) {
+		char header_hmac_key[255];
+		snprintf(header_hmac_key, 255, "3ds-hmac-key: %s", h->hmac_key);
+		headers = curl_slist_append(headers, header_hmac_key);
 	}
 
 	if (h->body) {

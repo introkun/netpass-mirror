@@ -18,21 +18,25 @@
 
 #pragma once
 
-#include <3ds.h>
-#include <curl/curl.h>
-#include "cecd.h"
+typedef struct BossHTTPHeader {
+	char name[0x20];
+	char value[0x100];
+} BossHTTPHeader;
 
-typedef struct {
-	u8 ptr[MAX_MESSAGE_SIZE];
-	size_t len;
-	int offset;
-} CurlReply;
+typedef enum BossPropertyId {
+	BOSSPROPERTY_DURATION = 0x04,
+	BOSSPROPERTY_URL = 0x07,
+	BOSSPROPERTY_HTTPHEADERS = 0x0D,
+	BOSSPROPERTY_TOTALTASKS = 0x35,
+	BOSSPROPERTY_TASKIDS = 0x36,
+} BossPropertyId;
 
-void initCurlReply(CurlReply* r, size_t size);
-void deinitCurlReply(CurlReply* r);
-Result curlInit(void);
-void curlExit(void);
-void curlFreeHandler(int offset);
-Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name, char* hmac_key);
-void getMacStr(char value[13]);
-void getNetpassId(char* value, u32 size);
+typedef BossHTTPHeader* BossHTTPHeaders;
+
+Result bossGetStorageInfo(u64* exdata_id, u32* boss_size, u8* extdata_type);
+Result bossUnregisterTask(char* task_id, u16 step_id);
+Result bossReconfigureTask(char* task_id, u16 step_id);
+Result bossGetTaskIdList(void);
+Result bossReceiveProperty(BossPropertyId propertyId, void* buf, u32 size);
+Result bossStartTask(char* task_id);
+Result bossCancelTask(char* task_id);

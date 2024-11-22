@@ -10,3 +10,7 @@ netpass.cia.txt
 config.yaml
 romfs/gfx
 codegen/
+out/
+patches/*/code.bin
+patches/*/build
+patches/*/out

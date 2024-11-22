@@ -104,7 +104,7 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
 					char url[50];
 					snprintf(url, 50, "%s/data", BASE_URL);
-					Result res = httpRequest("GET", url, 0, 0, (void*)1, "/netpass_data.txt");
+					Result res = httpRequest("GET", url, 0, 0, (void*)1, "/netpass_data.txt", 0);
 					if (R_FAILED(res)) {
 						printf("ERROR downloading all data: %ld\n", res);
 						return;
@@ -118,7 +118,7 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
 					char url[50];
 					snprintf(url, 50, "%s/data", BASE_URL);
-					Result res = httpRequest("DELETE", url, 0, 0, 0, 0);
+					Result res = httpRequest("DELETE", url, 0, 0, 0, 0, 0);
 					if (R_FAILED(res)) {
 						printf("ERROR deleting all data: %ld\n", res);
 						return;

@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ *<
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,20 +30,28 @@ FS_Archive sharedextdata_b = 0;
 Result uploadOutboxes(void) {
 	Result res = 0;
 	Result messages = 0;
-	CecMboxListHeader mbox_list;
-	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
+	CecMboxListHeaderWithCapacities mbox_list;
+	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(mbox_list.header), (u8*)&mbox_list.header);
 	if (R_FAILED(res)) return -1;
-	clearIgnoredTitles(&mbox_list);
+	clearIgnoredTitles(&mbox_list.header);
+	// now fill in the capacities
+	for (size_t i = 0; i < mbox_list.header.num_boxes; i++) {
+		u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
+		CecBoxInfoHeader boxinfo;
+		res = cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(boxinfo), (u8*)&boxinfo);
+		if (R_FAILED(res)) return -1;
+		mbox_list.capacities[i] = boxinfo.max_num_messages - boxinfo.num_messages;
+	}
 	
 	{
 		char url[50];
-		snprintf(url, 50, "%s/outbox/mboxlist", BASE_URL);
-		res = httpRequest("POST", url, sizeof(CecMboxListHeader), (u8*)&mbox_list, 0, 0);
-		if (R_FAILED(res)) return res;
+		snprintf(url, 50, "%s/outbox/mboxlist_ext", BASE_URL);
+		res = httpRequest("POST", url, sizeof(mbox_list), (u8*)&mbox_list, 0, 0, 0);
+		//if (R_FAILED(res)) return res;
 	}
-	for (int i = 0; i < mbox_list.num_boxes; i++) {
-		printf("Uploading outbox %d/%ld...", i+1, mbox_list.num_boxes);
-		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
+	for (int i = 0; i < mbox_list.header.num_boxes; i++) {
+		printf("Uploading outbox %d/%ld...", i+1, mbox_list.header.num_boxes);
+		u32 title_id = strtol((const char*)mbox_list.header.box_names[i], NULL, 16);
 		CecBoxInfoFull outbox;
 		res = cecdOpenAndRead(title_id, CEC_PATH_OUTBOX_INFO, sizeof(CecBoxInfoFull), (u8*)&outbox);
 		if (R_FAILED(res)) continue;
@@ -60,28 +68,38 @@ Result uploadOutboxes(void) {
 				continue;
 			}
 			char* title_name = b64encode(msg, 100);
+			res = cecdOpenAndRead(title_id, CEC_PATH_MBOX_INFO, sizeof(CecMBoxInfoHeader), msg);
+			if (R_FAILED(res)) {
+				free(msg);
+				free(title_name);
+				continue;
+			}
+			char* hmac_key = b64encode(((CecMBoxInfoHeader*)msg)->hmac_key, 32);
 			res = cecdReadMessage(title_id, true, outbox.messages[j].message_size, msg, outbox.messages[j].message_id);
 			if (R_FAILED(res)) {
 				free(msg);
 				free(title_name);
+				free(hmac_key);
 				continue;
 			}
 			char url[50];
 			if (!validateStreetpassMessage(msg)) {
 				snprintf(url, 50, "%s/outbox/%lx", BASE_URL, title_id);
 				printf("Deleting ");
-				httpRequest("DELETE", url, 0, 0, 0, 0);
+				httpRequest("DELETE", url, 0, 0, 0, 0, 0);
 				free(msg);
 				free(title_name);
+				free(hmac_key);
 				continue;
 			}
 			snprintf(url, 50, "%s/outbox/upload", BASE_URL);
 			CurlReply* reply;
-			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply, title_name);
+			res = httpRequest("POST", url, outbox.messages[j].message_size, msg, &reply, title_name, hmac_key);
 			if (R_FAILED(res)) {
 				curlFreeHandler(reply->offset);
 				free(msg);
 				free(title_name);
+				free(hmac_key);
 				continue;
 			}
 			if (res == 200) {
@@ -90,6 +108,7 @@ Result uploadOutboxes(void) {
 				msg = malloc(outbox.messages[j].message_size);
 				if (!msg) {
 					free(title_name);
+					free(hmac_key);
 					curlFreeHandler(reply->offset);
 					continue;
 				}
@@ -97,6 +116,7 @@ Result uploadOutboxes(void) {
 				if (R_FAILED(res)) {
 					free(msg);
 					free(title_name);
+					free(hmac_key);
 					curlFreeHandler(reply->offset);
 					continue;
 				}
@@ -108,6 +128,7 @@ Result uploadOutboxes(void) {
 						curlFreeHandler(reply->offset);
 						free(msg);
 						free(title_name);
+						free(hmac_key);
 						continue;
 					}
 				}
@@ -116,6 +137,7 @@ Result uploadOutboxes(void) {
 			curlFreeHandler(reply->offset);
 			free(msg);
 			free(title_name);
+			free(hmac_key);
 		}
 		if (R_FAILED(res)) {
 			printf("Failed %ld\n", res);
@@ -147,7 +169,7 @@ Result downloadInboxes(void) {
 		while (http_code == 200 && box_messages < box_header.max_num_messages) {
 			printf(".");
 			CurlReply* reply;
-			res = httpRequest("GET", url, 0, 0, &reply, 0);
+			res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
 			if (R_FAILED(res)) break;
 
 			http_code = res;
@@ -175,7 +197,7 @@ Result getLocation(void) {
 	CurlReply* reply;
 	char url[80];
 	snprintf(url, 80, "%s/location/current", BASE_URL);
-	res = httpRequest("GET", url, 0, 0, &reply, 0);
+	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
 	if (R_FAILED(res)) goto cleanup;
 	int http_code = res;
 	if (http_code == 200) {
@@ -193,7 +215,7 @@ Result setLocation(int location) {
 	if (config.last_location == location) return -1;
 	char url[80];
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
-	res = httpRequest("PUT", url, 0, 0, 0, 0);
+	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
 		printf("ERROR: Failed to enter location %d: %ld\n", location, res);
 		return res;

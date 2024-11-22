@@ -24,6 +24,7 @@
 #include "cecd.h"
 #include "curl-handler.h"
 #include "config.h"
+#include "boss.h"
 
 int main() {
 	gfxInitDefault();
@@ -31,6 +32,7 @@ int main() {
 	amInit();
 	nsInit();
 	aptInit();
+	frdInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 	stringsInit();
@@ -45,7 +47,7 @@ int main() {
 	srand(time(NULL));
 
 	configInit(); // must be after cecdInit()
-	
+
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
 		u32 extdata_lowpathdata[3];
@@ -68,6 +70,108 @@ int main() {
 			// something not working
 			return getConnectionErrorScene(location);
 		}
+
+		if (0) {
+			#define SPRELAY_TITLE_ID 0x0004013000003400ll
+			#define SPRELAY_TASK_ID "sprelay"
+
+			bossInit(SPRELAY_TITLE_ID, false);
+			u32 bufsize = sizeof(BossHTTPHeader)*3;
+			void* buf = malloc(bufsize);
+			char* url = buf;
+			char* task_ids = buf;
+			BossHTTPHeaders http_headers = buf;
+			Result res = 0;
+
+			u8 status;
+			u32 out1;
+			u8 out2;
+			//aptMainLoop();
+			bossGetTaskIdList();
+			bossGetTaskState(SPRELAY_TASK_ID, 0, &status, &out1, &out2);
+			printf("status: %d\n", status);
+
+			res = bossCancelTask(SPRELAY_TASK_ID);
+			printf("cancel task: %lx\n", res);
+
+			bossGetTaskState(SPRELAY_TASK_ID, 0, &status, &out1, &out2);
+			printf("status: %d\n", status);
+
+			u16 num_tasks;
+			bossReceiveProperty(BOSSPROPERTY_TOTALTASKS, &num_tasks, sizeof(num_tasks));
+			printf("num_tasks: %d\n", num_tasks);
+			bossReceiveProperty(BOSSPROPERTY_TASKIDS, task_ids, bufsize);
+			for (int i = 0; i < num_tasks; i++) {
+				printf("task_id: %s\n", task_ids + i*8);
+			}
+
+			// dump the current properties
+
+			/*FILE* f = fopen("/sprelay.dat", "wb");
+			const int sizes[] = {1, 1, 4, 4, 4, 1, 1, 0x200, 4, 1, 0x100, 0x200, 4, 0x360, 4, 0xC, 1, 1, 1, 4, 4, 0x40, 4, 1, 1, 1, 4, 4};
+			for (int i = 0; i < 0x1C; i++) {
+				bossReceiveProperty(i, buf, sizes[i]);
+				fwrite(buf, sizes[i], 1, f);
+			}
+			fclose(f);*/
+
+			res = bossUnregisterTask(SPRELAY_TASK_ID, 0);
+			printf("unregister task: %lx\n", res);
+/*
+			// add the task to register the sprelay thingy to netpass
+			// u32 test_NsDataId = 0x57524248;//This can be anything.
+			bossContext ctx;
+			u32 test_NsDataId = 0x57524248;//This can be anything.
+			bossReinit(0);
+
+			printf("==================\n");
+
+			bossUnregisterTask(SPRELAY_TASK_REGISTER, 0);
+			bossDeleteNsData(test_NsDataId);
+			res = bossSetStorageInfo(test_NsDataId, 0, 1);
+			printf("Set storage info: %lx\n", res);
+			bossSetupContextDefault(&ctx, 60, BASE_URL "/spr-register");
+			http_headers = ctx.property_xd;
+
+			strcpy(http_headers[0].name, "3ds-mac");
+			getMacStr(http_headers[0].value);
+			strcpy(http_headers[1].name, "3ds-nid");
+			getNetpassId(http_headers[1].value, sizeof(http_headers[1].value));
+			strcpy(http_headers[2].name, "3ds-netpass-version");
+			snprintf(http_headers[2].value, sizeof(http_headers[2].value), "v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+			
+			res = bossSendContextConfig(&ctx);
+			printf("Send Context: %lx\n", res);
+
+			res = bossRegisterTask(SPRELAY_TASK_REGISTER, 0, 0);
+			printf("Register task: %lx\n", res);
+
+			res = bossStartTaskImmediate(SPRELAY_TASK_REGISTER);
+			printf("Start task: %lx\n", res);
+
+			printf("Waiting for task to finish... \n");
+
+			while(1) {
+				res = bossGetTaskState(SPRELAY_TASK_ID, 0, &status, &out1, &out2);
+				if (R_FAILED(res)) {
+					printf("Error: %lx", res);
+					break;
+				}
+				if (status!=BOSSTASKSTATUS_STARTED) break;
+				printf(".");
+				svcSleepThread(1000000000ll); // 1s
+			}
+			printf("\n");
+			printf("status: %d\n", status);
+
+			// notification title: 0x32
+			// notification body: 0x72
+			// url offset: 0x21c
+			// http headers offset: 0x41c
+*/
+			free(buf);
+		}
+
 		bgLoopInit();
 		if (location == -1) {
 			return getHomeScene(); // load home
@@ -79,7 +183,7 @@ int main() {
 		char url[50];
 		snprintf(url, 50, "%s/ping", BASE_URL);
 	check_internet:
-		res = httpRequest("GET", url, 0, 0, 0, 0);
+		res = httpRequest("GET", url, 0, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -CURLE_COULDNT_RESOLVE_HOST) {
 				svcSleepThread((u64)1000000 * 100);

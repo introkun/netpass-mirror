@@ -82,7 +82,7 @@ SceneResult N(report)(Scene* sc, int i) {
 
 			char url[50];
 			snprintf(url, 50, "%s/report/new", BASE_URL);
-			res = httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0);
+			res = httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0);
 			free(data);
 			if (R_FAILED(res)) {
 				printf("Error sending report: %ld\n", res);

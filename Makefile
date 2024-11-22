@@ -163,7 +163,7 @@ ifneq ($(ROMFS),)
 	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: all clean translations
+.PHONY: all clean translations patches
 
 MAKEROM		?=	makerom
 
@@ -174,6 +174,9 @@ MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSIO
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
+
+patches:
+	@$(MAKE) -C patches
 
 codegen:
 	@$(PYTHON) $(TOPDIR)/codegen.py
@@ -207,6 +210,7 @@ $(OUTDIR):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
+	@$(MAKE) -C patches clean
 	@rm -fr $(BUILD) $(GFXBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
 
 #---------------------------------------------------------------------------------

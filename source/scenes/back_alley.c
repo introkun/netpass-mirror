@@ -52,7 +52,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 	Scene* scene = getLoadingScene(0, lambda(void, (void) {
 		char url[80];
 		snprintf(url, 80, "%s/pass/title_id/%lx", BASE_URL, N(buy_title_id));
-		Result res = httpRequest("PUT", url, 0, 0, 0, 0);
+		Result res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 		if (R_FAILED(res)) {
 			if (res == -404) {
 				printf("ERROR: No fitting pass found!");
