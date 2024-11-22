@@ -27,6 +27,8 @@
 #include "boss.h"
 
 int main() {
+	osSetSpeedupEnable(true); // enable speedup on N3DS
+
 	gfxInitDefault();
 	cfguInit();
 	amInit();
