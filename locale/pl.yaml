@@ -15,7 +15,7 @@ str_settings: 'Ustawienia'
 str_download_data: 'Pobierz swoje dane'
 str_delete_data: 'Usuń swoje dane'
 str_back: 'Cofnij'
-str_language: 'Polski'
+str_language: 'Angielski'
 str_goto_beach: 'Idź na Plażę'
 str_at_beach: 'Jesteś na Plaży.'
 str_goto_arcade: 'Idź do Salonu gier'
@@ -34,3 +34,6 @@ str_cancel: Anuluj
 str_submit: Wyślij
 str_check_inboxes: Sprawdź Skrzynki
 str_toggle_titles: Wł/Wył Gry
+str_toggle_titles_message: Wciśnij {a_button} by rozpocząć lub zatrzymać proces wymiany.
+str_toggle_titles_on: (WŁĄCZONE)
+str_toggle_titles_off: (WYŁĄCZONE)
