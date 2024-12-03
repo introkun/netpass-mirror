@@ -1,8 +1,9 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
+str_loading: "Načítání    "
+str_libcurl_error: "libCURL chyba (%d): %s"
+str_libcurl_date_and_time: 'Ujistěte se, že datum a čas vašeho systému jsou správně
+  nastaveny!'
+str_httpstatus_error: 'Stavový kód HTTP %d'
+str_3ds_error: 'Kód chyby 3DS %08lx'
 str_at_home: ''
 str_goto_train_station: ''
 str_at_train_station: ''
