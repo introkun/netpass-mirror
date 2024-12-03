@@ -1,6 +1,6 @@
 str_loading: "Chargement    "
 str_libcurl_error: "Erreur libCURL (%d) : %s"
-str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées !'
+str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées!'
 str_httpstatus_error: 'Code de statut HTTP %d'
 str_3ds_error: 'Code d''erreur 3DS %08lx'
 str_at_home: 'Vous êtes chez vous.'
