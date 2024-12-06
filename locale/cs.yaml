@@ -1,0 +1,41 @@
+str_loading: "Načítání    "
+str_libcurl_error: "libCURL chyba (%d): %s"
+str_libcurl_date_and_time: 'Ujistěte se, že datum a čas vašeho systému jsou správně
+  nastaveny!'
+str_httpstatus_error: 'HTTP stavový kód %d'
+str_3ds_error: 'Kód chyby 3DS %08lx'
+str_at_home: 'Jste doma.'
+str_goto_train_station: 'Cesta na Vlakové Nádraží'
+str_at_train_station: 'Jste na Vlakové Nádraží.'
+str_goto_plaza: 'Cesta na Tržiště'
+str_at_plaza: 'Jste na Tržiště.'
+str_goto_mall: 'Cesta na Nákupní Středisko'
+str_at_mall: 'Jste na Nákupní Středisko.'
+str_exit: 'Ukončete'
+str_settings: 'Parametry'
+str_download_data: 'Stáhnout osobní údaje'
+str_delete_data: 'Vymazat osobní údaje'
+str_back: 'Zpět'
+str_language: 'Čeština'
+str_goto_beach: 'Cesta na Pláž'
+str_at_beach: 'Jste na Pláž.'
+str_goto_arcade: 'Cesta na Arkádová místnost'
+str_at_arcade: 'Jste na Arkádová místnost.'
+str_goto_catcafe: 'Cesta na Kočičí kavárna'
+str_at_catcafe: 'Jste na Kočičí kavárna.'
+str_system_language: 'Systémový Jazyk'
+str_language_pick: 'Jazyk:'
+str_no_location_twice: 'Do stejného místa nelze vstoupit dvakrát za sebou!'
+str_report_user: 'Nahlásit uživatele'
+str_report_user_hint: 'Nahlásit "%s"'
+str_cancel: 'Zrušit'
+str_submit: 'Předložit'
+str_back_alley: 'Alej'
+str_back_alley_message: 'Pojďme si najít nové ''''přátele'''''
+str_back_alley_pay: "Koupit průchod {playcoin}%d"
+str_check_inboxes: 'Zkontrolujte Doručené'
+str_toggle_titles: 'Výběr her'
+str_toggle_titles_message: "Stisknutím tlačítka {a_button} spustíte nebo zastavíte
+  výměnu průchodů."
+str_toggle_titles_on: "(ANO)"
+str_toggle_titles_off: "(NE)"
