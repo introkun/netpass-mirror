@@ -1,13 +1,19 @@
 #include "switch.h"
 #include "../curl-handler.h"
+#include "../boss.h"
+#include "../utils.h"
 #include <stdlib.h>
+#include <malloc.h>
+#include <sys/stat.h>
+#include <ctype.h>
+#include <dirent.h>
 #define N(x) scenes_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_title;
-	C2D_Text g_entries[6];
+	C2D_Text g_entries[8];
 	C2D_Text g_languages[NUM_LANGUAGES + 1];
 	int cursor;
 	int selected_language;
@@ -25,7 +31,9 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_language_pick);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_download_data);
 	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_delete_data);
-	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_write_patches);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_clear_spr_cache);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
@@ -43,7 +51,7 @@ void N(init)(Scene* sc) {
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 8; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
 	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 50, 0, 1, 1);
@@ -79,8 +87,8 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = 0;
-		if (_data->cursor > 5) _data->cursor = 5;
+		if (_data->cursor < 0) _data->cursor = 7;
+		if (_data->cursor > 7) _data->cursor = 0;
 		if (_data->cursor == 2) {
 			int old_lang = _data->selected_language;
 			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
@@ -93,14 +101,17 @@ SceneResult N(process)(Scene* sc) {
 		}
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
+				// toggle titles
 				sc->next_scene = getToggleTitlesScene();
 				return scene_push;
 			}
 			if (_data->cursor == 1) {
+				// report users
 				sc->next_scene = getReportListScene();
 				return scene_push;
 			}
 			if (_data->cursor == 3) {
+				// download personal data
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
 					char url[50];
 					snprintf(url, 50, "%s/data", BASE_URL);
@@ -115,6 +126,7 @@ SceneResult N(process)(Scene* sc) {
 				return scene_push;
 			}
 			if (_data->cursor == 4) {
+				// delete personal data
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
 					char url[50];
 					snprintf(url, 50, "%s/data", BASE_URL);
@@ -127,7 +139,78 @@ SceneResult N(process)(Scene* sc) {
 				}));
 				return scene_push;
 			}
-			if (_data->cursor == 5) return scene_pop;
+			if (_data->cursor == 5) {
+				// copy patches
+				#define COPY_DSTDIR "/luma/sysmodules"
+				#define COPY_SRCDIR "romfs:/patches"
+				mkdir_p(COPY_DSTDIR);
+				printf("Copying sysmodules...\n");
+				DIR* d = opendir(COPY_SRCDIR);
+				if (!d) {
+					printf("ERROR: src dir not found\n");
+					return scene_continue;
+				}
+				void* buffer = malloc(0x4000);
+				if (!buffer) {
+					printf("ERROR: malloc\n");
+					return scene_continue;
+				}
+				struct dirent* p;
+				char srcpath[100];
+				char dstpath[100];
+				while ((p = readdir(d))) {
+					snprintf(srcpath, 100, "%s/%s", COPY_SRCDIR, p->d_name);
+					snprintf(dstpath, 100, "%s/%s", COPY_DSTDIR, p->d_name);
+					struct stat statbuf;
+					if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
+						// ok we actually have a file, copy it
+						printf("%s...", p->d_name);
+						FILE* src = fopen(srcpath, "rb");
+						FILE* dst = fopen(dstpath, "wb+");
+						if (!src || !dst) {
+							if (src) fclose(src);
+							if (dst) fclose(dst);
+							printf("ERROR: open\n");
+							continue;
+						}
+						size_t len = fread(buffer, 1, 0x4000, src);
+						if (!len) {
+							fclose(src);
+							fclose(dst);
+							printf("ERROR: read\n");
+							continue;
+						}
+						if (!fwrite(buffer, len, 1, dst)) {
+							fclose(src);
+							fclose(dst);
+							printf("ERROR: write\n");
+							continue;
+						}
+						fclose(src);
+						fclose(dst);
+
+						printf("Done\n");
+					}
+				}
+				printf("Copying sysmodules done\n");
+				free(buffer);
+				return scene_continue;
+			}
+			if (_data->cursor == 6) {
+				// clear spr cache
+				#define SPRELAY_TITLE_ID 0x0004013000003400ll
+				#define SPRELAY_TASK_ID "sprelay"
+				printf("Clearing spr cache...");
+				bossInit(SPRELAY_TITLE_ID, false);
+				bossUnregisterTask(SPRELAY_TASK_ID, 0);
+				bossUnregisterTask(SPRELAY_TASK_ID, 0);
+				printf("Done\n");
+				nsInit();
+				NS_RebootSystem();
+				printf("Rebooting system...");
+				return scene_continue;
+			}
+			if (_data->cursor == 7) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

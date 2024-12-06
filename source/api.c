@@ -157,6 +157,89 @@ Result downloadInboxes(void) {
 	if (R_FAILED(res)) return res;
 	clearIgnoredTitles(&mbox_list);
 	for (int i = 0; i < mbox_list.num_boxes; i++) {
+		/*
+		printf("Checking inbox %d/%ld...", i+1, mbox_list.num_boxes);
+		uint32_t title_id = (int)strtol((char*)mbox_list.box_names[i], NULL, 16);
+		if (!title_id) continue;
+		char url[100];
+		snprintf(url, 100, "%s/inbox/%s/slot", BASE_URL, mbox_list.box_names[i]);
+		CurlReply* reply;
+		res = httpRequest("GET", url, 0, 0, &reply, (void*)1, 0);
+		if (R_FAILED(res)) break;
+		u32 http_code = res;
+		if (http_code == 200 && reply->len > 0x14) {
+			Handle state_change_handle;
+			res = cecdGetChangeStateEventHandle(&state_change_handle);
+			res = cecdStop(CEC_COMMAND_OVER_BOSS);
+			int num = 0;
+			while (true) {
+				svcWaitSynchronization(state_change_handle, 10e9);
+				CecStateAbbrev state;
+				res = cecdGetCecdState(&state);
+				num++;
+				if (num > 10) {
+					break;
+				}
+				if (R_SUCCEEDED(res) && state == CEC_STATE_ABBREV_INACTIVE) {
+					break;
+				}
+			}
+			svcCloseHandle(state_change_handle);
+
+			res = cecdSprCreate();
+			//printf("Create: %lx\n", res);
+
+			res = cecdSprInitialise();
+			//printf("Initialise: %lx\n", res);
+			
+			SlotMetadata slots[3];
+			int slots_total;
+			cecdSprGetSendSlotsMetadata(sizeof(slots), &slots, &slots_total);
+			printf("slots_total: %d\n", slots_total);
+			printf("send_method: %d\n", slots[0].send_method);
+			printf("title_id: %lx\n", slots[0].title_id);
+			printf("size: %ld\n", slots[0].size);
+
+			cecdSprSetTitleSent(slots[0].title_id, true);
+
+			res = cecdSprFinaliseSend();
+			//printf("Finalise Send: %lx\n", res);
+
+			res = cecdSprStartRecv();
+			//printf("Start Recv: %lx\n", res);
+
+			res = cecdSprSetTitleSent(title_id, true);
+			//printf("Set title sent: %lx\n", res);
+
+			CecMessageHeader* msg = (CecMessageHeader*)(reply->ptr + sizeof(CecSlotHeader));
+			CecSlotHeader* slot = (CecSlotHeader*)reply->ptr;
+			uint32_t metadata[3];
+			slots[0].send_method = msg->send_method;
+			slots[0].title_id = title_id;
+			slots[0].size = reply->len;
+			res = cecdSprAddSlotsMetadata(0xC, (void*)&slots);
+			//printf("Metadata: %lx\n", res);
+
+			res = cecdSprAddSlot(title_id, reply->len, reply->ptr);
+			printf("title_id: %lx\n", title_id);
+			printf("title_id2: %lx\n", slot->title_id);
+			printf("num_messages: %ld\n", slot->message_count);
+			printf("Add Slot: %lx\n", res);
+			printf("Len: %d\n", reply->len);
+			printf("Send method: %d\n", msg->send_method);
+
+			res = cecdSprDone(true);
+			//printf("Spr Done: %lx\n", res);
+		}
+		curlFreeHandler(reply->offset);
+		if (R_FAILED(res)) {
+			printf("Error: %lx\n", res);
+		} else {
+			printf("Done\n");
+		}
+		continue;
+		*/
+
 		int title_id = (int)strtol((char*)mbox_list.box_names[i], NULL, 16);
 		if (!title_id) continue;
 		res = cecdOpenAndRead(title_id, CEC_PATH_INBOX_INFO, sizeof(CecBoxInfoHeader), (u8*)&box_header);

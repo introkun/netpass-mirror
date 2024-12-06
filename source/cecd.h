@@ -32,39 +32,49 @@
 #define CECMESSAGE_BOX_ICON 101
 #define CECMESSAGE_BOX_TITLE 110
 
-#define CEC_COMMAND_NONE 0
-#define CEC_COMMAND_START 1
-#define CEC_COMMAND_RESET_START 2
-#define CEC_COMMAND_READYSCAN 3
-#define CEC_COMMAND_READYSCANWAIT 4
-#define CEC_COMMAND_STARTSCAN 5
-#define CEC_COMMAND_RESCAN 6
-#define CEC_COMMAND_NDM_RESUME 7
-#define CEC_COMMAND_NDM_SUSPEND 8
-#define CEC_COMMAND_NDM_SUSPEND_IMMEDIATE 9
-#define CEC_COMMAND_STOPWAIT 0xA
-#define CEC_COMMAND_STOP 0xB
-#define CEC_COMMAND_STOP_FORCE 0xC
-#define CEC_COMMAND_STOP_FORCE_WAIT 0xD
-#define CEC_COMMAND_RESET_FILTER 0xE
-#define CEC_COMMAND_DAEMON_STOP 0xF
-#define CEC_COMMAND_DAEMON_START 0x10
-#define CEC_COMMAND_EXIT 0x11
-#define CEC_COMMAND_OVER_BOSS 0x12
-#define CEC_COMMAND_OVER_BOSS_FORCE 0x13
-#define CEC_COMMAND_OVER_BOSS_FORCE_WAIT 0x14
-#define CEC_COMMAND_END 0x15
+typedef enum {
+	CEC_COMMAND_NONE = 0,
+	CEC_COMMAND_START = 1,
+	CEC_COMMAND_RESET_START = 2,
+	CEC_COMMAND_READYSCAN = 3,
+	CEC_COMMAND_READYSCANWAIT = 4,
+	CEC_COMMAND_STARTSCAN = 5,
+	CEC_COMMAND_RESCAN = 6,
+	CEC_COMMAND_NDM_RESUME = 7,
+	CEC_COMMAND_NDM_SUSPEND = 8,
+	CEC_COMMAND_NDM_SUSPEND_IMMEDIATE = 9,
+	CEC_COMMAND_STOPWAIT = 0xA,
+	CEC_COMMAND_STOP = 0xB,
+	CEC_COMMAND_STOP_FORCE = 0xC,
+	CEC_COMMAND_STOP_FORCE_WAIT = 0xD,
+	CEC_COMMAND_RESET_FILTER = 0xE,
+	CEC_COMMAND_DAEMON_STOP = 0xF,
+	CEC_COMMAND_DAEMON_START = 0x10,
+	CEC_COMMAND_EXIT = 0x11,
+	CEC_COMMAND_OVER_BOSS = 0x12,
+	CEC_COMMAND_OVER_BOSS_FORCE = 0x13,
+	CEC_COMMAND_OVER_BOSS_FORCE_WAIT = 0x14,
+	CEC_COMMAND_END = 0x15,
+} CecCommand;
 
-#define CEC_STATE_ABBREV_IDLE 1
-#define CEC_STATE_ABBREV_INACTTIVE 2
-#define CEC_STATE_ABBREV_SCANNING 3
-#define CEC_STATE_ABBREV_WLREADY 4
-#define CEC_STATE_ABBREV_OTHER 5
+typedef enum {
+	CEC_STATE_ABBREV_IDLE = 1,
+	CEC_STATE_ABBREV_INACTIVE = 2,
+	CEC_STATE_ABBREV_SCANNING = 3,
+	CEC_STATE_ABBREV_WLREADY = 4,
+	CEC_STATE_ABBREV_OTHER = 5,
+} CecStateAbbrev;
 
 // only a made-up number that is prolly large enough for existing streetpass messages
 #define MAX_MESSAGE_SIZE 0x20000
 
 typedef u8 CecMessageId[8];
+
+typedef struct SlotMetadata {
+	int send_method;
+	u32 title_id;
+	u32 size;
+} SlotMetadata;
 
 Result cecdInit(void);
 Result cecdGetState(u32* state);
@@ -73,10 +83,23 @@ Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMes
 Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
 Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id);
 Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
+Result cecdStop(CecCommand command);
+Result cecdGetCecdState(CecStateAbbrev* state);
 Result cecdGetCecInfoEventHandle(Handle* handle);
 Result cecdGetChangeStateEventHandle(Handle* handle);
 Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf);
 Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf);
+Result cecdSprCreate(void);
+Result cecdSprInitialise(void);
+Result cecdSprGetSendSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total);
+Result cecdSprSetTitleSent(u32 title_id, bool success);
+Result cecdSprFinaliseSend(void);
+Result cecdSprStartRecv(void);
+Result cecdSprAddSlotsMetadata(u32 size, u8* buf);
+Result cecdSprAddSlot(u32 title_id, u32 size, u8* buf);
+Result cecdSprFinaliseRecv(void);
+Result cecdSprDone(bool success);
+Result cecdGenHashConsoleUnique(u64* out);
 Handle cecdGetServHandle(void);
 
 Result updateStreetpassOutbox(u8* msgbuf);
@@ -135,6 +158,15 @@ typedef struct CecMessageHeader {
 	u16 user_data;
 } CecMessageHeader;
 
+typedef struct CecSlotHeader {
+	u16 magic; // 0x6161 'aa'
+	u16 padding;
+	u32 size;
+	u32 title_id;
+	u32 batch_id;
+	u32 message_count;
+} CecSlotHeader;
+
 typedef struct CecBoxInfoHeader {
 	u16 magic; // 0x6262 'bb'
 	u16 padding;
@@ -171,6 +203,13 @@ typedef struct CecMBoxInfoHeader {
 	u32 padding5;
 	CecTimestamp unknown_time;
 } CecMBoxInfoHeader;
+
+typedef struct CecOBIndex {
+	u16 magic; // 0x6767 'gg'
+	u16 padding;
+	u32 num_messages;
+	u64 message_ids;
+} CecOBIndex;
 
 typedef struct CecMboxListHeader {
 	u16 magic; // 0x6868 'hh'

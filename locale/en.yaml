@@ -37,3 +37,5 @@ str_toggle_titles: Toggle Games
 str_toggle_titles_message: "Press {a_button} to start or stop exchanging passes."
 str_toggle_titles_on: "(ON)"
 str_toggle_titles_off: "(OFF)"
+str_write_patches: "Write patches"
+str_clear_spr_cache: "Clear spr cache"

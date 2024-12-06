@@ -88,13 +88,27 @@ Result getMac(u8 mac[6]) {
 size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	CurlReply* r = (CurlReply*)ptr;
 	size_t new_len = r->len + size*nmemb;
-	if (new_len > MAX_MESSAGE_SIZE) {
-		return 0;
+	if (r->custom_ptr) {
+		if (new_len > r->capacity) {
+			void* ptr = realloc(r->custom_ptr, r->capacity*2);
+			if (!ptr) {
+				return 0;
+			}
+			r->custom_ptr = ptr;
+		}
+		memcpy(r->custom_ptr + r->len, data, size*nmemb);
+		r->custom_ptr[new_len] = '\0';
+		r->len = new_len;
+		return size*nmemb;
+	} else {
+		if (new_len > MAX_MESSAGE_SIZE) {
+			return 0;
+		}
+		memcpy(r->ptr + r->len, data, size*nmemb);
+		r->ptr[new_len] = '\0';
+		r->len = new_len;
+		return size*nmemb;
 	}
-	memcpy(r->ptr + r->len, data, size*nmemb);
-	r->ptr[new_len] = '\0';
-	r->len = new_len;
-	return size*nmemb;
 }
 
 size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
@@ -109,6 +123,11 @@ size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 }
 
 void curlFreeHandler(int offset) {
+	if (handles[offset].reply.custom_ptr) {
+		free(handles[offset].reply.custom_ptr);
+		handles[offset].reply.custom_ptr = 0;
+		handles[offset].reply.capacity = 0;
+	}
 	handles[offset].status = CURL_HANDLE_STATUS_RESET;
 }
 
@@ -159,6 +178,11 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	res = handles[curl_handle_slot].res;
 	if (reply && (u32)reply != 1) {
 		*reply = &handles[curl_handle_slot].reply;
+		if ((u32)title_name == 1) {
+			// use a custom growing pointer for the reply
+			handles[curl_handle_slot].reply.custom_ptr = malloc(0x100);
+			handles[curl_handle_slot].reply.capacity = 0x100;
+		}
 	} else {
 		curlFreeHandler(curl_handle_slot);
 	}
@@ -209,30 +233,46 @@ void curl_multi_loop_request_setup(int i) {
 	}
 	struct curl_slist* headers = NULL;
 
-	// add mac header
-	char header_mac[25];
-	char header_mac_value[13];
-	getMacStr(header_mac_value);
-	snprintf(header_mac, sizeof(header_mac), "3ds-mac: %s", header_mac_value);
-	headers = curl_slist_append(headers, header_mac);
-	char header_netpass_id[100];
-	snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
-	headers = curl_slist_append(headers, header_netpass_id);
-	char header_netpass_version[100];
-	snprintf(header_netpass_version, 100, "3ds-netpass-version: v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
-	headers = curl_slist_append(headers, header_netpass_version);
-	char header_friend_key[100];
+	{
+		// add mac header
+		char header_mac[25];
+		char header_mac_value[13];
+		getMacStr(header_mac_value);
+		snprintf(header_mac, sizeof(header_mac), "3ds-mac: %s", header_mac_value);
+		headers = curl_slist_append(headers, header_mac);
+	}
+	{
+		// add nid header
+		char header_netpass_id[100];
+		snprintf(header_netpass_id, 100, "3ds-nid: %s", netpass_id);
+		headers = curl_slist_append(headers, header_netpass_id);
+	}
+	{
+		// add version header
+		char header_netpass_version[100];
+		snprintf(header_netpass_version, 100, "3ds-netpass-version: v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+		headers = curl_slist_append(headers, header_netpass_version);
+	}
+	{
+		// add time header
+		char header_time[100];
+		time_t unixTime = time(NULL);
+		struct tm* ts = gmtime((const time_t *)&unixTime);
+		snprintf(header_time, 100, "3ds-time: %02i:%02i:%02i", ts->tm_hour, ts->tm_min, ts->tm_sec);
+		headers = curl_slist_append(headers, header_time);
+	}
 	FriendKey friend_key;
 	Result res = FRD_GetMyFriendKey(&friend_key);
 	if (R_SUCCEEDED(res)) {
 		u64 fc;
 		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
 		if (R_SUCCEEDED(res)) {
+			char header_friend_key[100];
 			snprintf(header_friend_key, 100, "3ds-friend-code: %016llX", (fc ^ friend_key.localFriendCode) & 0x0000ffffffffffffll);
 			headers = curl_slist_append(headers, header_friend_key);
 		}
 	}
-	if (h->title_name && !h->file_reply) {
+	if (h->title_name && !h->file_reply && (u32)h->title_name > 1) {
 		char header_title_name[225];
 		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
 		headers = curl_slist_append(headers, header_title_name);

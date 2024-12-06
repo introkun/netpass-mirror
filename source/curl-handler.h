@@ -24,6 +24,8 @@
 
 typedef struct {
 	u8 ptr[MAX_MESSAGE_SIZE];
+	u8* custom_ptr;
+	size_t capacity;
 	size_t len;
 	int offset;
 } CurlReply;

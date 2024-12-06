@@ -44,6 +44,12 @@ make codegen
 make
 ```
 
+### For building patches
+If you want to build patches you have to manually dump their decrypted code from a 3ds and then place the file as `code.bin` into the respective patch folder. After that, you can run:
+```bash
+make patch
+```
+
 ### Additional prerequisites to build the `.CIA`
  - Makerom: You need the `makerom` executable in your `$PATH`
    You can get it precompiled on https://github.com/3DSGuy/Project_CTR/releases and then copy it to `$DEVKITPRO/tools/bin`
