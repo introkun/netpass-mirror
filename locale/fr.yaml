@@ -39,3 +39,5 @@ str_toggle_titles_off: (OFF)
 str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les échanges
   StreetPass.
 str_check_inboxes: Boîte de Réception
+str_write_patches: Écrire des corrections
+str_clear_spr_cache: Supprimer le cache spr
