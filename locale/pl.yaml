@@ -37,3 +37,5 @@ str_toggle_titles: Wł/Wył Gry
 str_toggle_titles_message: Wciśnij {a_button} by rozpocząć lub zatrzymać proces wymiany.
 str_toggle_titles_on: (WŁĄCZONE)
 str_toggle_titles_off: (WYŁĄCZONE)
+str_write_patches: Wczytaj łatki
+str_clear_spr_cache: Wyczyść spr cache
