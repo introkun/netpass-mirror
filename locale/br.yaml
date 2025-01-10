@@ -12,7 +12,7 @@ str_goto_mall: 'Mont d''an Kreiz Kenwerzhel'
 str_at_mall: 'Er Kreiz Kenwerzhel emaoc''h.'
 str_exit: 'Kuitaat'
 str_settings: 'Arventennoù'
-str_download_data: 'Pellgar. ar roadennoù perso.'
+str_download_data: 'Pellgargañ ar roadennoù perso.'
 str_delete_data: 'Diverkañ ar roadennoù perso.'
 str_back: 'Distro'
 str_language: 'Brezhoneg'
@@ -32,9 +32,11 @@ str_submit: 'Kinnig'
 str_back_alley: 'Karreg-vor'
 str_back_alley_message: 'Deomp da chaseal an emgavioù'
 str_back_alley_pay: "Prenañ un alc’hhouez {playcoin}%d"
-str_check_inboxes: 'Kontrollañ Inboxes'
+str_check_inboxes: 'Kontrollañ ar voest-keleier'
 str_toggle_titles: 'Diuzit ar c''hoarioù'
 str_toggle_titles_message: "Evit gweredekaat/diweredekaat ar Streetpass, pouezit war
   {a_button}."
 str_toggle_titles_on: "(YA)"
 str_toggle_titles_off: "(KET)"
+str_write_patches: Kargañ an difazieroù
+str_clear_spr_cache: Diverkañ ar grubuilh spr
