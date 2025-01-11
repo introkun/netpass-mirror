@@ -36,3 +36,8 @@ str_back_alley_pay: Koop een pas {playcoin}%d
 str_check_inboxes: Check postvakken
 str_write_patches: Schrijf patches
 str_clear_spr_cache: Wis spr cache
+str_toggle_titles_off: (UIT)
+str_toggle_titles_on: (AAN)
+str_toggle_titles_message: Druk op {a_button} om de uitwisseling van ontmoetingen
+  aan/uitschakelen.
+str_toggle_titles: Spellen Aan-/uitschakelen
