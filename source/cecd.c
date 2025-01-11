@@ -60,7 +60,7 @@ cleanup:
 
 Result cecdGetState(u32* state) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0E, 0, 0);
 	
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -73,7 +73,7 @@ Result cecdGetState(u32* state) {
 
 Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x03, 4, 4);
 	cmdbuf[1] = program_id;
 	cmdbuf[2] = (u32)is_outbox;
@@ -93,7 +93,7 @@ Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMes
 
 Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x03, 4, 4);
 	cmdbuf[1] = program_id;
 	cmdbuf[2] = (u32)is_outbox;
@@ -115,7 +115,7 @@ Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf
 
 Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x06, 4, 4);
 	cmdbuf[1] = program_id;
 	cmdbuf[2] = (u32)is_outbox;
@@ -135,7 +135,7 @@ Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMe
 
 Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x07, 4, 6);
 	cmdbuf[1] = program_id;
 	cmdbuf[2] = (u32)is_outbox;
@@ -155,9 +155,21 @@ Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* bu
 	return res;
 }
 
+Result cecdStart(CecCommand command) {
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x0B, 1, 0);
+	cmdbuf[1] = command;
+
+	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
+	res = (Result)cmdbuf[1];
+
+	return res;
+}
+
 Result cecdStop(CecCommand command) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0C, 1, 0);
 	cmdbuf[1] = command;
 
@@ -169,7 +181,7 @@ Result cecdStop(CecCommand command) {
 
 Result cecdGetCecdState(CecStateAbbrev* state) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0xE, 0, 0);
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
 	res = (Result)cmdbuf[1];
@@ -180,7 +192,7 @@ Result cecdGetCecdState(CecStateAbbrev* state) {
 
 Result cecdGetCecInfoEventHandle(Handle* handle) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0xF, 0, 0);
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
 	res = (Result)cmdbuf[1];
@@ -191,7 +203,7 @@ Result cecdGetCecInfoEventHandle(Handle* handle) {
 
 Result cecdGetChangeStateEventHandle(Handle* handle) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x10, 0, 0);
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
 	res = (Result)cmdbuf[1];
@@ -202,7 +214,7 @@ Result cecdGetChangeStateEventHandle(Handle* handle) {
 
 Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x11, 4, 4);
 	cmdbuf[1] = size;
 	cmdbuf[2] = program_id;
@@ -222,7 +234,7 @@ Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf) {
 
 Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x12, 4, 4);
 	cmdbuf[1] = size;
 	cmdbuf[2] = program_id;
@@ -242,7 +254,7 @@ Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf) {
 
 Result cecdSprCreate(void) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x40A, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -253,7 +265,7 @@ Result cecdSprCreate(void) {
 
 Result cecdSprInitialise(void) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x40B, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -262,9 +274,9 @@ Result cecdSprInitialise(void) {
 	return res;
 }
 
-Result cecdSprGetSendSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total) {
+Result cecdSprGetSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x40C, 1, 2);
 	cmdbuf[1] = size;
 
@@ -278,9 +290,25 @@ Result cecdSprGetSendSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total
 	return res;
 }
 
+Result cecdSprGetSlot(u32 title_id, u32 size, u8* buf) {
+	Result res = 0;
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x40D, 2, 2);
+	cmdbuf[1] = title_id;
+	cmdbuf[2] = size;
+
+	cmdbuf[3] = IPC_Desc_Buffer(size, IPC_BUFFER_W);
+	cmdbuf[4] = (u32)buf;
+
+	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
+	res = (Result)cmdbuf[1];
+
+	return res;
+}
+
 Result cecdSprSetTitleSent(u32 title_id, bool success) { // set send result
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x40E, 2, 0);
 	cmdbuf[1] = title_id;
 	cmdbuf[2] = success;
@@ -293,7 +321,7 @@ Result cecdSprSetTitleSent(u32 title_id, bool success) { // set send result
 
 Result cecdSprFinaliseSend(void) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x40F, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -304,7 +332,7 @@ Result cecdSprFinaliseSend(void) {
 
 Result cecdSprStartRecv(void) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x410, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -315,7 +343,7 @@ Result cecdSprStartRecv(void) {
 
 Result cecdSprAddSlotsMetadata(u32 size, u8* buf) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x411, 1, 2);
 	cmdbuf[1] = size;
 
@@ -330,7 +358,7 @@ Result cecdSprAddSlotsMetadata(u32 size, u8* buf) {
 
 Result cecdSprAddSlot(u32 title_id, u32 size, u8* buf) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x412, 3, 2);
 	cmdbuf[1] = title_id;
 	cmdbuf[2] = 0xFF; // flags
@@ -347,7 +375,7 @@ Result cecdSprAddSlot(u32 title_id, u32 size, u8* buf) {
 
 Result cecdSprFinaliseRecv(void) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x413, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -358,8 +386,8 @@ Result cecdSprFinaliseRecv(void) {
 
 Result cecdSprDone(bool success) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
-	cmdbuf[0] = IPC_MakeHeader(0x414, 0, 0);
+	u32* cmdbuf = getThreadCommandBuffer();
+	cmdbuf[0] = IPC_MakeHeader(0x414, 1, 0);
 	cmdbuf[1] = success;
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -370,7 +398,7 @@ Result cecdSprDone(bool success) {
 
 Result cecdGenHashConsoleUnique(u64* out) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x415, 0, 0);
 
 	if (R_FAILED(res = svcSendSyncRequest(cecdHandle))) return res;
@@ -383,7 +411,7 @@ Result cecdGenHashConsoleUnique(u64* out) {
 // this method is broken
 Result cecdGetSystemInfo(u32 destbuf_size, void* destbuf) {
 	Result res = 0;
-	u32 *cmdbuf = getThreadCommandBuffer();
+	u32* cmdbuf = getThreadCommandBuffer();
 	u8 parambuf[32];
 	cmdbuf[0] = IPC_MakeHeader(0x0A, 3, 4); // 0x000A00C4
 	cmdbuf[1] = 32; // dest buffer size

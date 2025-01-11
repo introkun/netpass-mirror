@@ -32,8 +32,7 @@
 
 void clearIgnoredTitles(CecMboxListHeader* mbox_list);
 
-Result uploadOutboxes(void);
-Result downloadInboxes(void);
+Result doSlotExchange(void);
 Result getLocation(void);
 Result setLocation(int location);
 

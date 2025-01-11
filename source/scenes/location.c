@@ -90,7 +90,7 @@ SceneResult N(process)(Scene* sc) {
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
 				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
-					downloadInboxes();
+					triggerDownloadInboxes();
 				}));
 				return scene_push;
 			}

@@ -35,6 +35,7 @@ int main() {
 	nsInit();
 	aptInit();
 	frdInit();
+	fsInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
@@ -92,7 +93,7 @@ int main() {
 			location = res;
 			return;
 		}
-		uploadOutboxes();
+		doSlotExchange();
 		res = getLocation();
 		if (R_FAILED(res) && res != -1) {
 			printf("ERROR failed to get location: %ld\n", res);
@@ -133,6 +134,7 @@ int main() {
 	C3D_Fini();
 	//curlExit();
 	romfsExit();
+	fsExit();
 	frdExit();
 	aptExit();
 	nsExit();

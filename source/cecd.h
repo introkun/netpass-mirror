@@ -66,7 +66,7 @@ typedef enum {
 } CecStateAbbrev;
 
 // only a made-up number that is prolly large enough for existing streetpass messages
-#define MAX_MESSAGE_SIZE 0x20000
+#define MAX_MESSAGE_SIZE 0x19000
 
 typedef u8 CecMessageId[8];
 
@@ -83,6 +83,7 @@ Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMes
 Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
 Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id);
 Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac);
+Result cecdStart(CecCommand command);
 Result cecdStop(CecCommand command);
 Result cecdGetCecdState(CecStateAbbrev* state);
 Result cecdGetCecInfoEventHandle(Handle* handle);
@@ -91,7 +92,8 @@ Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf);
 Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf);
 Result cecdSprCreate(void);
 Result cecdSprInitialise(void);
-Result cecdSprGetSendSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total);
+Result cecdSprGetSlotsMetadata(u32 size, SlotMetadata* buf, u32* slots_total);
+Result cecdSprGetSlot(u32 title_id, u32 size, u8* buf);
 Result cecdSprSetTitleSent(u32 title_id, bool success);
 Result cecdSprFinaliseSend(void);
 Result cecdSprStartRecv(void);
