@@ -1,41 +1,44 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
+str_loading: "Iekraušana    "
+str_libcurl_error: "libCURL kļūda (%d): %s"
+str_libcurl_date_and_time: 'Pārliecinieties, ka jūsu sistēmas datums un laiks ir iestatīti
+  pareizi!'
+str_httpstatus_error: 'HTTP statusa kods %d'
+str_3ds_error: '3DS kļūda kods %08lx'
+str_at_home: 'Jūs esat mājās.'
+str_goto_train_station: 'Dodieties uz Dzelzceļa staciju'
+str_at_train_station: 'Jūs atrodaties Dzelzceļa staciju.'
+str_goto_plaza: 'Dodieties uz Laukums'
+str_at_plaza: 'Jūs atrodaties Laukums.'
+str_goto_mall: 'Dodieties uz Tirdzniecības centrs'
+str_at_mall: 'Jūs atrodaties Tirdzniecības centrs.'
+str_exit: 'Iziet'
+str_settings: 'Iestatījumi'
+str_download_data: 'Lejupielādēt personas datus'
+str_delete_data: 'Dzēst personas datus'
+str_back: 'Atpakaļ'
+str_language: 'Latviešu'
+str_goto_beach: 'Dodieties uz Pludmale'
+str_at_beach: 'Jūs atrodaties Pludmale.'
+str_goto_arcade: 'Dodieties uz Spēļu istaba'
+str_at_arcade: 'Jūs atrodaties Spēļu istaba.'
+str_goto_catcafe: 'Dodieties uz Kaķu Kafejnīca'
+str_at_catcafe: 'Jūs atrodaties Kaķu Kafejnīca.'
+str_system_language: 'Sistēmas valoda'
+str_language_pick: 'Valoda:'
+str_no_location_twice: 'Jūs nevarat divas reizes pēc kārtas ievadīt vienu un to pašu
+  vietu!'
+str_report_user: 'Ziņot par lietotāju'
+str_report_user_hint: 'Ziņot "%s"'
+str_cancel: 'Atcelt'
+str_submit: 'Iesniegt'
+str_back_alley: 'Aleja'
+str_back_alley_message: 'Darīsim vēl dažas piespēles'
+str_back_alley_pay: "Iegādāties piespēle {playcoin}%d"
+str_check_inboxes: 'Pārbaudiet iesūtnes'
+str_toggle_titles: 'Pārslēgt Spēles'
+str_toggle_titles_message: "Nospiediet {a_button}, lai uzsāktu vai pārtrauktu piespēles
+  apmaiņu."
+str_toggle_titles_on: "(JĀ)"
+str_toggle_titles_off: "(NĒ)"
 str_write_patches: ""
 str_clear_spr_cache: ""
