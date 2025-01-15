@@ -49,6 +49,15 @@ ReportList* loadReportList(void) {
 	return list;
 }
 
+void saveSlotInLog(CecSlotHeader* slot) {
+	u8* ptr = ((u8*)slot) + sizeof(CecSlotHeader);
+	for (int i = 0; i < slot->message_count; i++) {
+		CecMessageHeader* msg = (CecMessageHeader*)ptr;
+		saveMsgInLog(msg);
+		ptr += msg->message_size;
+	}
+}
+
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
 	mkdir_p(LOG_DIR);
@@ -84,23 +93,23 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	}
 
 	int found_i = -1;
-	// find if the batch already exists
+	// find if the transfer id already exists
 	for (int i = 0; i < list->header.cur_size; i++) {
-		if (list->entries[i].batch_id == msg->batch_id) {
+		if (list->entries[i].transfer_id == msg->transfer_id) {
 			found_i = i;
 			break;
 		}
 	}
 	char* b64name = b64encode(msg->message_id, 8);
 	char filename[100];
-	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->batch_id, b64name);
+	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->transfer_id, b64name);
 	free(b64name);
 	bool edited = false;
 	if (found_i < 0) {
 		// we have to add a new entry!
 		if (list->header.max_size == list->header.cur_size) {
 			// uho, all is full, gotta pop the first one of the list
-			u32 rm_batch = list->entries[0].batch_id;
+			u32 rm_batch = list->entries[0].transfer_id;
 			char rm_dirname[100];
 			snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
 			rmdir_r(rm_dirname);
@@ -108,7 +117,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			memmove(list->entries, ((u8*)list->entries) + sizeof(ReportListEntry), list->header.cur_size * sizeof(ReportListEntry));
 		}
 		ReportListEntry* e = &list->entries[list->header.cur_size];
-		e->batch_id = msg->batch_id;
+		e->transfer_id = msg->transfer_id;
 		memcpy(&e->received, &msg->received, sizeof(CecTimestamp));
 		found_i = list->header.cur_size;
 		list->header.cur_size++;
@@ -152,11 +161,11 @@ error:
 	free(list);
 }
 
-Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 batch_id) {
+Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 	msg->magic = 0;
 
 	char dirname[100];
-	snprintf(dirname, 100, "%s%lx", LOG_DIR, batch_id);
+	snprintf(dirname, 100, "%s%lx", LOG_DIR, transfer_id);
 	size_t path_len = strlen(dirname);
 
 	DIR* d = opendir(dirname);
@@ -173,7 +182,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 batch_id) {
 		if (f) {
 			fread(msg, sizeof(CecMessageHeader), 1, f);
 			fclose(f);
-			if (msg->magic == 0x6060 && msg->batch_id == batch_id) {
+			if (msg->magic == 0x6060 && msg->transfer_id == transfer_id) {
 				free(fname);
 				break;
 			} else {

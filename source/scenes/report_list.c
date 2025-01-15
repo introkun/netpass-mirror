@@ -35,7 +35,7 @@ typedef struct {
 // yutzo, diamonds, eddie
 
 char* N(send_msg);
-u32 N(send_batch_id);
+u32 N(send_transfer_id);
 
 SceneResult N(report)(Scene* sc, int i) {
 	static const int msgmaxlen = 200;
@@ -60,11 +60,11 @@ SceneResult N(report)(Scene* sc, int i) {
 	}
 	if (button == SWKBD_D1_CLICK1) {
 		// successfully submitted the input
-		N(send_batch_id) = entry->batch_id;
+		N(send_transfer_id) = entry->transfer_id;
 		printf("Got report: \"%s\", sending...\n", N(send_msg));
 		Scene* scene = getLoadingScene(0, lambda(void, (void) {
 			CecMessageHeader msg;
-			Result res = reportGetSomeMsgHeader(&msg, N(send_batch_id));
+			Result res = reportGetSomeMsgHeader(&msg, N(send_transfer_id));
 			if (R_FAILED(res)) {
 				printf("ERROR: %lx\n", res);
 				goto exit;

@@ -54,7 +54,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	// read extra metadata to send
 	u8* slot = malloc(metadata->size);
 	if (!slot) {
-		return -1;
+		return -2;
 	}
 
 	// now it is time to *actually* fetch the slot
@@ -293,6 +293,7 @@ Result doSlotExchange(void) {
 		}
 		slot_new_data_num++;
 		res = cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]);
+		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
 			printf("-");
 			goto fail;

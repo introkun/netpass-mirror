@@ -32,7 +32,7 @@ typedef struct {
 
 typedef struct {
 	MiiData mii;
-	u32 batch_id;
+	u32 transfer_id;
 	CecTimestamp received;
 } ReportListEntry;
 
@@ -48,6 +48,7 @@ typedef struct {
 	ReportListEntry entries[];
 } ReportList;
 
+void saveSlotInLog(CecSlotHeader* slot);
 void saveMsgInLog(CecMessageHeader* msg);
 ReportList* loadReportList(void);
-Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 batch_id);
+Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id);
