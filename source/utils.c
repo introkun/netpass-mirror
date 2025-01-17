@@ -88,7 +88,7 @@ int rmdir_r(char *path) {
 			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, ".."))
 				continue;
 
-			len = path_len + strlen(p->d_name) + 2; 
+			len = path_len + strlen(p->d_name) + 2;
 			buf = malloc(len);
 
 			if (buf) {
@@ -96,10 +96,11 @@ int rmdir_r(char *path) {
 
 				snprintf(buf, len, "%s/%s", path, p->d_name);
 				if (!stat(buf, &statbuf)) {
-					if (S_ISDIR(statbuf.st_mode))
+					if (S_ISDIR(statbuf.st_mode)) {
 						r2 = rmdir_r(buf);
-					else
+					} else {
 						r2 = unlink(buf);
+					}
 				}
 				free(buf);
 			}

@@ -25,6 +25,7 @@
 #include "curl-handler.h"
 #include "config.h"
 #include "boss.h"
+#include "report.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -50,6 +51,7 @@ int main() {
 
 	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
+
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
 		u32 extdata_lowpathdata[3];
@@ -80,7 +82,9 @@ int main() {
 		return getLocationScene(location);
 	})), lambda(void, (void) {
 		Result res;
-		// first, we gotta wait for having internet
+		// first, we import the locally stored passes for reports to work
+		reportInit();
+		// next, we gotta wait for having internet
 		char url[50];
 		snprintf(url, 50, "%s/ping", BASE_URL);
 	check_internet:

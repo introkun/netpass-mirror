@@ -65,7 +65,7 @@ typedef enum {
 	CEC_STATE_ABBREV_OTHER = 5,
 } CecStateAbbrev;
 
-// only a made-up number that is prolly large enough for existing streetpass messages
+// seems to be the max number of bytes for transfering stuffs
 #define MAX_MESSAGE_SIZE 0x19000
 
 typedef u8 CecMessageId[8];

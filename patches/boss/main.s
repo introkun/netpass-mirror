@@ -20,6 +20,8 @@ s_handle_fsuser_2 equ 0x14b1a8
 FsFileWrite equ 0x118b68
 FsFileClose equ 0x118adc
 FsUserCloseArchive equ 0x118adc
+strlen equ 0x12775c
+snprintf equ 0x124b24
 
 
 .org spr_url_addr
@@ -47,7 +49,8 @@ FsFilePtr equ FullFilePtr + 0x4
 PathArgs equ FsFilePtr + 0x4
 SlotBuffer equ PathArgs + 0xC
 SlotBufferSize equ SlotBuffer + 0x4
-StackArgsSize equ SlotBufferSize + 0x4
+PathBuffer equ SlotBufferSize + 0x4
+StackArgsSize equ PathBuffer + 0x34
 
 .org 0x139510
 SaveSlotData:
@@ -70,7 +73,7 @@ SaveSlotData:
   str r0, [sp, #PathArgs + 8] ; we need in r0 a pointer to the handle
   add r0, sp, #PathArgs + 8
   add r1, sp, #PathArgs ; archive handle, just temporary storage we use
-  mov r2, 9; SDMC archive
+  mov r2, 9 ; SDMC archive
   mov r3, 1 ; empty path type
   mov r4, 0
   str r4, [sp, #CallArg3] ; this will be our empty string
@@ -95,12 +98,24 @@ SaveSlotData:
   ; now we have the full file handle, and thus should be able to open the file we want
 
   ; build PathArgs
-  mov r4, 3 ; ascii path type
+  ; first create the path str
+  ldr r0, [sp, SlotBuffer]
+  ldr r4, [r0, 0x04] ; size
+  str r4, [sp, #CallArg2]
+  ldr r4, [r0, 0x30] ; transfer id
+  str r4, [sp, #CallArg1]
+  ldr r3, [r0, 0x08] ; title id
+  ldr r2, [slotPathPatternPtr] ; pattern string
+  mov r1, 0x34 ; destination string length
+  add r0, sp, PathBuffer ; destionation string
+  bl snprintf
+
+  add r0, r0, 1 ; add the null character from snprintf
+  str r0, [sp, #PathArgs + 8] ; string length
+  mov r4, 3 ; ascii path typeSlotPathStr
   str r4, [sp, #PathArgs]
-  ldr r4, [slotPath]
-  str r4, [sp, #PathArgs + 4]
-  mov r4, 11 ; path len
-  str r4, [sp, #PathArgs + 8]
+  add r0, sp, PathBuffer ; the newly created string
+  str r0, [sp, #PathArgs + 4]
 
   ; open the file
   mov r3, 0b111 ; open flags
@@ -145,15 +160,12 @@ fail:
 .align
 FSUserHandlePtr:
   .word s_handle_fsuser_2
-slotPath:
-  .word SlotPathStr
-SlotPathStr:
-  .asciiz "/meow.test"
-;slotPath:
-;  .asciiz "/meow.test"
+slotPathPatternPtr:
+  .word slotPathPattern
 
 ; ro data
 .org 0x148a7c
-  
+slotPathPattern:
+  .asciiz "/config/netpass/log_spr/_%08lx_%08lx_%ld"
 
 .close

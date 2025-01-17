@@ -52,3 +52,4 @@ void saveSlotInLog(CecSlotHeader* slot);
 void saveMsgInLog(CecMessageHeader* msg);
 ReportList* loadReportList(void);
 Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id);
+void reportInit(void);

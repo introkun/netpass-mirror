@@ -26,9 +26,11 @@
 #include <sys/stat.h>
 #include <ctype.h>
 #include <dirent.h>
+#include <unistd.h>
 
 #define LOG_DIR "/config/netpass/log/"
 #define LOG_INDEX "/config/netpass/log/index.nrle"
+#define LOG_SPR_DIR "/config/netpass/log_spr"
 
 #define MAX_REPORT_ENTRIES_LEN 128
 
@@ -60,7 +62,6 @@ void saveSlotInLog(CecSlotHeader* slot) {
 
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
-	mkdir_p(LOG_DIR);
 	FILE* f = fopen(LOG_INDEX, "rb");
 	if (!f) {
 		// ok, file is empty, we have to create it
@@ -195,4 +196,42 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 	if (!msg->magic) return -2; // nothing in directory
 
 	return 0;
+}
+
+void reportInit(void) {
+	mkdir_p(LOG_DIR);
+	mkdir_p(LOG_SPR_DIR);
+
+	DIR* d = opendir(LOG_SPR_DIR);
+	if (d) {
+		printf("Add SPR passes ");
+		struct dirent* p;
+		while ((p = readdir(d))) {
+			size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 2;
+			char* buf = malloc(len);
+			if (buf) {
+				struct stat statbuf;
+				snprintf(buf, len, "%s/%s", LOG_SPR_DIR, p->d_name);
+				if (!stat(buf, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
+					FILE* f = fopen(buf, "rb");
+					if (f) {
+						CecSlotHeader slot;
+						fread(&slot, sizeof(CecSlotHeader), 1, f);
+						CecSlotHeader* buf_slot = malloc(slot.size);
+						if (buf_slot) {
+							fseek(f, 0, 0);
+							fread(buf_slot, slot.size, 1, f);
+							fclose(f);
+							printf("=");
+							saveSlotInLog(buf_slot);
+							free(buf_slot);
+						}
+					}
+					unlink(buf);
+				}
+				free(buf);
+			}
+		}
+		printf(" Done\n");
+	}
 }
