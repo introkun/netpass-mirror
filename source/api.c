@@ -250,7 +250,10 @@ Result doSlotExchange(void) {
 				break;
 			}
 		}
-		Result res2 = extra ? uploadSlot(extra, &slotinfo.metadata[i]) : -1;
+		if (!extra) {
+			continue; // the slot was disabled
+		}
+		Result res2 = uploadSlot(extra, &slotinfo.metadata[i]);
 		if (R_FAILED(res2)) {
 			printf("-");
 		} else {
