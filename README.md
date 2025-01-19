@@ -6,7 +6,7 @@
 Scan QR code to download!
 
 GBAtemp thread: https://gbatemp.net/threads/a-new-way-to-experience-streetpass.653810/  
-Discord guild: https://discord.gg/netpass
+Discord guild: https://discord.gg/QY8wzCMHyP
 
 Introducing NetPass:
 
