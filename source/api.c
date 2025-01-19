@@ -276,6 +276,17 @@ Result doSlotExchange(void) {
 
 	// download all slots
 	for (int i = 0; i < slots_total; i++) {
+		// make sure the slot isn't disabled
+		bool found = false;
+		for (int j = 0; j < 12; j++) {
+			if (slotinfo.metadata[i].title_id == title_extra_info[j].title_id) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			continue; // the slot was disabled
+		}
 		res = downloadSlot(i, &slotinfo);
 		error_origin = "download slot";
 		if (R_FAILED(res)) goto fail;
@@ -290,7 +301,15 @@ Result doSlotExchange(void) {
 	error_origin = "add slots";
 	int slot_new_data_num = 0;
 	for (int i = 0; i < slots_total; i++) {
-		if (slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
+		// make sure the slot isn't disabled
+		bool found = false;
+		for (int j = 0; j < 12; j++) {
+			if (slotinfo.metadata[i].title_id == title_extra_info[j].title_id) {
+				found = true;
+				break;
+			}
+		}
+		if (!found || slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
 			printf("=");
 			continue;
 		}
