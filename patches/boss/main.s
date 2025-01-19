@@ -22,6 +22,7 @@ FsFileClose equ 0x118adc
 FsUserCloseArchive equ 0x118adc
 strlen equ 0x12775c
 snprintf equ 0x124b24
+CreateFileBuffers equ 0x13d7d8
 
 
 .org spr_url_addr
@@ -52,7 +53,9 @@ SlotBufferSize equ SlotBuffer + 0x4
 PathBuffer equ SlotBufferSize + 0x4
 StackArgsSize equ PathBuffer + 0x34
 
-.org 0x139510
+.org 0x13ade0
+.area 0x98
+.align
 SaveSlotData:
   push {r4, r5, lr}
   mov r4, r1 ; buffer
@@ -63,10 +66,10 @@ SaveSlotData:
 
   sub sp, #StackArgsSize
 
-
   str r4, [sp, #SlotBuffer]
   str r5, [sp, #SlotBufferSize]
   ; now we can add our own method here
+  ;bl CreateFileBuffers
 
   ; first we open the sd mmc archive
   bl getFsUserHandle ; user handle is in r0 now
@@ -83,7 +86,7 @@ SaveSlotData:
   str r4, [sp, #CallArg2] ; size=1 for path
   bl FsUserOpenArchive
   cmp r0, #0
-  bcc fail
+  bcc fail1
 
   ; now we store it into the full handle
   ldr r3, [sp, #PathArgs + 4]
@@ -93,7 +96,7 @@ SaveSlotData:
   add r0, sp, #FullFilePtr
   bl newFullFileFromHandle
   cmp r0, #0
-  bcc fail
+  bcc fail1
 
   ; now we have the full file handle, and thus should be able to open the file we want
 
@@ -107,7 +110,7 @@ SaveSlotData:
   ldr r3, [r0, 0x08] ; title id
   ldr r2, [slotPathPatternPtr] ; pattern string
   mov r1, 0x34 ; destination string length
-  add r0, sp, PathBuffer ; destionation string
+  add r0, sp, PathBuffer ; destination string
   bl snprintf
 
   add r0, r0, 1 ; add the null character from snprintf
@@ -121,11 +124,12 @@ SaveSlotData:
   mov r3, 0b111 ; open flags
   add r2, sp, #PathArgs
   add r1, sp, #FsFilePtr
-  add r0, sp, #FullFilePtr
-  ldr r0, [r0]
+  ldr r0, [sp, #FullFilePtr]
+  cmp r0, #0 ; check for null pointer
+  beq fail1
   bl FsUserOpenFile
   cmp r0, #0
-  bcc fail
+  bcc fail1
 
   ; write to the file
   mov r4, 1 ; update
@@ -134,14 +138,30 @@ SaveSlotData:
   str r4, [sp, #CallArg2]
   ldr r4, [sp, #SlotBuffer]
   str r4, [sp, #CallArg1]
+
+  bl func_cont
+fail1:
+  bl fail
+.align
+FSUserHandlePtr:
+  .word s_handle_fsuser_2
+slotPathPatternPtr:
+  .word slotPathPattern
+.endarea
+
+.org 0x10f5ae
+.area 0x2a
+func_cont:
   mov r3, 0 ; file offset
   mov r2, 0
   add r1, sp, PathArgs ; use this as temporary variable again
-  add r0, sp, FsFilePtr
-  ldr r0, [r0]
+  ldr r0, [sp, FsFilePtr]
+  cmp r0, #0 ; check for null pointer
+  beq fail
   bl FsFileWrite
   cmp r0, #0
   bcc fail
+
 
   ; now close up everything
   add r0, sp, FsFilePtr
@@ -157,11 +177,7 @@ fail:
   pop {r0, r1, r2, r3}
   pop {r4, r5, pc}
 
-.align
-FSUserHandlePtr:
-  .word s_handle_fsuser_2
-slotPathPatternPtr:
-  .word slotPathPattern
+.endarea
 
 ; ro data
 .org 0x148a7c
