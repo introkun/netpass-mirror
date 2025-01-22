@@ -38,3 +38,5 @@ str_check_inboxes: Controlla la posta in arrivo
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_toggle_titles: Giochi
+str_write_patches: Installa patch
+str_clear_spr_cache: Pulisci cache spr
