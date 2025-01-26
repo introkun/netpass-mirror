@@ -1,4 +1,4 @@
-str_loading: "Laden...    "
+str_loading: "Laden    "
 str_libcurl_error: "libCURL fout (%d): %s"
 str_libcurl_date_and_time: 'Zorg ervoor dat de datum en tijd van je systeem correct
   zijn!'
