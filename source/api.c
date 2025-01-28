@@ -261,6 +261,9 @@ Result doSlotExchange(void) {
 		}
 		error_origin = "upload slot";
 		res = cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2));
+		if (res2 == -400) { // we still want to continue if it was http 400
+			res2 = 0;
+		}
 		if (R_FAILED(res) || R_FAILED(res = res2)) goto fail;
 	}
 	// we are done sending things
