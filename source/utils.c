@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,34 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
+#define _NJ_INCLUDE_HEADER_ONLY
+#include "nanojpeg.c"
+
+void* cecGetExtHeader(CecMessageHeader* msg, u32 type) {
+	u32 counter = sizeof(CecMessageHeader);
+	while (counter < msg->total_header_size) {
+		u32 this_type = ((u32*)(((u8*)msg) + counter))[0];
+		u32 this_size = ((u32*)(((u8*)msg) + counter))[1];
+		if (this_type == type) return ((u8*)msg) + counter;
+		counter += this_size;
+		// we might have to do extra aligning
+		if (counter %4) counter += 4 - counter % 4;
+	}
+	return NULL;
+}
+
+u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type) {
+	u32 counter = sizeof(CecMessageHeader);
+	while (counter < msg->total_header_size) {
+		u32 this_type = ((u32*)(((u8*)msg) + counter))[0];
+		u32 this_size = ((u32*)(((u8*)msg) + counter))[1];
+		if (this_type == type) return this_size;
+		counter += this_size;
+		// we might have to do extra aligning
+		if (counter %4) counter += 4 - counter % 4;
+	}
+	return 0;
+}
 
 // from https://nachtimwald.com/2017/11/18/base64-encode-and-decode-in-c/
 size_t b64_encoded_size(size_t inlen) {
@@ -227,4 +255,84 @@ u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len) {
 		buf++;
 	}
 	return NULL;
+}
+
+// from https://github.com/joel16/3DShell/blob/b0c6c9e6a779957b5fb9caf4d6d9cfe3acb4ff92/source/textures.cpp#L150
+u32 GetNextPowerOf2(u32 v) {
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
+	return (v >= 64 ? v : 64);
+}
+bool rgbToImage(C2D_Image* img, u32 width, u32 height, u8* buf) {
+	if (width >= 1024 || height >= 1024) return false;
+
+	C3D_Tex* tex = malloc(sizeof(C3D_Tex));
+	if (!tex) return false;
+	memset(tex, 0, sizeof(C3D_Tex));
+	Tex3DS_SubTexture* subtex = malloc(sizeof(Tex3DS_SubTexture));
+	if (!subtex) {
+		free(tex);
+		return false;
+	}
+	memset(subtex, 0, sizeof(Tex3DS_SubTexture));
+	subtex->width = (u16)width;
+	subtex->height = (u16)height;
+
+	u32 w_pow2 = GetNextPowerOf2(width);
+	u32 h_pow2 = GetNextPowerOf2(height);
+
+	subtex->left = 0.0f;
+	subtex->top = 1.0f;
+	subtex->right = 1.0f * width / w_pow2;
+	subtex->bottom = 1.0 - (1.0f * subtex->height / h_pow2);
+
+	C3D_TexInit(tex, (u16)w_pow2, (u16)h_pow2, GPU_RGBA8);
+	C3D_TexSetFilter(tex, GPU_NEAREST, GPU_NEAREST);
+	memset(tex->data, 0, tex->size);
+
+	for (u32 x = 0; x < width; x++) {
+		for (u32 y = 0; y < height; y++) {
+			u32 dst_pos = ((((y >> 3) * (w_pow2 >> 3) + (x >> 3)) << 6) + ((x & 1) | ((y & 1) << 1) | ((x & 2) << 1) | ((y & 2) << 2) | ((x & 4) << 2) | ((y & 4) << 3))) * 4;
+			u32 src_pos = (y * width + x) * 3;
+			// RGBA -> ABGR
+			u8 pxl[4];
+			pxl[3] = buf[src_pos + 0];
+			pxl[2] = buf[src_pos + 1];
+			pxl[1] = buf[src_pos + 2];
+			pxl[0] = 0xFF;
+			memcpy(&((u8*)tex->data)[dst_pos], &pxl, 4);
+		}
+	}
+
+	C3D_TexFlush(tex);
+	tex->border = 0xFFFFFFFF; // transparent
+	C3D_TexSetWrap(tex, GPU_CLAMP_TO_BORDER, GPU_CLAMP_TO_BORDER);
+
+	img->tex = tex;
+	img->subtex = subtex;
+	return true;
+}
+
+void C2D_ImageDelete(C2D_Image* img) {
+	C3D_TexDelete(img->tex);
+	free(img->tex);
+	free((void*)img->subtex);
+}
+
+bool loadJpeg(C2D_Image* img, u8* data, u32 size) {
+	njInit();
+	if (njDecode(data, size)) {
+		njDone();
+		return false;
+	}
+	int width = njGetWidth();
+	int height = njGetHeight();
+	bool success = rgbToImage(img, width, height, njGetImage());
+	njDone();
+	return success;
 }

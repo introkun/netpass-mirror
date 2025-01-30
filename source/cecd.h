@@ -17,6 +17,13 @@
  */
 
 #pragma once
+#include <3ds.h>
+#include <3ds/types.h>
+
+typedef enum {
+	TITLE_LETTER_BOX = 0x051600,
+	TITLE_MII_PLAZA  = 0x020800,
+} CecTitles;
 
 #define CEC_PATH_MBOX_LIST 1
 #define CEC_PATH_MBOX_INFO 2

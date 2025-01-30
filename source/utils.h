@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,19 @@
 
 #pragma once
 
+#include "cecd.h"
 #include <3ds.h>
 #include <3ds/types.h>
+#include <citro2d.h>
+#include <citro3d.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 
 #define MAX(x, y) (x > y ? x : y)
 
+void* cecGetExtHeader(CecMessageHeader* msg, u32 type);
+u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type);
 char* b64encode(u8* in, size_t len);
 int rmdir_r(char *path);
 void mkdir_p(char* orig_path);
@@ -34,6 +39,8 @@ Result APT_Unwrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 o
 u16 crc16_ccitt(void const *buf, size_t len, uint32_t starting_val);
 Result decryptMii(void* data, MiiData* mii);
 u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);
+void C2D_ImageDelete(C2D_Image* img);
+bool loadJpeg(C2D_Image* img, u8* data, u32 size);
 
 typedef struct {
 	u32 magic; // 0x4F00

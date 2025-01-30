@@ -23,6 +23,7 @@
 #include "api.h"
 #include "strings.h"
 #include "config.h"
+#include "utils.h"
 
 #define SCREEN_TOP_WIDTH 400
 #define SCREEN_TOP_HEIGHT 240
@@ -54,6 +55,7 @@ Scene* processScene(Scene* scene);
 #include "scenes/connection_error.h"
 #include "scenes/settings.h"
 #include "scenes/info.h"
+#include "scenes/report_entry.h"
 #include "scenes/report_list.h"
 #include "scenes/back_alley.h"
 #include "scenes/toggle_titles.h"

@@ -48,8 +48,30 @@ typedef struct {
 	ReportListEntry entries[];
 } ReportList;
 
+typedef struct {
+	u32 total_size;
+	u32 jpeg_size;
+	u8 pad[0x60];
+	u8* jpegs;
+} ReportMessagesEntryLetterBox;
+
+typedef struct {
+	char* name;
+	u32 title_id;
+	MiiData* mii;
+	void* data;
+} ReportMessagesEntry;
+
+typedef struct {
+	int count;
+	ReportMessagesEntry entries[12];
+} ReportMessages;
+
 void saveSlotInLog(CecSlotHeader* slot);
 void saveMsgInLog(CecMessageHeader* msg);
 ReportList* loadReportList(void);
+bool loadReportMessages(ReportMessages* msgs, u32 transfer_id);
+void freeReportMessages(ReportMessages* msgs);
 Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id);
+
 void reportInit(void);

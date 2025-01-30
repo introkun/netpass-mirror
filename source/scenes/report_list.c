@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "switch.h"
+#include "report_list.h"
 #include "../report.h"
-#include "../hmac_sha256/sha256.h"
 #include <stdlib.h>
 #include <malloc.h>
 #define N(x) scenes_report_list_namespace_##x
@@ -32,75 +31,8 @@ typedef struct {
 	int offset;
 } N(DataStruct);
 
-// yutzo, diamonds, eddie
-
 char* N(send_msg);
 u32 N(send_transfer_id);
-
-SceneResult N(report)(Scene* sc, int i) {
-	static const int msgmaxlen = 200;
-	ReportListEntry* entry = &_data->list->entries[i];
-	N(send_msg) = malloc(msgmaxlen + 1);
-	SwkbdResult button;
-	{
-		char hint_text[50];
-		char* mii_name[15];
-		memset(mii_name, 0, sizeof(mii_name));
-		utf16_to_utf8((u8*)mii_name, entry->mii.mii_name, 15);
-		snprintf(hint_text, 50, _s(str_report_user_hint), mii_name);
-		SwkbdState swkbd;
-		memset(N(send_msg), 0, msgmaxlen + 1);
-		swkbdInit(&swkbd, SWKBD_TYPE_NORMAL, 2, msgmaxlen);
-		swkbdSetHintText(&swkbd, hint_text);
-		swkbdSetButton(&swkbd, SWKBD_BUTTON_LEFT, _s(str_cancel), false);
-		swkbdSetButton(&swkbd, SWKBD_BUTTON_RIGHT, _s(str_submit), true);
-		swkbdSetFeatures(&swkbd, SWKBD_DARKEN_TOP_SCREEN | SWKBD_MULTILINE);
-		swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
-		button = swkbdInputText(&swkbd, N(send_msg), msgmaxlen + 1);
-	}
-	if (button == SWKBD_D1_CLICK1) {
-		// successfully submitted the input
-		N(send_transfer_id) = entry->transfer_id;
-		printf("Got report: \"%s\", sending...\n", N(send_msg));
-		Scene* scene = getLoadingScene(0, lambda(void, (void) {
-			CecMessageHeader msg;
-			Result res = reportGetSomeMsgHeader(&msg, N(send_transfer_id));
-			if (R_FAILED(res)) {
-				printf("ERROR: %lx\n", res);
-				goto exit;
-			}
-			SHA256_HASH hash;
-			Sha256Calculate(&msg, 0x28, &hash);
-			ReportSendPayload* data = malloc(sizeof(ReportSendPayload));
-			if (!data) goto exit;
-			
-			data->magic = 0x5053524e;
-			data->version = 1;
-			memcpy(data->message_id, msg.message_id, sizeof(CecMessageId));
-			memcpy(&data->hash, &hash, sizeof(SHA256_HASH));
-			memcpy(data->msg, N(send_msg), sizeof(data->msg));
-
-			char url[50];
-			snprintf(url, 50, "%s/report/new", BASE_URL);
-			res = httpRequest("POST", url, sizeof(ReportSendPayload), (u8*)data, 0, 0, 0);
-			free(data);
-			if (R_FAILED(res)) {
-				printf("Error sending report: %ld\n", res);
-				goto exit;
-			}
-
-			printf("report sent\n");
-		exit:
-			free(N(send_msg));
-		}));
-		scene->pop_scene = sc->pop_scene;
-		sc->next_scene = scene;
-		return scene_switch;
-	}
-	free(N(send_msg));
-	return scene_pop;
-}
-
 
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
@@ -176,7 +108,9 @@ SceneResult N(process)(Scene* sc) {
 	while(_data->cursor*14 - _data->offset > 180) _data->offset++;
 	if (kDown & KEY_A) {
 		int selected_i = _data->list->header.cur_size - _data->cursor - 1;
-		return N(report)(sc, selected_i);
+		ReportListEntry* entry = &_data->list->entries[selected_i];
+		sc->next_scene = getReportEntryScene(entry);
+		return scene_push;
 	}
 	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;
