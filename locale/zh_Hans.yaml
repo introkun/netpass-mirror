@@ -37,3 +37,5 @@ str_toggle_titles: 切换擦肩游戏
 str_toggle_titles_on: (启用)
 str_toggle_titles_off: (禁用)
 str_toggle_titles_message: 按 {a_button} 切换是否交换擦肩信息。
+str_write_patches: 写入补丁
+str_clear_spr_cache: 清除 spr 的缓存
