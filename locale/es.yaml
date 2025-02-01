@@ -32,10 +32,20 @@ str_submit: Enviar
 str_back_alley: Callejón
 str_back_alley_pay: Compra un pase por {playcoin}%d
 str_back_alley_message: Consigamos más pases
-str_check_inboxes: Comprobar buzones de entrada
+str_check_inboxes: Comprobar pases
 str_toggle_titles: Activar o desactivar juegos
-str_toggle_titles_on: (ENCENDIDO)
-str_toggle_titles_off: (APAGADO)
-str_toggle_titles_message: Pulsa {a_button} para comenzar o parar la búsqueda de pases.
+str_toggle_titles_on: (SI)
+str_toggle_titles_off: (NO)
+str_toggle_titles_message: Pulsa {a_button} para activar o desactivar la búsqueda
+  de pases.
 str_clear_spr_cache: Limpiar cache (SPRelay)
 str_write_patches: Escribir parches
+str_report_mii_name: 'Apodo: %s'
+str_report_mario_kart_7_greeting: 'Saludo: %s'
+str_report_mii_plaza_greeting: 'Saludo: %s'
+str_report_mii_plaza_custom_message: 'Saludo Personal: %s'
+str_report_mii_plaza_custom_reply: 'Respuesta Personal: %s'
+str_b_go_back: Atrás
+str_report_tomodachi_life_island_name: 'Nombre de la Isla: %s'
+str_report_mii_plaza_last_game: 'Último Programa: %s'
+str_report_mii_plaza_country: 'Región: %s - %s'
