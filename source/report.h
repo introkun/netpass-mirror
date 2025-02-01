@@ -56,6 +56,23 @@ typedef struct {
 } ReportMessagesEntryLetterBox;
 
 typedef struct {
+	char greeting[17];
+} ReportMessageEntryMarioKart7;
+
+typedef struct {
+	char last_game[65];
+	char country[33];
+	char region[33];
+	char greeting[17];
+	char custom_message[17];
+	char custom_reply[17];
+} ReportMessageEntryMiiPlaza;
+
+typedef struct {
+	char island_name[17];
+} ReportMessageEntryTomodachiLife;
+
+typedef struct {
 	char* name;
 	u32 title_id;
 	MiiData* mii;

@@ -19,6 +19,8 @@
 #include "report.h"
 #include "config.h"
 #include "utils.h"
+#include "strings.h"
+#include "curl-handler.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -33,6 +35,12 @@
 #define LOG_SPR_DIR "/config/netpass/log_spr"
 
 #define MAX_REPORT_ENTRIES_LEN 128
+
+#define SETUP_ENTRY(a, x) a* body = (a*)(((u8*)buf) + buf->total_header_size); \
+	entry->data = malloc(sizeof(x)); \
+	if (!entry->data) break; \
+	x* data = (x*)entry->data; \
+	memset(data, 0, sizeof(x));
 
 ReportList* loadReportList(void) {
 	FILE* f = fopen(LOG_INDEX, "rb");
@@ -106,6 +114,32 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 				memcpy(entry->data, &((ReportMessagesEntryLetterBox*)ptr)->jpegs, size);
 				break;
 			}
+			case TITLE_MARIO_KART_7: {
+				SETUP_ENTRY(CecMessageBodyMarioKart7, ReportMessageEntryMarioKart7);
+				utf16_to_utf8((u8*)data->greeting, body->message, 16);
+				break;
+			}
+			case TITLE_MII_PLAZA: {
+				SETUP_ENTRY(CecMessageBodyMiiPlaza, ReportMessageEntryMiiPlaza);
+				u8 lang = get_nintendo_language();
+				utf16_to_utf8((u8*)data->last_game, body->title[lang].short_description, 64);
+				utf16_to_utf8((u8*)data->country, body->country[lang].name, 32);
+				utf16_to_utf8((u8*)data->region, body->region[lang].name, 32);
+				utf16_to_utf8((u8*)data->greeting, body->message, 16);
+				u8* mac = getMacBuf();
+				for (int i = 0; i < 0x10; i++) {
+					if (!memcmp(mac, body->reply_list[i].mac, 6)) {
+						utf16_to_utf8((u8*)data->custom_message, body->reply_msg[i].message, 16);
+						utf16_to_utf8((u8*)data->custom_reply, body->replied_msg[i].message, 16);
+						break;
+					}
+				}
+				break;
+			}
+			case TITLE_TOMODACHI_LIFE: {
+				SETUP_ENTRY(CecMessageBodyTomodachiLife, ReportMessageEntryTomodachiLife);
+				utf16_to_utf8((u8*)data->island_name, body->island_name, 16);
+			};
 		}
 
 		// we don't need buf anymore so we can use it now to fetch the game name
@@ -225,13 +259,13 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	}
 	ReportListEntry* e = &list->entries[found_i];
 	if (msg->title_id == TITLE_MII_PLAZA) {
+		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)((u8*)msg) + msg->total_header_size;
 		static const int cfpb_offset = 0x36bc;
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
-			CFPB* cfpb = (CFPB*)((u8*)msg + msg->total_header_size + cfpb_offset);
-			if (cfpb->magic == 0x42504643) {
+			if (body->cfpb.magic == 0x42504643) {
 				int prev_mii_id = e->mii.magic == 3 ? e->mii.mii_id : 0;
-				Result r = decryptMii(&cfpb->nonce, &e->mii);
+				Result r = decryptMii(&body->cfpb.nonce, &e->mii);
 				if (!R_FAILED(r) && prev_mii_id != e->mii.mii_id) edited = true;
 			}
 		}

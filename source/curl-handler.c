@@ -191,6 +191,11 @@ cleanup:
 	h->status = CURL_HANDLE_STATUS_DONE;
 }
 
+u8* getMacBuf(void) {
+	return mac;
+}
+
+
 void getMacStr(char value[13]) {
 	for (int i = 0; i < 6; i++) {
 		value += sprintf(value, "%02X", mac[i]);

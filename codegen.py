@@ -7,6 +7,8 @@ basepath = os.path.dirname(os.path.realpath(__file__))
 SRCDIR = basepath + "/" + SRCDIR
 DESTDIR = basepath + "/" + DESTDIR
 
+NINTENDO_LANGUAGES = ("JP", "EN", "FR", "DE", "IT", "ES", "ZH", "KO", "NL", "PT", "RU", "TW");
+
 language_map = {
 	"ja": "jp",
 	"zh_Hant": "tw",
@@ -41,6 +43,7 @@ for file in os.listdir(SRCDIR):
 			translations[language] = yaml.safe_load(f)
 
 headerfile = "#pragma once\n\n#include <3ds.h>\n"
+headerfile += f"#define NUM_NINTENDO_LANGUAGES {len(NINTENDO_LANGUAGES)}\n"
 
 outfile = "#include <3ds.h>\n#include \"lang_strings.h\"\n";
 
@@ -50,7 +53,7 @@ lang_keys.sort(key=lambda x: 0 if x == "en" else struct.unpack(">H", x.encode("u
 
 lang_i = 0
 for lang in lang_keys:
-	if l(lang) not in ("JP", "EN", "FR", "DE", "IT", "ES", "ZH", "KO", "NL", "PT", "RU", "TW"):
+	if l(lang) not in NINTENDO_LANGUAGES:
 		lang_i += 1
 		headerfile += f"#define CFG_LANGUAGE_{l(lang)} {20+lang_i}\n"
 headerfile += f"#define NUM_LANGUAGES {len(lang_keys)}\n"

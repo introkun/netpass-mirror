@@ -24,10 +24,34 @@
 #include <turbojpeg.h>
 #define N(x) scenes_report_entry_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define SETUP_EXDATA_INIT(a, x) if (!entry->data) break; \
+	a* entry_data = (a*)entry->data; \
+	_data->extra_data[i] = malloc(sizeof(N(x))); \
+	if (!_data->extra_data[i]) break; \
+	N(x)* ex_data = _data->extra_data[i]; \
+	memset(ex_data, 0, sizeof(N(x)));
+#define SETUP_EXDATA_RENDER(x) N(x)* ex_data = _data->extra_data[i]; \
+	if (!ex_data) break;
 
 typedef struct {
 	C2D_Image pane[4];
 } N(ExtraDataLetterbox);
+
+typedef struct {
+	C2D_Text greeting;
+} N(ExtraDataMarioKart7);
+
+typedef struct {
+	C2D_Text last_game;
+	C2D_Text country;
+	C2D_Text greeting;
+	C2D_Text custom_message;
+	C2D_Text custom_reply;
+} N(ExtraDataMiiPlaza);
+
+typedef struct {
+	C2D_Text island_name;
+} N(ExtraDataTomodachiLife);
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -37,7 +61,9 @@ typedef struct {
 	C2D_Text* g_game_names;
 	C2D_Text* g_mii_names;
 	ReportMessages* msgs;
+	int y_offset;
 	void* extra_data[12];
+	C2D_Text go_back;
 } N(DataStruct);
 
 char* N(send_msg);
@@ -49,9 +75,9 @@ SceneResult N(report)(Scene* sc) {
 	SwkbdResult button;
 	{
 		char hint_text[50];
-		char* mii_name[15];
+		char* mii_name[11];
 		memset(mii_name, 0, sizeof(mii_name));
-		utf16_to_utf8((u8*)mii_name, _data->entry->mii.mii_name, 15);
+		utf16_to_utf8((u8*)mii_name, _data->entry->mii.mii_name, 10);
 		snprintf(hint_text, 50, _s(str_report_user_hint), mii_name);
 		SwkbdState swkbd;
 		memset(N(send_msg), 0, msgmaxlen + 1);
@@ -146,53 +172,96 @@ void N(init)(Scene* sc) {
 		return;
 	}
 
-	_data->g_staticBuf = C2D_TextBufNew(200 * (_data->msgs->count + 1));
+	_data->g_staticBuf = C2D_TextBufNew(300 * (_data->msgs->count + 1));
+
+	// first create the heading
+	{
+		char render_text[50];
+		char* mii_name[11];
+		memset(mii_name, 0, sizeof(mii_name));
+		utf16_to_utf8((u8*)mii_name, _data->entry->mii.mii_name, 10);
+		snprintf(render_text, 50, _s(str_report_user_hint), mii_name);
+		C2D_TextFontParse(&_data->g_title, _font(str_report_user_hint), _data->g_staticBuf, render_text);
+	}
+	_data->y_offset = 0;
+	TextLangParse(&_data->go_back, _data->g_staticBuf, str_b_go_back);
 
 	for (int i = 0; i < _data->msgs->count; i++) {
 		ReportMessagesEntry* entry = &_data->msgs->entries[i];
 		_data->extra_data[i] = 0;
 		if (entry->mii) {
-			char mii_name[11] = {0};
-			utf16_to_utf8((u8*)mii_name, entry->mii->mii_name, 11);
-			C2D_TextFontParse(&_data->g_mii_names[i], getFontIndex(entry->mii->mii_options.char_set), _data->g_staticBuf, mii_name);
+			char mii_name[11];
+			memset(mii_name, 0, sizeof(mii_name));
+			utf16_to_utf8((u8*)mii_name, entry->mii->mii_name, 10);
+			char render_text[50];
+			snprintf(render_text, 50, _s(str_report_mii_name), mii_name);
+			C2D_TextFontParse(&_data->g_mii_names[i], _font(str_report_mii_name), _data->g_staticBuf, render_text);
 		}
 		if (entry->name) {
 			C2D_TextParse(&_data->g_game_names[i], _data->g_staticBuf, entry->name);
 		} else {
 			char game_name[10];
-			snprintf(game_name, 50, "%04lx", entry->title_id);
+			snprintf(game_name, 50, "%08lx", entry->title_id);
 			C2D_TextParse(&_data->g_game_names[i], _data->g_staticBuf, game_name);
 		}
 		switch (entry->title_id) {
 			case TITLE_LETTER_BOX: {
-				if (!entry->data) break;
-				_data->extra_data[i] = malloc(sizeof(N(ExtraDataLetterbox)));
-				if (!_data->extra_data[i]) break;
-				memset(_data->extra_data[i], 0, sizeof(N(ExtraDataLetterbox)));
-				N(ExtraDataLetterbox)* ex_data = _data->extra_data[i];
-				u8* data_count = entry->data;
+				SETUP_EXDATA_INIT(u8, ExtraDataLetterbox);
 				for (int j = 0; j < 4; j++) {
-					u32 size = *((u32*)data_count);
-					data_count += 4;
+					u32 size = *((u32*)entry_data);
+					entry_data += 4;
 					if (size < 5000) { // protective measure
-						if (!loadJpeg(&ex_data->pane[j], data_count, size)) {
+						if (!loadJpeg(&ex_data->pane[j], entry_data, size)) {
 							ex_data->pane[j].tex = 0;
 						}
 					}
-					data_count += size;
-					if (size % 4) data_count += 4 - (size % 4);
+					entry_data += size;
+					if (size % 4) entry_data += 4 - (size % 4);
 				}
+				break;
+			}
+			case TITLE_MARIO_KART_7: {
+				SETUP_EXDATA_INIT(ReportMessageEntryMarioKart7, ExtraDataMarioKart7);
+				char render_text[50];
+				snprintf(render_text, 50, _s(str_report_mario_kart_7_greeting), entry_data->greeting);
+				C2D_TextFontParse(&ex_data->greeting, _font(str_report_mario_kart_7_greeting), _data->g_staticBuf, render_text);
+				break;
+			}
+			case TITLE_MII_PLAZA: {
+				SETUP_EXDATA_INIT(ReportMessageEntryMiiPlaza, ExtraDataMiiPlaza);
+				char render_text[100];
+				snprintf(render_text, 100, _s(str_report_mii_plaza_last_game), entry_data->last_game);
+				C2D_TextFontParse(&ex_data->last_game, _font(str_report_mii_plaza_last_game), _data->g_staticBuf, render_text);
+				snprintf(render_text, 100, _s(str_report_mii_plaza_country), entry_data->country, entry_data->region);
+				C2D_TextFontParse(&ex_data->country, _font(str_report_mii_plaza_country), _data->g_staticBuf, render_text);
+				snprintf(render_text, 100, _s(str_report_mii_plaza_greeting), entry_data->greeting);
+				C2D_TextFontParse(&ex_data->greeting, _font(str_report_mii_plaza_greeting), _data->g_staticBuf, render_text);
+				if (entry_data->custom_message[0]) {
+					snprintf(render_text, 100, _s(str_report_mii_plaza_custom_message), entry_data->custom_message);
+					C2D_TextFontParse(&ex_data->custom_message, _font(str_report_mii_plaza_custom_message), _data->g_staticBuf, render_text);
+					snprintf(render_text, 100, _s(str_report_mii_plaza_custom_reply), entry_data->custom_reply);
+					C2D_TextFontParse(&ex_data->custom_reply, _font(str_report_mii_plaza_custom_reply), _data->g_staticBuf, render_text);
+				}
+				break;
+			}
+			case TITLE_TOMODACHI_LIFE: {
+				SETUP_EXDATA_INIT(ReportMessageEntryTomodachiLife, ExtraDataTomodachiLife);
+				char render_text[50];
+				snprintf(render_text, 50, _s(str_report_tomodachi_life_island_name), entry_data->island_name);
+				C2D_TextFontParse(&ex_data->island_name, _font(str_report_tomodachi_life_island_name), _data->g_staticBuf, render_text);
+				break;
 			}
 		}
 	}
-	C2D_TextParse(&_data->g_title, _data->g_staticBuf, "Report User");
 }
 
 void N(render)(Scene* sc) {
 	if (!_data) {
 		return;
 	}
-	int ycursor = 10;
+	int ycursor = 2 + _data->y_offset;
+	C2D_DrawText(&_data->go_back, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
+	ycursor += 14;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, ycursor, 0, 1, 1);
 	ycursor += 28;
 	for (int i = 0; i < _data->msgs->count; i++) {
@@ -205,14 +274,40 @@ void N(render)(Scene* sc) {
 		}
 		switch (entry->title_id) {
 			case TITLE_LETTER_BOX: {
-				N(ExtraDataLetterbox)* ex_data = _data->extra_data[i];
-				if (ex_data) {
-					for (int j = 0; j < 4; j++) {
-						if (!ex_data->pane[j].tex) continue;
-						C2D_DrawImageAt(ex_data->pane[j], 40 + (82 * j), ycursor, 0, NULL, 1, 1);
-					}
-					ycursor += 50;
+				SETUP_EXDATA_RENDER(ExtraDataLetterbox);
+				for (int j = 0; j < 4; j++) {
+					if (!ex_data->pane[j].tex) continue;
+					C2D_DrawImageAt(ex_data->pane[j], 40 + (82 * j), ycursor, 0, NULL, 1, 1);
 				}
+				ycursor += 50;
+				break;
+			}
+			case TITLE_MARIO_KART_7: {
+				SETUP_EXDATA_RENDER(ExtraDataMarioKart7);
+				C2D_DrawText(&ex_data->greeting, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				ycursor += 14;
+				break;
+			}
+			case TITLE_MII_PLAZA: {
+				SETUP_EXDATA_RENDER(ExtraDataMiiPlaza);
+				C2D_DrawText(&ex_data->last_game, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				ycursor += 14;
+				C2D_DrawText(&ex_data->country, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				ycursor += 14;
+				C2D_DrawText(&ex_data->greeting, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				ycursor += 14;
+				if (*(u8*)&ex_data->custom_message) {
+					C2D_DrawText(&ex_data->custom_message, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+					ycursor += 14;
+					C2D_DrawText(&ex_data->custom_reply, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+					ycursor += 14;
+				}
+				break;
+			}
+			case TITLE_TOMODACHI_LIFE: {
+				SETUP_EXDATA_RENDER(ExtraDataTomodachiLife);
+				C2D_DrawText(&ex_data->island_name, C2D_AlignLeft, 40, ycursor, 0, 0.5, 0.5);
+				ycursor += 14;
 				break;
 			}
 		}
@@ -248,11 +343,13 @@ void N(exit)(Scene* sc) {
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
+	u32 kHeld = hidKeysHeld();
 	if (kDown & KEY_A) {
 		return N(report)(sc);
 	}
 	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;
+	_data->y_offset += ((kHeld & KEY_UP || kHeld & KEY_CPAD_UP) - ((kHeld & KEY_DOWN || kHeld & KEY_CPAD_DOWN) && 1))*2;
 	return scene_continue;
 }
 

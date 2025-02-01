@@ -34,5 +34,6 @@ Result curlInit(void);
 void curlExit(void);
 void curlFreeHandler(int offset);
 Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** reply, char* title_name, char* hmac_key);
+u8* getMacBuf(void);
 void getMacStr(char value[13]);
 void getNetpassId(char* value, u32 size);

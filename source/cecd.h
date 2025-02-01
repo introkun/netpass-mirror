@@ -21,8 +21,10 @@
 #include <3ds/types.h>
 
 typedef enum {
-	TITLE_LETTER_BOX = 0x051600,
-	TITLE_MII_PLAZA  = 0x020800,
+	TITLE_LETTER_BOX     = 0x051600,
+	TITLE_MII_PLAZA      = 0x020800,
+	TITLE_MARIO_KART_7   = 0x030600,
+	TITLE_TOMODACHI_LIFE = 0x08C500,
 } CecTitles;
 
 #define CEC_PATH_MBOX_LIST 1
@@ -233,3 +235,75 @@ typedef struct CecMboxListHeaderWithCapacities {
 	CecMboxListHeader header;
 	u32 capacities[24];
 } CecMboxListHeaderWithCapacities;
+
+typedef struct CecMessageBodyMarioKart7 {
+	u16 message[17];
+} CecMessageBodyMarioKart7;
+
+typedef struct CecRegionGameAgeRating {
+	u8 japan;
+	u8 usa;
+	u8 pad1;
+	u8 germany;
+	u8 europe;
+	u8 pad2;
+	u8 portugal;
+	u8 england;
+	u8 australia;
+	u8 south_korea;
+	u8 taiwan;
+	u8 pad3[5];
+} CecRegionGameAgeRating;
+
+typedef struct CecApplicationSettings {
+	CecRegionGameAgeRating age_rating;
+	u32 region_lockout;
+	u32 match_maker_id;
+	u8 match_maker_bit_id[8];
+	u32 flags;
+	u16 eula_version;
+	u8 pad[2];
+	float optimal_anim_frame;
+	u32 title_id;
+} CecApplicationSettings;
+
+typedef struct CecApplicationTitle {
+	u16 short_description[0x80/2];
+	u16 long_description[0x100/2];
+	u16 publisher[0x80/2];
+} CecApplicationTitle;
+
+typedef struct CecMessageMiiPlazaLocation {
+	u16 name[0x20];
+} CecMessageMiiPlazaLocation;
+
+typedef struct CecMessageMiiPlazaReplyList {
+	u32 mii_id;
+	u8 mac[6];
+} CecMessageMiiPlazaReplyList;
+
+typedef struct CecMessageMiiPlazaReply {
+	u16 message[0x11];
+} CecMessageMiiPlazaReply;
+
+typedef struct CecMessageBodyMiiPlaza {
+	CecApplicationSettings app_settings;
+	CecApplicationTitle title[16];
+	u8 pad1[0x168C];
+	CFPB cfpb;
+	u8 pad2[0x1C];
+	CecMessageMiiPlazaLocation country[16];
+	CecMessageMiiPlazaLocation region[16];
+	u8 pad3[16];
+	u16 message[17];
+
+	CecMessageMiiPlazaReplyList reply_list[0x10];
+
+	CecMessageMiiPlazaReply reply_msg[0x10];
+	CecMessageMiiPlazaReply replied_msg[0x10];
+} CecMessageBodyMiiPlaza;
+
+typedef struct CecMessageBodyTomodachiLife {
+	u8 pad[52];
+	u16 island_name[17];
+} CecMessageBodyTomodachiLife;
