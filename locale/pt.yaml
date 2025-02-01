@@ -38,3 +38,14 @@ str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_check_inboxes: Verificar Inboxes
 str_toggle_titles_message: Aperte {a_button} para ativar ou desativar a troca de passes.
+str_write_patches: Gravar patches
+str_clear_spr_cache: Limpar o cache SPR
+str_report_mii_name: 'Nome do Mii: %s'
+str_report_mario_kart_7_greeting: 'Saudação: %s'
+str_report_mii_plaza_last_game: 'Último Jogo: %s'
+str_report_mii_plaza_country: 'País: %s - %s'
+str_report_mii_plaza_greeting: 'Saudação: %s'
+str_report_mii_plaza_custom_message: 'Sua mensagem: %s'
+str_report_mii_plaza_custom_reply: 'Mensagem dele(a): %s'
+str_report_tomodachi_life_island_name: 'Nome da ilha: %s'
+str_b_go_back: '{b_button} Voltar'
