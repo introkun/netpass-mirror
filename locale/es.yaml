@@ -37,3 +37,5 @@ str_toggle_titles: Activar o desactivar juegos
 str_toggle_titles_on: (ENCENDIDO)
 str_toggle_titles_off: (APAGADO)
 str_toggle_titles_message: Pulsa {a_button} para comenzar o parar la búsqueda de pases.
+str_clear_spr_cache: Limpiar cache (SPRelay)
+str_write_patches: Escribir parches
