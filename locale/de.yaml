@@ -38,3 +38,11 @@ str_toggle_titles_message: Drücke {a_button}, um den Austausch von Begegnungen 
 str_toggle_titles_on: (AN)
 str_toggle_titles_off: (AUS)
 str_check_inboxes: Eingänge prüfen
+str_report_mii_plaza_greeting: 'Begrüßung: %s'
+str_report_mii_name: 'Mii Name: %s'
+str_report_mii_plaza_country: 'Region: %s - %s'
+str_report_tomodachi_life_island_name: 'Insel Name: %s'
+str_report_mii_plaza_custom_reply: Deren persönliche Begrüßung
+str_report_mii_plaza_last_game: 'Zuletzt gespielt: %s'
+str_report_mario_kart_7_greeting: 'Mitteilung: %s'
+str_report_mii_plaza_custom_message: 'Deine persönliche Begrüßung: %s'
