@@ -47,3 +47,5 @@ str_report_mii_plaza_last_game: 'Zuletzt gespielt: %s'
 str_report_mario_kart_7_greeting: 'Mitteilung: %s'
 str_report_mii_plaza_custom_message: 'Deine persönliche Begrüßung: %s'
 str_b_go_back: '{b_button} Zurück'
+str_clear_spr_cache: Leere SPR-Cache
+str_write_patches: Schreib SPR-Patches
