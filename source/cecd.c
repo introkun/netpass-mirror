@@ -30,6 +30,11 @@
 
 static Handle cecdHandle;
 static int cecdRefCount;
+static bool in_spr_mode = false;
+
+void waitForNoSpr(void) {
+	while (in_spr_mode) svcSleepThread((u64)1000000 * 100);
+}
 
 void getCurrentTime(CecTimestamp* cts) {
 	time_t unix_time = time(NULL);
@@ -72,6 +77,7 @@ Result cecdGetState(u32* state) {
 }
 
 Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x03, 4, 4);
@@ -92,6 +98,7 @@ Result cecdReadMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMes
 }
 
 Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x03, 4, 4);
@@ -114,6 +121,7 @@ Result cecdReadMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf
 }
 
 Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x06, 4, 4);
@@ -134,6 +142,7 @@ Result cecdWriteMessage(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMe
 }
 
 Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* buf, CecMessageId message_id, u8* hmac) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x07, 4, 6);
@@ -156,6 +165,7 @@ Result cecdWriteMessageWithHMAC(u32 program_id, bool is_outbox, u32 size, u8* bu
 }
 
 Result cecdStart(CecCommand command) {
+	in_spr_mode = command == CEC_COMMAND_OVER_BOSS || command == CEC_COMMAND_OVER_BOSS_FORCE || command == CEC_COMMAND_OVER_BOSS_FORCE_WAIT;
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0B, 1, 0);
@@ -168,6 +178,7 @@ Result cecdStart(CecCommand command) {
 }
 
 Result cecdStop(CecCommand command) {
+	in_spr_mode = command == CEC_COMMAND_OVER_BOSS || command == CEC_COMMAND_OVER_BOSS_FORCE || command == CEC_COMMAND_OVER_BOSS_FORCE_WAIT;
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x0C, 1, 0);
@@ -213,6 +224,7 @@ Result cecdGetChangeStateEventHandle(Handle* handle) {
 }
 
 Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x11, 4, 4);
@@ -233,6 +245,7 @@ Result cecdOpenAndWrite(u32 program_id, u32 path_type, u32 size, u8* buf) {
 }
 
 Result cecdOpenAndRead(u32 program_id, u32 path_type, u32 size, u8* buf) {
+	waitForNoSpr();
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x12, 4, 4);
