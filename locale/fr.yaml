@@ -46,7 +46,7 @@ str_report_mii_plaza_country: 'Région: %s - %s'
 str_report_mii_plaza_greeting: 'Salutation: %s'
 str_report_mii_plaza_custom_reply: 'Leurs réponses personnalisé: %s'
 str_report_tomodachi_life_island_name: "Nom de l'île: %s"
-str_b_go_back: '{b_button} retour'
+str_b_go_back: '{b_button} Retour'
 str_report_mii_name: 'Le nom du Mii: %s'
 str_report_mii_plaza_last_game: 'Dernière Partie: %s'
 str_report_mii_plaza_custom_message: 'Ta salutation personnalisé: %s'
