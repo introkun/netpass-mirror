@@ -39,3 +39,12 @@ str_toggle_titles_on: (オン)
 str_toggle_titles_off: (オフ)
 str_clear_spr_cache: sprのキャッシュをクリアする
 str_write_patches: パッチを書く
+str_report_mii_name: Miiの名前：%s
+str_report_mario_kart_7_greeting: 'ご挨拶: %s'
+str_report_mii_plaza_last_game: '最後にプレーしたゲーム: %s'
+str_report_mii_plaza_country: '国: %s - %s'
+str_report_mii_plaza_greeting: 'ご挨拶: %s'
+str_report_mii_plaza_custom_message: 'カスタムメッセージ: %s'
+str_report_mii_plaza_custom_reply: 'カスタム返信: %s'
+str_report_tomodachi_life_island_name: '島の名前:'
+str_b_go_back: '{b_button} 戻る'
