@@ -26,6 +26,57 @@
 
 int location = -1;
 FS_Archive sharedextdata_b = 0;
+NetpassTitleData title_data;
+
+Result initTitleData(void) {
+	Result res = 0;
+	CecMboxListHeader mbox_list;
+	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
+	if (R_FAILED(res)) return res;
+	u16 title_name_utf16[65];
+	for (int i = 0; i < mbox_list.num_boxes; i++) {
+		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
+		memset(title_name_utf16, 0, sizeof(title_name_utf16));
+		memset(title_data.titles[i].name, 0, 65);
+		res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, 64*2, (u8*)title_name_utf16);
+		if (R_FAILED(res)) return res;
+		utf16_to_utf8((u8*)title_data.titles[i].name, title_name_utf16, 64);
+		char* ptr = title_data.titles[i].name;
+		while (*ptr) {
+			if (*ptr == '\n') *ptr = ' ';
+			ptr++;
+		}
+		title_data.titles[i].title_id = title_id;
+	}
+	title_data.num_titles = mbox_list.num_boxes;
+	return res;
+}
+
+NetpassTitleData* getTitleData(void) {
+	return &title_data;
+}
+
+int numUsedTitles(void) {
+	int num = 0;
+	for (int i = 0; i < title_data.num_titles; i++) {
+		if (!isTitleIgnored(title_data.titles[i].title_id)) num++;
+	}
+	return num;
+}
+
+void clearIgnoredTitles(CecMboxListHeader* mbox_list) {
+	size_t pos = 0;
+	for (size_t i = 0; i < mbox_list->num_boxes; i++) {
+		u32 title_id = strtol((const char*)mbox_list->box_names[i], NULL, 16);
+		if (!isTitleIgnored(title_id)) {
+			if (pos != i) memcpy(mbox_list->box_names[pos], mbox_list->box_names[i], 16);
+			pos++;
+		}
+	}
+	memset(mbox_list->box_names[pos], 0, 16 * (mbox_list->num_boxes - pos));
+	mbox_list->num_boxes = pos;
+}
+
 
 typedef struct SlotInfo {
 	SlotMetadata metadata[12];
@@ -412,19 +463,6 @@ Result setLocation(int location) {
 	configWrite();
 	printf("Entered location %d!\n", location);
 	return res;
-}
-
-void clearIgnoredTitles(CecMboxListHeader* mbox_list) {
-	size_t pos = 0;
-	for (size_t i = 0; i < mbox_list->num_boxes; i++) {
-		u32 title_id = strtol((const char*)mbox_list->box_names[i], NULL, 16);
-		if (!isTitleIgnored(title_id)) {
-			if (pos != i) memcpy(mbox_list->box_names[pos], mbox_list->box_names[i], 16);
-			pos++;
-		}
-	}
-	memset(mbox_list->box_names[pos], 0, 16 * (mbox_list->num_boxes - pos));
-	mbox_list->num_boxes = pos;
 }
 
 static s32 main_thread_prio_s = 0;

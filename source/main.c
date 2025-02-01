@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,6 +97,7 @@ int main() {
 			location = res;
 			return;
 		}
+		initTitleData();
 		doSlotExchange();
 		res = getLocation();
 		if (R_FAILED(res) && res != -1) {

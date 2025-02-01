@@ -1,6 +1,7 @@
 /**
  * NetPass
  * Copyright (C) 2024 SunOfLife1
+ * Copyright (C) 2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,28 +37,12 @@ typedef struct {
 } N(DataStruct);
 
 bool N(init_gamelist)(Scene* sc) {
-	Result res = 0;
-	CecMboxListHeader mbox_list;
-	res = cecdOpenAndRead(0, CEC_PATH_MBOX_LIST, sizeof(CecMboxListHeader), (u8*)&mbox_list);
-	if (R_FAILED(res)) return false;
-	_data->number_games = mbox_list.num_boxes;
-	u16 title_name_utf16[50];
-	char title_name[50];
-	for (int i = 0; i < _data->number_games; i++) {
-		u32 title_id = strtol((const char*)mbox_list.box_names[i], NULL, 16);
-		memset(title_name_utf16, 0, sizeof(title_name_utf16));
-		memset(title_name, 0, sizeof(title_name));
-		res = cecdOpenAndRead(title_id, CECMESSAGE_BOX_TITLE, sizeof(title_name_utf16), (u8*)title_name_utf16);
-		if (R_FAILED(res)) return false;
-		utf16_to_utf8((u8*)title_name, title_name_utf16, sizeof(title_name));
-		char* ptr = title_name;
-		while (*ptr) {
-			if (*ptr == '\n') *ptr = ' ';
-			ptr++;
-		}
-		_data->title_ids[i] = title_id;
-		C2D_TextParse(&_data->g_game_titles[i], _data->g_staticBuf, title_name);
+	NetpassTitleData* title_data = getTitleData();
+	for (int i = 0; i < title_data->num_titles; i++) {
+		_data->title_ids[i] = title_data->titles[i].title_id;
+		C2D_TextParse(&_data->g_game_titles[i], _data->g_staticBuf, title_data->titles[i].name);
 	}
+	_data->number_games = title_data->num_titles;
 	return true;
 }
 

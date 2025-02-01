@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,19 @@
 		__fn__; \
 })
 
+typedef struct {
+	u32 title_id;
+	char name[65];
+} TitleDataEntry;
+
+typedef struct {
+	int num_titles;
+	TitleDataEntry titles[12];
+} NetpassTitleData;
+
+Result initTitleData(void);
+NetpassTitleData* getTitleData(void);
+int numUsedTitles(void);
 void clearIgnoredTitles(CecMboxListHeader* mbox_list);
 
 Result doSlotExchange(void);
