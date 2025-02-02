@@ -33,3 +33,19 @@ str_submit: Indsend
 str_back_alley: Baggyde
 str_back_alley_message: Lad os fuske nogle flere pas
 str_back_alley_pay: Køb et pass {playcoin}%d
+str_check_inboxes: Tjek indbakker
+str_toggle_titles_on: (TIL)
+str_toggle_titles_off: (FRA)
+str_toggle_titles: Spil Akt-/Deaktiver
+str_toggle_titles_message: Tryk på {a_button} for Akt-/Deaktiver udveksling af pas.
+str_clear_spr_cache: Ryd SPR-Cache
+str_write_patches: Indlæs SPR-Patches
+str_report_mii_name: 'Mii-navn: %s'
+str_report_mario_kart_7_greeting: 'Hilsen (MK7): %s'
+str_report_mii_plaza_greeting: 'Hilsen: %s'
+str_report_mii_plaza_last_game: 'Sidste Spil: %s'
+str_report_mii_plaza_country: 'Land: %s - %s'
+str_report_mii_plaza_custom_message: 'Din hilsen: %s'
+str_report_mii_plaza_custom_reply: 'Hans/Hendes budskab: %s'
+str_report_tomodachi_life_island_name: 'Øens navn: %s'
+str_b_go_back: '{b_button} Tilbage'
