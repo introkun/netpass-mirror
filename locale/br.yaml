@@ -38,5 +38,14 @@ str_toggle_titles_message: "Evit gweredekaat/diweredekaat ar Streetpass, pouezit
   {a_button}."
 str_toggle_titles_on: "(YA)"
 str_toggle_titles_off: "(KET)"
-str_write_patches: Kargañ an difazieroù
-str_clear_spr_cache: Diverkañ ar grubuilh spr
+str_write_patches: Kargañ an spr-difazieroù
+str_clear_spr_cache: Diverkañ ar spr-grubuilh
+str_report_mii_name: 'Anv ar Mii: %s'
+str_report_mario_kart_7_greeting: 'Saludiñ: %s'
+str_report_mii_plaza_last_game: "C'hoari diwezhañ: %s"
+str_report_mii_plaza_country: 'Rannvro: %s - %s'
+str_report_mii_plaza_greeting: 'Saludiñ: %s'
+str_report_mii_plaza_custom_message: 'Da saludiñ: %s'
+str_report_mii_plaza_custom_reply: 'O respontoù personelaet: %s'
+str_report_tomodachi_life_island_name: 'Anv an enezenn: %s'
+str_b_go_back: '{b_button} Distro'
