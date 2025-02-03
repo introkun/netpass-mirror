@@ -26,8 +26,8 @@ str_system_language: システム言語
 str_language_pick: '言語:'
 str_no_location_twice: 前回と同じ場所へ連続で出かけることは出来ません！
 str_cancel: キャンセル
-str_report_user: ユーザーを通報する
-str_report_user_hint: '"%s" を通報する'
+str_report_user: ユーザーを報告する
+str_report_user_hint: '"%s" を報告する'
 str_submit: 送信する
 str_back_alley_message: 今すぐすれちがいを購入する
 str_back_alley_pay: パスを購入する {playcoin}%d
