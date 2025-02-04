@@ -4,8 +4,8 @@ str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien ré
 str_httpstatus_error: 'Code de statut HTTP %d'
 str_3ds_error: 'Code d''erreur 3DS %08lx'
 str_at_home: 'Vous êtes chez vous.'
-str_goto_train_station: 'Aller à la Station de Métro'
-str_at_train_station: 'Vous êtes à la Station de Métro.'
+str_goto_train_station: 'Aller à la Gare'
+str_at_train_station: 'Vous êtes à la Gare.'
 str_goto_plaza: 'Aller à la Place'
 str_at_plaza: 'Vous êtes à la Place.'
 str_goto_mall: 'Aller au Centre Commercial'
@@ -39,14 +39,14 @@ str_toggle_titles_off: (OFF)
 str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les échanges
   StreetPass.
 str_check_inboxes: Boîte de Réception
-str_write_patches: Écrire des corrections
-str_clear_spr_cache: Supprimer le cache spr
+str_write_patches: Écrire des corrections SPR
+str_clear_spr_cache: Supprimer le cache SPR
 str_report_mario_kart_7_greeting: 'Salutation: %s'
 str_report_mii_plaza_country: 'Région: %s - %s'
 str_report_mii_plaza_greeting: 'Salutation: %s'
 str_report_mii_plaza_custom_reply: 'Leurs réponses personnalisé: %s'
 str_report_tomodachi_life_island_name: "Nom de l'île: %s"
 str_b_go_back: '{b_button} Retour'
-str_report_mii_name: 'Le nom du Mii: %s'
+str_report_mii_name: 'Nom du Mii: %s'
 str_report_mii_plaza_last_game: 'Dernière Partie: %s'
 str_report_mii_plaza_custom_message: 'Ta salutation personnalisé: %s'
