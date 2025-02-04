@@ -32,7 +32,7 @@ str_cancel: 'Zrušit'
 str_submit: 'Předložit'
 str_back_alley: 'Alej'
 str_back_alley_message: 'Pojďme si najít nové ''''přátele'''''
-str_back_alley_pay: "Koupit průchod {playcoin}%d"
+str_back_alley_pay: "Koupit propustku {playcoin}%d"
 str_check_inboxes: 'Zkontrolujte Doručené'
 str_toggle_titles: 'Výběr her'
 str_toggle_titles_message: "Stisknutím tlačítka {a_button} spustíte nebo zastavíte
