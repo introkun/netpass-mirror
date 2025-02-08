@@ -259,7 +259,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	}
 	ReportListEntry* e = &list->entries[found_i];
 	if (msg->title_id == TITLE_MII_PLAZA) {
-		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)((u8*)msg) + msg->total_header_size;
+		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)(((u8*)msg) + msg->total_header_size);
 		static const int cfpb_offset = 0x36bc;
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
