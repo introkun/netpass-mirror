@@ -55,7 +55,7 @@ StackArgsSize equ PathBuffer + 0x34
 
 .org 0x13ade0
 .area 0x98
-.align
+.align 2
 SaveSlotData:
   push {r4, r5, lr}
   mov r4, r1 ; buffer
@@ -125,11 +125,11 @@ SaveSlotData:
   add r2, sp, #PathArgs
   add r1, sp, #FsFilePtr
   ldr r0, [sp, #FullFilePtr]
-  cmp r0, #0 ; check for null pointer
-  beq fail1
-  bl FsUserOpenFile
   cmp r0, #0
   bcc fail1
+  ldr r4, [r0] ; the pointer to the open file method is in the
+  ldr r4, [r4] ; first four bytes of FsFullFile
+  blx r4
 
   ; write to the file
   mov r4, 1 ; update
@@ -149,24 +149,42 @@ slotPathPatternPtr:
   .word slotPathPattern
 .endarea
 
-.org 0x10f5ae
-.area 0x2a
+.org 0x10d6c4
+.area 0x2C
+.db 0, 0 ; zero-termination of "string"
+.align 2
 func_cont:
   mov r3, 0 ; file offset
   mov r2, 0
+  beq fail2
   add r1, sp, PathArgs ; use this as temporary variable again
   ldr r0, [sp, FsFilePtr]
   cmp r0, #0 ; check for null pointer
-  beq fail
-  bl FsFileWrite
-  cmp r0, #0
-  bcc fail
 
+  ldr r4, [r0] ; the second entry in the LUT at the top is
+  add r4, 1*4  ; the file write method
+  ldr r4, [r4]
+  blx r4
+  cmp r0, #0
+  bcc fail2
 
   ; now close up everything
-  add r0, sp, FsFilePtr
-  ldr r0, [r0]
-  bl FsFileClose
+  ldr r0, [sp, FsFilePtr]
+  ldr r4, [r0] ; the 12th entry in the LUT at the top is
+  add r4, 12*4 ; the file close method
+  ldr r4, [r4]
+
+  bl func_cont2
+fail2:
+  bl fail
+.endarea
+
+.org 0x12a948
+.area 0x32
+.db 0, 0 ; zero-termination of "string"
+func_cont2:
+  blx r4
+
   add r0, sp, FullFilePtr
   ldr r0, [r0]
   bl FsUserCloseArchive
@@ -176,6 +194,7 @@ fail:
 
   pop {r0, r1, r2, r3}
   pop {r4, r5, pc}
+
 
 .endarea
 
