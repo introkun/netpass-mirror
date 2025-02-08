@@ -29,13 +29,22 @@ str_report_user_hint: 举报 "%s"
 str_report_user: 举报用户
 str_cancel: 取消
 str_submit: 提交
-str_back_alley_pay: 购买擦肩信息 {playcoin}%d
+str_back_alley_pay: 购买瞬缘连接信息 {playcoin}%d
 str_back_alley: 后巷
-str_back_alley_message: 让我们搞点新的擦肩信息吧
-str_check_inboxes: 检查擦肩收件箱
-str_toggle_titles: 切换擦肩游戏
+str_back_alley_message: 让我们获取一些新的瞬缘连接吧
+str_check_inboxes: 检查瞬缘连接收件箱
+str_toggle_titles: 切换游戏
 str_toggle_titles_on: (启用)
 str_toggle_titles_off: (禁用)
-str_toggle_titles_message: 按 {a_button} 切换是否交换擦肩信息。
+str_toggle_titles_message: 按 {a_button} 切换是否交换瞬缘连接信息。
 str_write_patches: 写入补丁
-str_clear_spr_cache: 清除 spr 的缓存
+str_clear_spr_cache: 清除 SPR 缓存
+str_report_mii_name: Mii角色名：%s
+str_report_mii_plaza_last_game: 上次游戏：%s
+str_report_mii_plaza_country: 国家：%s - %s
+str_report_mii_plaza_custom_message: 你的自定义消息：%s
+str_report_mii_plaza_custom_reply: 对方的自定义答复：%s
+str_report_tomodachi_life_island_name: 岛屿名：%s
+str_report_mario_kart_7_greeting: 问候语：%s
+str_report_mii_plaza_greeting: 问候语：%s
+str_b_go_back: '{b_button} 返回'
