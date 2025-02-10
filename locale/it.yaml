@@ -40,3 +40,12 @@ str_toggle_titles_off: (OFF)
 str_toggle_titles: Giochi
 str_write_patches: Installa patch
 str_clear_spr_cache: Pulisci cache spr
+str_report_mii_name: 'Nome Mii: %s'
+str_report_mario_kart_7_greeting: 'Saluto: %s'
+str_report_mii_plaza_last_game: 'Ultimo gioco: %s'
+str_report_mii_plaza_country: 'Nazione: %s - %s'
+str_report_mii_plaza_greeting: 'Saluto: %s'
+str_report_mii_plaza_custom_message: 'Il tuo messaggio: %s'
+str_report_mii_plaza_custom_reply: 'La loro risposta: %s'
+str_report_tomodachi_life_island_name: 'Nome isola: %s'
+str_b_go_back: '{b_button} Torna indietro'
