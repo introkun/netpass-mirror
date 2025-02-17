@@ -155,7 +155,7 @@ typedef struct CecMessageHeader {
 	CecMessageId message_id;
 	u32 message_version;
 	CecMessageId message_id2;
-	u8 flags;
+	u8 recipients; // 0x01: everyone, 0x02: friends
 	u8 send_method;
 	bool unopened;
 	bool new_flag;

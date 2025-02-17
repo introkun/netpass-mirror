@@ -246,7 +246,6 @@ Result doSlotExchange(void) {
 				goto fail;
 			}
 			title_extra_info[i].hmac_key = b64encode(((CecMBoxInfoHeader*)buf)->hmac_key, 32);
-
 		}
 		free(buf);
 	}
