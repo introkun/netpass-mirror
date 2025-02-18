@@ -26,16 +26,24 @@ CreateFileBuffers equ 0x13d7d8
 
 
 .org spr_url_addr
-//  .asciiz "https://devapi.netpass.cafe/spr"
+;  .asciiz "https://devapi.netpass.cafe/spr"
   .asciiz "https://api.netpass.cafe/spr"
 
-// set spr loop to ~15min
+; set spr loop to ~15min
 .org spr_startup_time
   .db 0x38
 
-// unset the bssid locking
+; unset the bssid locking
 .org spr_ap_filter_time
   .dw 0
+
+; set the policy list to our own url
+.org 0x1074f0
+  .asciiz "https://api.netpass.cafe/boss"
+.org 0x107514
+  .asciiz "%s/policylist/%s/%s/%s?ap=%s"
+.org 0x107534
+  .asciiz "%s/policylist/%s/%s/%s"
 
 .org trampoline_entry
   bl SaveSlotData
