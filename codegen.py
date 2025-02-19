@@ -36,11 +36,21 @@ def _s(s):
 
 translations = {}
 
+# we need en first so that we know how many total strings there are to be able
+# to create the threashold of when languages get included
+total_lang_strings = 0
+with open(SRCDIR + "/en.yaml", "r", encoding="utf-8") as f:
+	total_lang_strings = len(yaml.safe_load(f))
+
 for file in os.listdir(SRCDIR):
 	if file.endswith(".yaml"):
 		language = file[:-5]
 		with open(SRCDIR + "/" + file, "r", encoding="utf-8") as f:
-			translations[language] = yaml.safe_load(f)
+			strs = yaml.safe_load(f)
+			this_lang_strings = len(dict(filter(lambda s: s[1] is not None and s[1] != "", strs.items())))
+			print(f"{language} {total_lang_strings} {this_lang_strings}")
+			if this_lang_strings > total_lang_strings*0.5 or l(language) in NINTENDO_LANGUAGES:
+				translations[language] = strs
 
 headerfile = "#pragma once\n\n#include <3ds.h>\n"
 headerfile += f"#define NUM_NINTENDO_LANGUAGES {len(NINTENDO_LANGUAGES)}\n"
