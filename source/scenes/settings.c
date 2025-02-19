@@ -141,8 +141,8 @@ SceneResult N(process)(Scene* sc) {
 			}
 			if (_data->cursor == 5) {
 				// copy patches
-				#define COPY_DSTDIR "/luma/sysmodules"
-				#define COPY_SRCDIR "romfs:/patches"
+				#define COPY_DSTDIR "/luma/sysmodules/"
+				#define COPY_SRCDIR "romfs:/patches/"
 				mkdir_p(COPY_DSTDIR);
 				printf("Copying sysmodules...\n");
 				DIR* d = opendir(COPY_SRCDIR);
@@ -159,8 +159,8 @@ SceneResult N(process)(Scene* sc) {
 				char srcpath[100];
 				char dstpath[100];
 				while ((p = readdir(d))) {
-					snprintf(srcpath, 100, "%s/%s", COPY_SRCDIR, p->d_name);
-					snprintf(dstpath, 100, "%s/%s", COPY_DSTDIR, p->d_name);
+					snprintf(srcpath, 100, "%s%s", COPY_SRCDIR, p->d_name);
+					snprintf(dstpath, 100, "%s%s", COPY_DSTDIR, p->d_name);
 					struct stat statbuf;
 					if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
 						// ok we actually have a file, copy it
