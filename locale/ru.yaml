@@ -38,3 +38,14 @@ str_toggle_titles: Переключить игры
 str_toggle_titles_on: (ВКЛЮЧЕНО)
 str_toggle_titles_off: (ВЫКЛЮЧЕНО)
 str_toggle_titles_message: Нажмите {a_button}, чтобы начать или остановить обмен "пассами".
+str_report_mii_name: 'Имя Mii: %s'
+str_report_mii_plaza_greeting: 'Приветствие: %s'
+str_write_patches: Записать патчи
+str_clear_spr_cache: Очистить кэш SPR
+str_report_mario_kart_7_greeting: 'Приветствие: %s'
+str_report_mii_plaza_last_game: 'Последняя игра: %s'
+str_report_mii_plaza_country: 'Страна: %s - %s'
+str_report_mii_plaza_custom_message: 'Ваше специальное сообщение: %s'
+str_report_mii_plaza_custom_reply: 'Их специальный ответ: %s'
+str_report_tomodachi_life_island_name: 'Название острова: %s'
+str_b_go_back: '{b_button} Назад'
