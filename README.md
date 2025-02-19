@@ -2,11 +2,11 @@
 
 [![Translation status](https://weblate.sorunome.de/widget/netpass/app/svg-badge.svg)](https://weblate.sorunome.de/engage/netpass/)
 
-![QR Code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png)  
+![QR Code](https://gitlab.com/Sorunome/3ds-streetpass/-/raw/release_builds/qr.png){width=400px}  
 Scan QR code to download!
 
-GBAtemp thread: https://gbatemp.net/threads/a-new-way-to-experience-streetpass.653810/  
-Discord guild: https://discord.gg/QY8wzCMHyP
+GBAtemp thread: https://gbatemp.net/threads/netpass-a-new-way-to-experience-streetpass.664005/  
+Discord guild: https://netpass.cafe/discord
 
 Introducing NetPass:
 
