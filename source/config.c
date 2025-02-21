@@ -141,6 +141,7 @@ void load(void) {
 
 void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
+	if (!f) return;
 	char line[250];
 	snprintf(line, 250, "last_location=%d\n", config.last_location);
 	fputs(line, f);
