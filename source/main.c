@@ -113,6 +113,11 @@ int main() {
 		}
 	}));
 
+	if (_PATCHES_VERSION_ > config.patches_version) {
+		printf("New patches version to apply!\n");
+		scene = getUpdatePatchesScene(scene);
+	}
+
 	scene->init(scene);
 
 	while (aptMainLoop()) {

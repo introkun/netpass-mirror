@@ -59,3 +59,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/report_list.h"
 #include "scenes/back_alley.h"
 #include "scenes/toggle_titles.h"
+#include "scenes/update_patches.h"

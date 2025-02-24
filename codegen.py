@@ -23,7 +23,11 @@ replace_map = {
 	"l_button": "\ue004",
 	"r_button": "\ue005",
 	"d_pad": "\ue006",
+	"start_button": "【start】",
+	"select_button": "【select】",
 	"playcoin": "\ue075",
+	"analog_stick": "\ue077",
+	"power_button": "\ue078",
 }
 
 def l(s):
