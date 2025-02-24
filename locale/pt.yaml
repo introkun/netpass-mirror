@@ -4,7 +4,7 @@ str_libcurl_date_and_time: 'Certifique-se de que a data e o horário do seu sist
   estejam corretos!'
 str_httpstatus_error: 'Código de status HTTP %d'
 str_3ds_error: 'Código de erro 3DS %08lx'
-str_at_home: 'Você está em casa.'
+str_at_home: 'Você está em Casa.'
 str_goto_train_station: 'Ir para a Estação de Trem'
 str_at_train_station: 'Você está na Estação de Trem.'
 str_goto_plaza: 'Ir para a Praça'
@@ -31,7 +31,7 @@ str_report_user_hint: Denunciar "%s"
 str_cancel: Cancelar
 str_submit: Enviar
 str_back_alley: Beco
-str_back_alley_message: Vamos pegar mais alguns passes
+str_back_alley_message: Vamos pegar mais alguns passes!
 str_back_alley_pay: Compre um passe {playcoin}%d
 str_toggle_titles: Ativar/Desativar Jogos
 str_toggle_titles_on: (ON)
@@ -57,7 +57,7 @@ str_update_patches_poweroff_desc: A atualização de patches foi bem-sucedida! S
   irá reiniciar.
 str_update_patches_desc: Para instalar corretamente o NetPass, alguns patches para
   o sysmodule serão criados agora. Para que eles funcionem, você precisa ativar “Enable
-  loading external FIRMs and modules” na configuração do Luma3DS. Para ver a configuração,
+  loading external FIRMs and modules” na configuração do Luma3DS. Para ver as configurações,
   desligue o console e pressione {select_button} enquanto liga {power_button} o console.
   Você pode fazer isso depois que os patches forem gravados.
 str_update_patches: Atualizar patches
