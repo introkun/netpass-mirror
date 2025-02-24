@@ -3,7 +3,7 @@ str_libcurl_error: "libCURL error (%d): %s"
 str_libcurl_date_and_time: Make sure that your system's date and time are set correctly!
 str_httpstatus_error: HTTP status code %d
 str_3ds_error: 3DS error code %08lx
-str_at_home: You are at home.
+str_at_home: You are at Home.
 str_goto_train_station: Go to Train Station
 str_at_train_station: You are at the Train Station.
 str_goto_plaza: Go to Plaza
@@ -30,7 +30,7 @@ str_report_user_hint: Report "%s"
 str_cancel: Cancel
 str_submit: Submit
 str_back_alley: Back Alley
-str_back_alley_message: Let's hustle some more passes
+str_back_alley_message: Let's hustle some more passes!
 str_back_alley_pay: "Purchase a pass {playcoin}%d"
 str_check_inboxes: Check Inboxes
 str_toggle_titles: Toggle Games
@@ -54,7 +54,7 @@ str_update_patches_desc: "To properly install NetPass, some sysmodule patches wi
   FIRMs and modules\" in the Luma3DS settings. To access settings, power off the console
   and then press {select_button} while powering on {power_button} the console. You
   can do this after the patches are written."
-str_update_patches_error_desc: "Something went wrong updating patches. Please report
-  this issue on GitLab, GBAtemp or Discord. https://netpass.cafe/discord"
+str_update_patches_error_desc: "Something went wrong while updating patches. Please
+  report this issue on GitLab, GBAtemp or Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Updating patches successful! Your console will
   now restart."
