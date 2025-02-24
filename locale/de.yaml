@@ -49,3 +49,15 @@ str_report_mii_plaza_custom_message: 'Deine persönliche Begrüßung: %s'
 str_b_go_back: '{b_button} Zurück'
 str_clear_spr_cache: Leere SPR-Cache
 str_write_patches: Schreib SPR-Patches
+str_b_cancel: '{b_button} Abbrechen'
+str_a_ok: '{a_button} Ok'
+str_update_patches: Patches aktualisieren
+str_update_patches_error_desc: Ein Fehler ist während der Aktualisierung aufgetreten.
+  Bitte melde dieses Problem auf gitlab, gbatemp oder auf Discord. https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine Konsole
+  wird nun neu gestartet.
+str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein paar
+  sysmodule patches erstellt. Damit diese funktionieren muss "Enable loading external
+  FIRMs and modules" in den Luma3DS Einstellungen aktiviert sein. Um dies zu aktivieren
+  halte {select_button} gedrückt während du deine Konsole startest. Du kannst dies
+  auch nach der Installation erledigen.
