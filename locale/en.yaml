@@ -49,6 +49,12 @@ str_b_go_back: "{b_button} Go Back"
 str_b_cancel: "{b_button} Cancel"
 str_a_ok: "{a_button} Ok"
 str_update_patches: "Update patches"
-str_update_patches_desc: "To properly install NetPass, some sysmodule patches will be created now. For those to work, you need to enable \"Enable loading external FIRMs and modules\" within lumas configuration. To view the configuration, power off the console and then press {select_button} while powering on {power_button} the console. You can do this after the patches are written."
-str_update_patches_error_desc: "Something went wrong updating patches. Please report this issue on the gitlab, gbatemp or the discord. https://netpass.cafe/discord"
-str_update_patches_poweroff_desc: "Updating patches successful! Your console will now restart."
+str_update_patches_desc: "To properly install NetPass, some sysmodule patches will
+  be created now. For those to work, you need to enable \"Enable loading external
+  FIRMs and modules\" in the Luma3DS settings. To access settings, power off the console
+  and then press {select_button} while powering on {power_button} the console. You
+  can do this after the patches are written."
+str_update_patches_error_desc: "Something went wrong updating patches. Please report
+  this issue on GitLab, GBAtemp or Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Updating patches successful! Your console will
+  now restart."
