@@ -3,7 +3,7 @@ str_libcurl_error: "Error de libCURL (%d): %s"
 str_libcurl_date_and_time: '¡Asegúrate de que la fecha y hora del sistema sean correctas!'
 str_httpstatus_error: 'Código de estado HTTP %d'
 str_3ds_error: 'Código de error de 3DS %08lx'
-str_at_home: 'Estás en casa.'
+str_at_home: 'Estás en Casa.'
 str_goto_train_station: 'Ir a la Estación de Tren'
 str_at_train_station: 'Estás en la Estación de Tren.'
 str_goto_plaza: 'Ir a la Plaza'
@@ -31,7 +31,7 @@ str_cancel: Cancelar
 str_submit: Enviar
 str_back_alley: Callejón
 str_back_alley_pay: Compra un pase por {playcoin}%d
-str_back_alley_message: Consigamos más pases
+str_back_alley_message: ¡Consigamos más pases!
 str_check_inboxes: Comprobar pases
 str_toggle_titles: Activar o desactivar juegos
 str_toggle_titles_on: (SI)
@@ -52,12 +52,12 @@ str_report_mii_plaza_country: 'Región: %s - %s'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Actualizar parches
 str_update_patches_error_desc: Algo salió mal al actualizar los parches. Por favor,
-  informe este problema en Gitlab, gbatemp o Discord. https://netpass.cafe/discord
+  informe este problema en GitLab, GBAtemp o Discord. https://netpass.cafe/discord
 str_update_patches_poweroff_desc: ¡La actualización de los parches se realizó correctamente!
   Ahora tu consola se reiniciará.
 str_update_patches_desc: Para instalar NetPass correctamente, se crearán algunos parches
   de sysmodule. Para que funcionen, debe habilitar "Enable loading external FIRMs
-  and modules" dentro de la configuración de luma. Para ver la configuración, apague
-  la consola y luego presione {select_button} mientras enciende {power_button} la
-  consola. Puede hacer esto después de que se escriban los parches.
+  and modules" en la configuración de Luma3DS. Para ver la configuración, apague la
+  consola y luego presione {select_button} mientras enciende {power_button} la consola.
+  Puede hacer esto después de que se escriban los parches.
 str_b_cancel: '{b_button} Cancelar'
