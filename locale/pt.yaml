@@ -51,3 +51,13 @@ str_report_tomodachi_life_island_name: 'Nome da ilha: %s'
 str_b_go_back: '{b_button} Voltar'
 str_b_cancel: '{b_button} Cancelar'
 str_a_ok: '{a_button} Ok'
+str_update_patches_error_desc: Algo de errado aconteceu ao atualizar os patches. Por
+  favor, reporte o problema no Gitlab, GBAtemp ou no Discord. https://netpass.cafe/discord
+str_update_patches_poweroff_desc: A atualização de patches foi bem-sucedida! Seu console
+  irá reiniciar.
+str_update_patches_desc: Para instalar corretamente o NetPass, alguns patches para
+  o sysmodule serão criados agora. Para que eles funcionem, você precisa ativar “Enable
+  loading external FIRMs and modules” na configuração do Luma3DS. Para ver a configuração,
+  desligue o console e pressione {select_button} enquanto liga {power_button} o console.
+  Você pode fazer isso depois que os patches forem gravados.
+str_update_patches: Atualizar patches
