@@ -39,11 +39,7 @@ CreateFileBuffers equ 0x13d7d8
 
 ; set the policy list to our own url
 .org 0x1074f0
-  .asciiz "https://api.netpass.cafe/boss"
-.org 0x107514
-  .asciiz "%s/policylist/%s/%s/%s?ap=%s"
-.org 0x107534
-  .asciiz "%s/policylist/%s/%s/%s"
+  .asciiz "https://nppl.api.netpass.cafe/boss"
 
 .org trampoline_entry
   bl SaveSlotData
