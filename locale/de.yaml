@@ -57,7 +57,7 @@ str_update_patches_error_desc: Ein Fehler ist während der Aktualisierung aufget
 str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine Konsole
   wird nun neu gestartet.
 str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein paar
-  sysmodule patches erstellt. Damit diese funktionieren muss "Enable loading external
-  FIRMs and modules" in den Luma3DS Einstellungen aktiviert sein. Um dies zu aktivieren
-  halte {select_button} gedrückt während du deine Konsole startest. Du kannst dies
+  sysmodule patches erstellt. Damit diese funktionieren, muss "Enable loading external
+  FIRMs and modules" in den Luma3DS-Einstellungen aktiviert sein. Um dies zu aktivieren,
+  halte {select_button} gedrückt, während du deine Konsole startest. Du kannst dies
   auch nach der Installation erledigen.
