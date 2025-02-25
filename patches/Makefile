@@ -1,6 +1,6 @@
 .PHONY: all clean boss http ssl
 
-all: boss cecd
+all: boss cecd ssl
 
 boss:
 	@make -C boss
