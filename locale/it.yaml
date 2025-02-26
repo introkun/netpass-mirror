@@ -32,7 +32,7 @@ str_cancel: Annulla
 str_submit: Invia
 str_back_alley: Vicolo
 str_back_alley_pay: Compra un pass {playcoin}%d
-str_back_alley_message: Cerca altri pass
+str_back_alley_message: Cerca altri pass!
 str_toggle_titles_message: Premi {a_button} per iniziare o smettere di scambiare pass.
 str_check_inboxes: Controlla la posta in arrivo
 str_toggle_titles_on: (ON)
@@ -49,3 +49,15 @@ str_report_mii_plaza_custom_message: 'Il tuo messaggio: %s'
 str_report_mii_plaza_custom_reply: 'La loro risposta: %s'
 str_report_tomodachi_life_island_name: 'Nome isola: %s'
 str_b_go_back: '{b_button} Torna indietro'
+str_b_cancel: '{b_button} Indietro'
+str_a_ok: '{a_button} Ok'
+str_update_patches: Aggiorna patch
+str_update_patches_desc: Per installare correttamente NetPass verranno create delle
+  patch. Per farle funzionare, assicurati di aver abilitato "Enable loading external
+  FIRMs and modules" nelle impostazioni di Luma3DS. Per aprire le impostazioni, spegni
+  la console e tieni premuto {select_button} mentre accendi {power_button} la console.
+  Puoi farlo anche dopo aver installato le patch.
+str_update_patches_error_desc: Si è verificato un errore nell'aggiornamento delle
+  patch. Segnale questo errore su GitLab, GBATemp o Discord. https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Patch aggiornate con successo! La console ora si
+  riavvierà.
