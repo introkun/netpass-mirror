@@ -31,7 +31,7 @@ str_cancel: Abbrechen
 str_submit: Absenden
 str_report_user: Einen Benutzer melden
 str_back_alley: Seitengasse
-str_back_alley_message: Lass uns ein paar Begegnungen holen
+str_back_alley_message: Lass uns ein paar Begegnungen holen!
 str_back_alley_pay: Kaufe eine Begegnung {playcoin}%d
 str_toggle_titles: Spiele Ein-/Ausschalten
 str_toggle_titles_message: Drücke {a_button}, um den Austausch von Begegnungen ein-/auszuschalten.
@@ -53,7 +53,7 @@ str_b_cancel: '{b_button} Abbrechen'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Patches aktualisieren
 str_update_patches_error_desc: Ein Fehler ist während der Aktualisierung aufgetreten.
-  Bitte melde dieses Problem auf gitlab, gbatemp oder auf Discord. https://netpass.cafe/discord
+  Bitte melde dieses Problem auf GitLab, GBAtemp oder auf Discord. https://netpass.cafe/discord
 str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine Konsole
   wird nun neu gestartet.
 str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein paar
