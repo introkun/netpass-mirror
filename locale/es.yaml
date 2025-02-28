@@ -61,3 +61,8 @@ str_update_patches_desc: Para instalar NetPass correctamente, se crearán alguno
   consola y luego presione {select_button} mientras enciende {power_button} la consola.
   Puede hacer esto después de que se escriban los parches.
 str_b_cancel: '{b_button} Cancelar'
+str_integrations: Integraciones
+str_integrations_message: Las integraciones de terceros quedan fuera de la moderación
+  de NetPass. ¡Úsala bajo tu propio riesgo!
+str_report_source_unknown: Fuente desconocida
+str_report_source: 'Fuente: %s'
