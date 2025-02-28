@@ -58,3 +58,5 @@ str_update_patches_error_desc: "Something went wrong while updating patches. Ple
   report this issue on GitLab, GBAtemp or Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Updating patches successful! Your console will
   now restart."
+str_integrations: "Integrations"
+str_integrations_message: "Third-party integrations are outside of NetPass moderation. Use at your own risk!"
