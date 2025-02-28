@@ -59,3 +59,5 @@ str_update_patches_desc: NetPassを正しくインストールするために、
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押します。パッチを書き込んだ後でもできます。
 str_integrations_message: 第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください!
 str_integrations: インテグレーション
+str_report_source_unknown: 未知元
+str_report_source: '元: %s'
