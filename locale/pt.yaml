@@ -61,3 +61,6 @@ str_update_patches_desc: Para instalar corretamente o NetPass, alguns patches pa
   desligue o console e pressione {select_button} enquanto liga {power_button} o console.
   Você pode fazer isso depois que os patches forem gravados.
 str_update_patches: Atualizar patches
+str_integrations: Integrações
+str_integrations_message: As integrações de terceiros estão fora da moderação do NetPass.
+  Use-os por sua conta e risco!
