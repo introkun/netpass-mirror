@@ -64,3 +64,5 @@ str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein 
 str_integrations: Einbindungen
 str_integrations_message: Drittanbieter-Einbindungen werden nicht von NetPass moderiert.
   Benutzung auf eigene Gefahr!
+str_report_source: 'Quelle: %s'
+str_report_source_unknown: Unbekannte Quelle
