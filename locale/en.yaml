@@ -60,3 +60,5 @@ str_update_patches_poweroff_desc: "Updating patches successful! Your console wil
   now restart."
 str_integrations: "Integrations"
 str_integrations_message: "Third-party integrations are outside of NetPass moderation. Use at your own risk!"
+str_report_source: "Source: %s"
+str_report_source_unknown: "Unknown source"
