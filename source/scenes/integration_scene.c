@@ -106,7 +106,6 @@ SceneResult N(process)(Scene* sc) {
 	}
 	
 	if (kDown & KEY_START) {
-		configWrite();
 		return scene_stop;
 	}
 	return scene_continue;

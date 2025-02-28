@@ -30,12 +30,12 @@
 #include <dirent.h>
 #include "boss.h"
 
-#define PATCHES_COPY_DSTDIR "/luma/sysmodules/"
+#define PATCHES_COPY_DSTDIR "sdmc:/luma/sysmodules/"
 #define PATCHES_COPY_SRCDIR "romfs:/patches/"
 #define SPRELAY_TITLE_ID 0x0004013000003400ll
 #define SPRELAY_TASK_ID "sprelay"
 
-static const char config_path[] = "/config/netpass/netpass.cfg";
+static const char config_path[] = "sdmc:/config/netpass/netpass.cfg";
 
 Config config = {
 	.last_location = -1,
@@ -252,6 +252,7 @@ bool writePatches(void) {
 			printf("Done\n");
 		}
 	}
+	closedir(d);
 	printf("Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();

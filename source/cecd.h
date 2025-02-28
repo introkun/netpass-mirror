@@ -144,7 +144,7 @@ typedef struct CecTimestamp {
 
 typedef struct CecMessageHeader {
 	u16 magic; // 0x6060 ``
-	u16 padding;
+	u16 padding_sourceident;
 	u32 message_size;
 	u32 total_header_size;
 	u32 body_size;
