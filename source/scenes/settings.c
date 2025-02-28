@@ -17,6 +17,7 @@
  */
 
 #include "settings.h"
+#include "integration_scene.h"
 #include "switch.h"
 #include "../curl-handler.h"
 #include "../utils.h"
@@ -47,7 +48,8 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_download_data);
 	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_delete_data);
 	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_update_patches);
-	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_integrations);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
@@ -65,7 +67,7 @@ void N(init)(Scene* sc) {
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 1, 1);
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
 	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 50, 0, 1, 1);
@@ -101,8 +103,8 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = 6;
-		if (_data->cursor > 6) _data->cursor = 0;
+		if (_data->cursor < 0) _data->cursor = 7;
+		if (_data->cursor > 7) _data->cursor = 0;
 		if (_data->cursor == 2) {
 			int old_lang = _data->selected_language;
 			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
@@ -158,7 +160,12 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getUpdatePatchesScene(NULL);
 				return scene_push;
 			}
-			if (_data->cursor == 6) return scene_pop;
+			if (_data->cursor == 6) {
+				// integrations
+				sc->next_scene = getIntegrationScene();
+				return scene_push;
+			}
+			if (_data->cursor == 7) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

@@ -26,6 +26,7 @@
 #include "config.h"
 #include "boss.h"
 #include "report.h"
+#include "integration.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -140,6 +141,7 @@ int main() {
 	}
 	printf("Exiting...\n");
 	bgLoopExit();
+	integrationExit();
 	C2D_Fini();
 	C3D_Fini();
 	//curlExit();
