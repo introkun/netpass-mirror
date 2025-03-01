@@ -61,3 +61,8 @@ str_update_patches_error_desc: Si è verificato un errore nell'aggiornamento del
   patch. Segnale questo errore su GitLab, GBATemp o Discord. https://netpass.cafe/discord
 str_update_patches_poweroff_desc: Patch aggiornate con successo! La console ora si
   riavvierà.
+str_integrations: Integrazioni
+str_integrations_message: Le integrazioni di terze parti non vengono moderate da NetPass.
+  Usale a tuo rischio e pericolo!
+str_report_source: 'Fonte: %s'
+str_report_source_unknown: Fonte sconosciuta
