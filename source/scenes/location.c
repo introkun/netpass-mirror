@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024, 2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ typedef struct {
 	C2D_Text g_entries[4];
 	C2D_SpriteSheet spr;
 	int cursor;
+	float width;
 } N(DataStruct);
 
 LanguageString* N(locations)[NUM_LOCATIONS] = {
@@ -49,6 +50,15 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_back_alley);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_exit);
+	get_text_dimensions(&_data->g_location, 1, 1, &_data->width, 0);
+	for (int i = 0; i < 4; i++) {
+		float width;
+		get_text_dimensions(&_data->g_entries[i], 1, 1, &width, 0);
+		width += 20.;
+		if (width > _data->width) {
+			_data->width = width;
+		}
+	}
 	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
 }
 
@@ -59,9 +69,7 @@ void N(render)(Scene* sc) {
 		C2D_DrawImageAt(img, 0, 0, 0, NULL, 1, 1);
 	}
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
-	float width;
-	get_text_dimensions(&_data->g_location, 1, 1, &width, 0);
-	C2D_DrawRectSolid(8, 8, 0, width + 4, 10 + 5*25, bgclr);
+	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 10 + 5*25, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
 	C2D_DrawText(&_data->g_location, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	for (int i = 0; i < 4; i++) {
