@@ -40,7 +40,7 @@ void N(init)(Scene* sc) {
 
 void N(render)(Scene* sc) {
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
-	C2D_DrawText(&_data->g_info, C2D_AlignLeft, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5);
+	C2D_DrawText(&_data->g_info, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5, (WIDTH - 2*MARGIN - 10) * 1.f);
 }
 
 void N(exit)(Scene* sc) {
