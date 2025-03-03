@@ -362,7 +362,10 @@ Result doSlotExchange(void) {
 				break;
 			}
 		}
-		if (!found || slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
+		if (!found) {
+			continue; // the slot was disabled
+		}
+		if (slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
 			printf("=");
 			continue;
 		}
