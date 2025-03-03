@@ -26,7 +26,7 @@
 #include "config.h"
 #include "boss.h"
 #include "report.h"
-#include "integration.h"
+#include "music.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -52,6 +52,7 @@ int main() {
 
 	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
+	musicInit(); // must be after romfsInit()
 
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
@@ -67,6 +68,8 @@ int main() {
 		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
 		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
 	}
+	
+	playMusic("home"); // start the default music
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
@@ -141,7 +144,7 @@ int main() {
 	}
 	printf("Exiting...\n");
 	bgLoopExit();
-	integrationExit();
+	musicExit();
 	C2D_Fini();
 	C3D_Fini();
 	//curlExit();

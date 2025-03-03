@@ -38,11 +38,13 @@ SOURCES			:=	source codegen source/scenes source/hmac_sha256
 DATA			:=	data
 INCLUDES		:=	include
 GRAPHICS		:=	gfx
+MUSIC			:=	music
 APP_AUTHOR		:=	Sorunome
 APP_TITLE		:=	NetPass
 APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS			:=	romfs
 GFXBUILD		:=	$(ROMFS)/gfx
+MUSICBUILD		:=	$(ROMFS)/music
 ICON			:=	meta/icon.png
 BANNER_AUDIO	:=	meta/banner.ogg
 BANNER_IMAGE	:=	meta/banner.cgfx
@@ -63,14 +65,15 @@ CFLAGS	+=	-D_VERSION_MAJOR_=$(NETPASS_VERSION_MAJOR) \
 			-D_VERSION_MINOR_=$(NETPASS_VERSION_MINOR) \
 			-D_VERSION_MICRO_=$(NETPASS_VERSION_MICRO) \
 			-D_PATCHES_VERSION_=$(NETPASS_PATCHES_VERSION) \
-			-DNUM_LOCATIONS=$(NETPASS_NUM_LOCATIONS)
+			-DNUM_LOCATIONS=$(NETPASS_NUM_LOCATIONS) \
+			-I$(DEVKITPRO)/portlibs/3ds/include/opus
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lcitro2d -lcitro3d -lctru -lm `curl-config --libs`
+LIBS	:= -lcitro2d -lcitro3d -lctru -lopusfile -lopus -logg `curl-config --libs` -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -101,6 +104,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 PICAFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.v.pica)))
 SHLISTFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.shlist)))
 GFXFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.t3s)))
+MUSICFILES	:=	$(foreach dir,$(MUSIC),$(notdir $(wildcard $(dir)/*.*)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 #---------------------------------------------------------------------------------
@@ -171,7 +175,7 @@ MAKEROM		?=	makerom
 MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSION_MAJOR} -minor ${NETPASS_VERSION_MINOR} -micro ${NETPASS_VERSION_MICRO} -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
 
 #---------------------------------------------------------------------------------
-3dsx: codegen $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR) smdh
+3dsx: codegen $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR) smdh
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
@@ -200,6 +204,14 @@ $(GFXBUILD):
 	@mkdir -p $@
 endif
 
+ifneq ($(MUSICBUILD),$(BUILD))
+$(MUSICBUILD):
+	@mkdir -p $@
+	@for file in $(MUSICFILES) ; do \
+		ffmpeg -y -i $(MUSIC)/$$file -ar 48000 -ac 2 $(MUSICBUILD)/$${file%.*}.opus ; \
+	done
+endif
+
 ifneq ($(DEPSDIR),$(BUILD))
 $(DEPSDIR):
 	@mkdir -p $@
@@ -212,14 +224,13 @@ $(OUTDIR):
 clean:
 	@echo clean ...
 	@$(MAKE) -C patches clean
-	@rm -fr $(BUILD) $(GFXBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
+	@rm -fr $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@tex3ds -i $< -H $(BUILD)/$*.h -d $(DEPSDIR)/$*.d -o $(GFXBUILD)/$*.t3x
-
 #---------------------------------------------------------------------------------
 else
 

@@ -18,6 +18,7 @@
 
 #include "switch.h"
 #include "../api.h"
+#include "../music.h"
 #include <stdlib.h>
 #define N(x) scenes_location_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
@@ -40,6 +41,15 @@ LanguageString* N(locations)[NUM_LOCATIONS] = {
 	&str_at_catcafe,
 };
 
+const char* N(music)[NUM_LOCATIONS] = {
+	"train_station",
+	"home",
+	"mall",
+	"home",
+	"home",
+	"home",
+};
+
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
@@ -60,6 +70,7 @@ void N(init)(Scene* sc) {
 		}
 	}
 	_data->spr = C2D_SpriteSheetLoad("romfs:/gfx/locations.t3x");
+	playMusic(N(music)[sc->data]);
 }
 
 void N(render)(Scene* sc) {
