@@ -96,7 +96,7 @@ int main() {
 			res = httpRequest("GET", url, 0, 0, 0, 0, 0);
 			if (R_SUCCEEDED(res)) break;
 			check_count++;
-			if (check_count > 50) {
+			if (check_count > 100) {
 				location = res;
 				return;
 			}

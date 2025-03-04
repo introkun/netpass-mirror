@@ -74,9 +74,9 @@ const char* string_in_language(LanguageString s, int lang) {
 // TODO: figure out the other values needed for chinese simplified
 static const float font_scale_map[4][4] = {
 	{1.f   , 1.145f, 1.145f, 1.5f  },
-	{1.f   , 1.f   , 1.f   , 1.f   },
 	{0.866f, 1.f   , 1.f   , 1.299f},
-	{0.666f, 1.f   , 0.768f, 1.f   },
+	{0.866f, 0.925f, 1.f   , 1.299f},
+	{0.666f, 0.715f, 0.768f, 1.f   },
 };
 void get_text_dimensions(C2D_Text* text, float scale_x, float scale_y, float* width, float* height) {
 	C2D_TextGetDimensions(text, scale_x, scale_y, width, height);
