@@ -1,35 +1,36 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
+str_loading: "Lastning    "
+str_libcurl_error: "libCURL fel (%d): %s"
+str_libcurl_date_and_time: 'Kontrollera att datum och tid är korrekt inställda i ditt
+  system!'
+str_httpstatus_error: 'HTTP status kod %d'
+str_3ds_error: '3DS fel kod %08lx'
+str_at_home: 'Du är Hemma.'
+str_goto_train_station: 'Gå till Järnvägsstationen'
+str_at_train_station: 'Du är vid Järnvägsstationen.'
+str_goto_plaza: 'Gå ner till Torget'
+str_at_plaza: 'Du är på Torget.'
+str_goto_mall: 'Gå till Esplanaden'
+str_at_mall: 'Du är på Esplanaden.'
+str_exit: 'Stänga'
+str_settings: 'Inställning'
+str_download_data: 'Ladda ner personuppgifter'
+str_delete_data: 'Radera personuppgifter'
+str_back: 'Tillbaka'
+str_language: 'Svenska'
+str_goto_beach: 'Åka till Stranden'
+str_at_beach: 'Du är på Stranden.'
+str_goto_arcade: 'Gå till Spelhallen'
+str_at_arcade: 'Du är i Spelhallen.'
+str_goto_catcafe: 'Gå till Kattkaféet'
+str_at_catcafe: 'Du är i Kattkaféet.'
+str_system_language: 'Systemspråk'
+str_language_pick: 'Språk:'
+str_no_location_twice: 'Du kan inte åka till samma destination två gånger i rad!'
+str_report_user: 'Anmäl en användare'
+str_report_user_hint: 'Anmäla "%s"'
+str_cancel: 'Annullera'
+str_submit: 'Sända'
+str_back_alley: 'Återvändsgränd'
 str_back_alley_message: ''
 str_back_alley_pay: ""
 str_check_inboxes: ''
@@ -45,8 +46,8 @@ str_report_mii_plaza_greeting: ""
 str_report_mii_plaza_custom_message: ""
 str_report_mii_plaza_custom_reply: ""
 str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
+str_b_go_back: "{b_button} Tillbaka"
+str_b_cancel: "{b_button} Annullera"
 str_a_ok: ""
 str_update_patches: ""
 str_update_patches_desc: ""
