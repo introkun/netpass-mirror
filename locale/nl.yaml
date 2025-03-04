@@ -41,3 +41,4 @@ str_toggle_titles_on: (AAN)
 str_toggle_titles_message: Druk op {a_button} om de uitwisseling van ontmoetingen
   aan/uitschakelen.
 str_toggle_titles: Spellen Aan-/uitschakelen
+str_a_ok: '{a_button} Oké'
