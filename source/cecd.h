@@ -85,6 +85,7 @@ typedef struct SlotMetadata {
 	u32 size;
 } SlotMetadata;
 
+Result waitForCecdState(bool start, int command, CecStateAbbrev state);
 Result cecdInit(void);
 Result cecdGetState(u32* state);
 Result cecdGetSystemInfo(u32 destbuf_size, void* destbuf);

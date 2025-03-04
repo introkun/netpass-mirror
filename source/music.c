@@ -33,6 +33,14 @@ bool stop_playing = false;
 Thread music_thread = 0;
 char curfilename[20] = {0};
 
+void wait_for_state(bool playing) {
+	int count = 0;
+	while (ndspChnIsPlaying(MUSIC_CHANNEL) == !playing && count < 100000) {
+		svcSleepThread(10);
+		count++;
+	}
+}
+
 u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_read) {
 	u64 samples_read = 0;
 
@@ -42,8 +50,8 @@ u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_rea
 		if (samples_just_read < 0) {
 			return samples_just_read;
 		} else if(samples_just_read == 0) {
-			// EOF
-			break;
+			// EOF, loop file
+			op_pcm_seek(opus_file, 0);
 		}
 
 		samples_read += samples_just_read;
@@ -84,6 +92,7 @@ void play_thread(void* p) {
 	}
 	// now start the loop
 	stop_playing = false;
+	wait_for_state(true);
 	while (!stop_playing) {
 		svcSleepThread((u64)1000 * 10);
 		// do nothing if the channel is paused
@@ -137,7 +146,7 @@ Result playMusic(char* filename) {
 
 void stopMusic(void) {
 	stop_playing = true;
-	while (ndspChnIsPlaying(MUSIC_CHANNEL));
+	wait_for_state(false);
 	if (music_thread) {
 		threadJoin(music_thread, U64_MAX);
 		threadFree(music_thread);

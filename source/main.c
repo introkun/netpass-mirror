@@ -91,16 +91,17 @@ int main() {
 		// next, we gotta wait for having internet
 		char url[50];
 		snprintf(url, 50, "%s/ping", BASE_URL);
-	check_internet:
-		res = httpRequest("GET", url, 0, 0, 0, 0, 0);
-		if (R_FAILED(res)) {
-			if (res == -CURLE_COULDNT_RESOLVE_HOST) {
-				svcSleepThread((u64)1000000 * 100);
-				goto check_internet;
+		int check_count = 0;
+		while (true) {
+			res = httpRequest("GET", url, 0, 0, 0, 0, 0);
+			if (R_SUCCEEDED(res)) break;
+			check_count++;
+			if (check_count > 50) {
+				location = res;
+				return;
 			}
-			location = res;
-			return;
 		}
+		waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 		initTitleData();
 		doSlotExchange();
 		res = getLocation();

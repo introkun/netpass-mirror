@@ -36,6 +36,28 @@ void waitForNoSpr(void) {
 	while (in_spr_mode) svcSleepThread((u64)1000000 * 100);
 }
 
+Result waitForCecdState(bool start, int command, CecStateAbbrev state) {
+	Handle state_change_handle;
+	Result res = 0;
+	res = cecdGetChangeStateEventHandle(&state_change_handle);
+	if (R_FAILED(res)) return res;
+	res = start ? cecdStart(command) : cecdStop(command);
+	if (R_FAILED(res)) return res;
+	int count = 0;
+	while (true) {
+		count++;
+		if (count > 20) {
+			return res = -1;
+		}
+		svcWaitSynchronization(state_change_handle, 10e9);
+		CecStateAbbrev is_state;
+		res = cecdGetCecdState(&is_state);
+		if (R_SUCCEEDED(res) && is_state == state) break;
+	}
+	svcCloseHandle(state_change_handle);
+	return res;
+}
+
 void getCurrentTime(CecTimestamp* cts) {
 	time_t unix_time = time(NULL);
 	struct tm* ts = gmtime((const time_t*)&unix_time);
