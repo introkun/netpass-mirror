@@ -41,6 +41,7 @@ void wait_for_state(bool playing) {
 	}
 }
 
+__attribute__((optimize ("O3")))
 u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_read) {
 	u64 samples_read = 0;
 
@@ -61,6 +62,7 @@ u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_rea
 	return samples_read;
 }
 
+__attribute__((optimize ("O3")))
 void play_thread(void* p) {
 	OggOpusFile* opus_file = p;
 	// now allocate the buffers
