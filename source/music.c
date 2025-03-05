@@ -140,7 +140,7 @@ Result playMusic(char* filename) {
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
 	OggOpusFile* opus_file = op_open_file(f, (int*)&res);
 	if (!opus_file) return res;
-	music_thread = threadCreate(play_thread, opus_file, 32*1024, main_thread_prio()-1, -2, false);
+	music_thread = threadCreate(play_thread, opus_file, 26*1024, main_thread_prio()-1, -2, false);
 	return res;
 }
 
