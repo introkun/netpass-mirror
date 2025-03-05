@@ -17,6 +17,7 @@
  */
 
 #include "report.h"
+#include "cecd.h"
 #include "config.h"
 #include "utils.h"
 #include "strings.h"
@@ -33,7 +34,7 @@
 
 #define LOG_DIR "sdmc:/config/netpass/log/"
 #define LOG_INDEX "sdmc:/config/netpass/log/index.nrle"
-#define LOG_SPR_DIR "sdmc:/config/netpass/log_spr"
+#define LOG_SPR_DIR "sdmc:/config/netpass/log_spr/"
 
 #define MAX_REPORT_ENTRIES_LEN 128
 
@@ -77,6 +78,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	if (!buf) return false;
 	u16 source_ident = 0;
 	while (!r && (p=readdir(d)) && msgs->count < 12) {
+		svcSleepThread(1);
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
@@ -208,6 +210,7 @@ void freeReportMessages(ReportMessages* msgs) {
 void saveSlotInLog(CecSlotHeader* slot) {
 	u8* ptr = ((u8*)slot) + sizeof(CecSlotHeader);
 	for (int i = 0; i < slot->message_count; i++) {
+		svcSleepThread(1);
 		CecMessageHeader* msg = (CecMessageHeader*)ptr;
 		saveMsgInLog(msg);
 		ptr += msg->message_size;
@@ -217,6 +220,7 @@ void saveSlotInLog(CecSlotHeader* slot) {
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
 	FILE* f = fopen(LOG_INDEX, "rb");
+	svcSleepThread(1);
 	if (!f) {
 		// ok, file is empty, we have to create it
 		f = fopen(LOG_INDEX, "wb");
@@ -234,6 +238,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		f = fopen(LOG_INDEX, "rb");
 		if (!f) return;
 	}
+	svcSleepThread(1);
 	size_t list_file_size;
 	{
 		ReportListHeader header;
@@ -246,7 +251,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		fread(list, list_file_size, 1, f);
 		fclose(f);
 	}
-
+	svcSleepThread(1);
 	int found_i = -1;
 	// find if the transfer id already exists
 	for (int i = 0; i < list->header.cur_size; i++) {
@@ -260,12 +265,14 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->transfer_id, b64name);
 	free(b64name);
 	bool edited = false;
+	svcSleepThread(1);
 	if (found_i < 0) {
 		// we have to add a new entry!
 		if (list->header.max_size == list->header.cur_size) {
 			// uho, all is full, gotta the first half of the list
 			int i = 0;
 			for (; i < MAX_REPORT_ENTRIES_LEN / 2; i++) {
+				svcSleepThread(1);
 				u32 rm_batch = list->entries[i].transfer_id;
 				char rm_dirname[100];
 				snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
@@ -274,6 +281,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			}
 			memmove(list->entries, ((u8*)list->entries) + sizeof(ReportListEntry)*i, list->header.cur_size * sizeof(ReportListEntry));
 		}
+		svcSleepThread(1);
 		ReportListEntry* e = &list->entries[list->header.cur_size];
 		e->transfer_id = msg->transfer_id;
 		memcpy(&e->received, &msg->received, sizeof(CecTimestamp));
@@ -281,6 +289,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		list->header.cur_size++;
 		edited = true;
 	}
+	svcSleepThread(1);
 	ReportListEntry* e = &list->entries[found_i];
 	if (msg->title_id == TITLE_MII_PLAZA) {
 		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)(((u8*)msg) + msg->total_header_size);
@@ -301,6 +310,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			if (!R_FAILED(r)) edited = true;
 		}
 	}
+	svcSleepThread(1);
 
 	if (edited) {
 		f = fopen(LOG_INDEX, "wb");
@@ -308,11 +318,13 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		fwrite(list, list_file_size, 1, f);
 		fclose(f);
 	}
+	svcSleepThread(1);
 	mkdir_p(filename);
 	f = fopen(filename, "wb");
 	if (!f) goto error;
 	fwrite(msg, msg->message_size, 1, f);
 	fclose(f);
+	svcSleepThread(1);
 
 error:
 	free(list);
@@ -361,38 +373,53 @@ void reportInit(void) {
 
 	DIR* d = opendir(LOG_SPR_DIR);
 	if (!d) return;
-	printf("Add SPR passes ");
 	struct dirent* p;
+	char filename[200];
+	bool has_spr_passes = false;
 	while ((p = readdir(d))) {
-		size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 2;
-		char* buf = malloc(len);
-		if (buf) {
-			struct stat statbuf;
-			snprintf(buf, len, "%s/%s", LOG_SPR_DIR, p->d_name);
-			if (!stat(buf, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
-				FILE* f = fopen(buf, "rb");
-				if (f) {
-					CecSlotHeader slot;
-					fread(&slot, sizeof(CecSlotHeader), 1, f);
-					CecSlotHeader* buf_slot = malloc(slot.size);
-					if (buf_slot) {
-						fseek(f, 0, 0);
-						fread(buf_slot, slot.size, 1, f);
-						fclose(f);
-						printf("=");
-						saveSlotInLog(buf_slot);
-						free(buf_slot);
-						unlink(buf);
-					} else {
-						printf("%ld", slot.size);
-						printf("E");
-						fclose(f);
-					}
-				}
-			}
-			free(buf);
+		svcSleepThread(1);
+		size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 1;
+		struct stat statbuf;
+		snprintf(filename, len, "%s%s", LOG_SPR_DIR, p->d_name);
+		if (stat(filename, &statbuf) && !S_ISDIR(statbuf.st_mode)) continue;
+		if (!has_spr_passes) {
+			has_spr_passes = true;
+			printf("Add SPR passes ");
 		}
+		FILE* f = fopen(filename, "rb");
+		if (!f) continue;
+		fseek(f, 0, SEEK_END);
+		size_t filesize = ftell(f);
+		rewind(f);
+		if (filesize < sizeof(CecSlotHeader)) {
+			fclose(f);
+			printf("/");
+			unlink(filename);
+			continue;
+		}
+		CecSlotHeader slot;
+		fread(&slot, sizeof(CecSlotHeader), 1, f);
+		if (slot.size > MAX_SLOT_SIZE) {
+			fclose(f);
+			printf("S");
+			unlink(filename);
+			continue;
+		}
+		CecSlotHeader* buf_slot = malloc(slot.size);
+		if (!buf_slot) {
+			printf("B");
+			fclose(f);
+			unlink(filename);
+			continue;
+		}
+		rewind(f);
+		fread(buf_slot, slot.size, 1, f);
+		fclose(f);
+		printf("=");
+		saveSlotInLog(buf_slot);
+		free(buf_slot);
+		unlink(filename);
 	}
 	closedir(d);
-	printf(" Done\n");
+	if (has_spr_passes) printf(" Done\n");
 }

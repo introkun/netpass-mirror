@@ -23,7 +23,7 @@
 #include "cecd.h"
 
 typedef struct {
-	u8 ptr[MAX_MESSAGE_SIZE + 0x1000];
+	u8 ptr[MAX_SLOT_SIZE];
 	size_t len;
 	int offset;
 } CurlReply;

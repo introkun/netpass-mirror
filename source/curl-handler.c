@@ -88,11 +88,11 @@ Result getMac(u8 mac[6]) {
 size_t curlWrite(void *data, size_t size, size_t nmemb, void* ptr) {
 	CurlReply* r = (CurlReply*)ptr;
 	size_t new_len = r->len + size*nmemb;
-	if (new_len > MAX_MESSAGE_SIZE + 0x1000) {
+	if (new_len > MAX_SLOT_SIZE) {
 		return 0;
 	}
 	memcpy(r->ptr + r->len, data, size*nmemb);
-	if (new_len + 1 < MAX_MESSAGE_SIZE + 0x1000) {
+	if (new_len + 1 < MAX_SLOT_SIZE) {
 		r->ptr[new_len] = '\0';
 	}
 	r->len = new_len;

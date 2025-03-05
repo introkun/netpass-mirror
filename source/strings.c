@@ -54,7 +54,6 @@ void stringsInit(void) {
 	} else {
 		_language = config.language;
 	}
-	printf("Got language %d\n", _language);
 	font_default = getFontIndex(0);
 }
 

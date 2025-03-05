@@ -76,6 +76,7 @@ typedef enum {
 
 // seems to be the max number of bytes for transfering stuffs
 #define MAX_MESSAGE_SIZE 0x19000
+#define MAX_SLOT_SIZE (MAX_MESSAGE_SIZE + 0x14)
 
 typedef u8 CecMessageId[8];
 
