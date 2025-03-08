@@ -65,3 +65,15 @@ str_update_patches_desc: Щоб установити NetPass належним ч
   loading external FIRMS and modules" у налаштуваннях Luma3DS. Щоби потрапити до цих
   налаштувань, вимкнiть консоль, а потiм увiмкнiть {power_button} її, утримуючи {select_button}.
   Це можна зробити пiсля того, як патчi будуть записанi.
+str_settings_about: Про застосунок
+str_about_reports: Система скарг
+str_about_music: Музика
+str_about_localisation: Локалiзацiя
+str_about_netpass_community: Спiльнота NetPass
+str_about_special_thanks: Окрема подяка
+str_about_production_cat: Мила кицька
+str_about_lead_dev: Лідер розробки
+str_settings_misc: Iнше
+str_about_graphics: Iлюстрацiї та графiка
+str_about_special_thanks_txt: Homebrew-спiльнотi 3DS за весь реверс-iнжинiринг та
+  документацiю
