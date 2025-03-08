@@ -65,3 +65,15 @@ str_update_patches_desc: Для полноценной установки NetPas
   Это можно сделать после записи патчей.
 str_integrations_message: NetPass не модерирует интеграции от третьих лиц. Используйте
   их на свой риск!
+str_settings_about: О приложении
+str_about_reports: Система жалоб
+str_about_graphics: Иллюстрации и графика
+str_about_music: Музыка
+str_about_localisation: Локализация
+str_about_netpass_community: Сообщество NetPass
+str_about_special_thanks_txt: Homebrew-сообществу 3DS за весь проделанный реверс-инжиниринг
+  и документацию
+str_about_production_cat: Милая кошечка
+str_settings_misc: Прочее
+str_about_special_thanks: Отдельная благодарность
+str_about_lead_dev: Лидер разработки
