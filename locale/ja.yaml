@@ -61,3 +61,14 @@ str_integrations_message: 第三者のインテグレーションはNetPassの�
 str_integrations: インテグレーション
 str_report_source_unknown: 未知元
 str_report_source: '元：%s'
+str_settings_about: NetPassにつて
+str_about_lead_dev: 主要な開発元
+str_about_reports: 報告システム
+str_about_graphics: アートとグラフィック
+str_about_music: 音楽
+str_about_netpass_community: NetPassのコミュニティ
+str_about_special_thanks: スペシャルサンクス
+str_about_production_cat: プロダクションの猫
+str_settings_misc: 他のこと
+str_about_localisation: ローカリゼーション
+str_about_special_thanks_txt: リバースエンジニアリングとドキュメンテーションした3DS Homebrewのコミュニティ
