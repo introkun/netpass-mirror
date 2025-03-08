@@ -69,3 +69,12 @@ str_update_patches_poweroff_desc: Mise à jour installée ! Votre console va m
 str_update_patches_error_desc: Un problème est survenu pendant l'installation de la
   mise à jour. S'il vous plaît, reporter le problème sur GitLab, GBAtemp ou Discord.
   https://netpass.cafe/discord
+str_settings_about: À propos
+str_about_lead_dev: Développeur principal
+str_about_reports: Système de signalement
+str_about_graphics: Art et visuels
+str_about_localisation: Localisation
+str_about_special_thanks: Remerciments
+str_settings_misc: Divers
+str_about_music: Musique
+str_about_netpass_community: Communauté NetPass
