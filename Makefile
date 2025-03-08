@@ -48,6 +48,14 @@ MUSICBUILD		:=	$(ROMFS)/music
 ICON			:=	meta/icon.png
 BANNER_AUDIO	:=	meta/banner.ogg
 BANNER_IMAGE	:=	meta/banner.cgfx
+APP_TITLE_INT	:=	
+APP_DESC_INT	:=	-gl "NetPass: StreetPass in der modernen Welt!" \
+					-pl "NetPass: StreetPass no mundo moderno!" \
+					-il "NetPass: StreetPass nel mondo moderno!" \
+					-fl "NetPass: StreetPass dans le monde moderne !" \
+					-jl "NetPass: 現代世界のすれちがい通信！" \
+					-rl "NetPass: StreetPass в современном мире!" \
+					-sl "NetPass: ¡StreetPass en el mundo moderno!"
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -187,12 +195,12 @@ codegen:
 	@$(PYTHON) $(TOPDIR)/codegen.py
 
 smdh:
-	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)"  -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d -o $(OUTPUT).smdh
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" $(APP_TITLE_INT) -l "$(APP_DESCRIPTION)" $(APP_DESC_INT) -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f visible,allow3d -o $(OUTPUT).smdh
 
 cia: 3dsx
 	@$(FFMPEG) -y -i $(TOPDIR)/$(BANNER_AUDIO) -c:a pcm_s16le $(TOPDIR)/$(BUILD)/banner.wav
 	@$(BANNERTOOL) makebanner -ci "$(TOPDIR)/$(BANNER_IMAGE)" -a "$(TOPDIR)/$(BUILD)/banner.wav" -o "$(BUILD)/banner.bnr"
-	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" $(APP_TITLE_INT) -l "$(APP_DESCRIPTION)" $(APP_DESC_INT) -p "$(APP_AUTHOR)" -i "$(APP_ICON)" -f "$(ICON_FLAGS)" -o "$(BUILD)/icon.icn"
 	@$(MAKEROM) -f cia -o "$(OUTPUT).cia" -target t -exefslogo $(MAKEROM_ARGS)
 
 $(BUILD):
