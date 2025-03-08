@@ -32,7 +32,7 @@ typedef struct {
 const N(RawCategory) N(raw_credits)[NUM_CREDIT_CATAGORIES] = {
 	{&str_about_lead_dev, 1, "Sorunome", 0},
 	{&str_about_reports, 1, "gart, checkraisefold, Sorunome", 0},
-	{&str_about_graphics, 2, "Arth, DaGrand39, 24blueroses, KingMayro, MilesTheCreator", 0},
+	{&str_about_graphics, 2, "Iveurne, DaGrand39, 24blueroses, KingMayro, MilesTheCreator", 0},
 	{&str_about_music, 1, "Meowbops, Evilev", 0},
 	{&str_about_localisation, 1, 0, &str_about_netpass_community},
 	{&str_about_production_cat, 1, "Laura", 0},
@@ -57,6 +57,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
+	_data->y_offset = 0;
 	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 150);
 	for (int i = 0; i < NUM_CREDIT_CATAGORIES; i++) {
 		TextLangParse(&_data->credits[i].name, _data->g_staticBuf, *N(raw_credits)[i].name);

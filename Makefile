@@ -53,7 +53,7 @@ APP_DESC_INT	:=	-gl "NetPass: StreetPass in der modernen Welt!" \
 					-pl "NetPass: StreetPass no mundo moderno!" \
 					-il "NetPass: StreetPass nel mondo moderno!" \
 					-fl "NetPass: StreetPass dans le monde moderne !" \
-					-jl "NetPass: 現代世界のすれちがい通信！" \
+					-jl "NetPass：現代世界のすれちがい通信！" \
 					-rl "NetPass: StreetPass в современном мире!" \
 					-sl "NetPass: ¡StreetPass en el mundo moderno!"
 
