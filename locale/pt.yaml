@@ -64,3 +64,17 @@ str_update_patches: Atualizar patches
 str_integrations: Integrações
 str_integrations_message: As integrações de terceiros estão fora da moderação do NetPass.
   Use-os por sua conta e risco!
+str_report_source: 'Fonte: %s'
+str_report_source_unknown: Fonte desconhecida
+str_settings_misc: Outros
+str_settings_about: Sobre
+str_about_lead_dev: Desenvolvedor Líder
+str_about_reports: Sistema de denúncias
+str_about_graphics: Arte & Gráficos
+str_about_music: Música
+str_about_localisation: Traduções
+str_about_netpass_community: A comunidade do NetPass
+str_about_special_thanks: Agradecimentos Especiais
+str_about_production_cat: Gato de produção
+str_about_special_thanks_txt: A comunidade homebrew do 3DS por toda a engenharia-reversa
+  e documentação
