@@ -66,3 +66,15 @@ str_integrations_message: Las integraciones de terceros quedan fuera de la moder
   de NetPass. ¡Úsala bajo tu propio riesgo!
 str_report_source_unknown: Fuente desconocida
 str_report_source: 'Fuente: %s'
+str_settings_misc: Misceláneo
+str_settings_about: Acerca de
+str_about_lead_dev: Desarrollador Principal
+str_about_reports: Sistema de Denuncias
+str_about_graphics: Arte y Gráficos
+str_about_music: Música
+str_about_localisation: Localización
+str_about_netpass_community: La comunidad de NetPass
+str_about_special_thanks: Agradecimientos Especiales
+str_about_special_thanks_txt: La comunidad homebrew de 3DS por toda la ingeniería
+  inversa y la documentación
+str_about_production_cat: Gato de producción
