@@ -1,5 +1,5 @@
 str_loading: "読み込み中    "
-str_libcurl_error: "libCURL エラー (%d): %s"
+str_libcurl_error: "libCURL エラー (%d)：%s"
 str_libcurl_date_and_time: '本体設定から日付と時刻が正しく設定されているか確認してください！'
 str_httpstatus_error: 'HTTP ステータスコード %d'
 str_3ds_error: '3DS エラーコード %08lx'
@@ -23,7 +23,7 @@ str_at_arcade: 'ゲームセンターに滞在中。'
 str_goto_catcafe: '猫カフェへ出かける'
 str_at_catcafe: '猫カフェに滞在中。'
 str_system_language: システム言語
-str_language_pick: '言語:'
+str_language_pick: '言語：'
 str_no_location_twice: 前回と同じ場所へ連続で出かけることは出来ません！
 str_cancel: キャンセル
 str_report_user: ユーザーを報告する
@@ -40,13 +40,13 @@ str_toggle_titles_off: (オフ)
 str_clear_spr_cache: sprのキャッシュをクリアする
 str_write_patches: パッチを書く
 str_report_mii_name: Miiの名前：%s
-str_report_mario_kart_7_greeting: 'ご挨拶: %s'
-str_report_mii_plaza_last_game: '最後にプレーしたゲーム: %s'
-str_report_mii_plaza_country: '国: %s - %s'
-str_report_mii_plaza_greeting: 'ご挨拶: %s'
-str_report_mii_plaza_custom_message: 'カスタムメッセージ: %s'
-str_report_mii_plaza_custom_reply: 'カスタム返信: %s'
-str_report_tomodachi_life_island_name: '島の名前:'
+str_report_mario_kart_7_greeting: 'ご挨拶：%s'
+str_report_mii_plaza_last_game: '最後にプレーしたゲーム：%s'
+str_report_mii_plaza_country: '国：%s - %s'
+str_report_mii_plaza_greeting: 'ご挨拶：%s'
+str_report_mii_plaza_custom_message: 'カスタムメッセージ：%s'
+str_report_mii_plaza_custom_reply: 'カスタム返信：%s'
+str_report_tomodachi_life_island_name: '島の名前：'
 str_b_go_back: '{b_button} 戻る'
 str_update_patches: パッチをアップデートする
 str_update_patches_error_desc: パッチの更新時にエラーが発生しました。この問題は NetPassのGitlab、GBAtemp または
@@ -57,7 +57,7 @@ str_a_ok: '{a_button}はい'
 str_update_patches_desc: NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで
   「Enable loading external FIRMs and modules 
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押します。パッチを書き込んだ後でもできます。
-str_integrations_message: 第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください!
+str_integrations_message: 第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください！
 str_integrations: インテグレーション
 str_report_source_unknown: 未知元
-str_report_source: '元: %s'
+str_report_source: '元：%s'
