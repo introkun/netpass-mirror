@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024, 2025 Sorunome
+ * Copyright (C) 2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,52 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "settings.h"
-#include "../curl-handler.h"
-#include "../utils.h"
 #include "misc_settings.h"
-#include <stdlib.h>
-#include <malloc.h>
-#define N(x) scenes_settings_namespace_##x
+#include "about.h"
+#define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 
-#define NUM_ENTRIES 6
+#define NUM_ENTRIES 5
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_title;
 	C2D_Text g_entries[NUM_ENTRIES];
-	C2D_Text g_languages[NUM_LANGUAGES + 1];
 	int cursor;
-	int selected_language;
-	float lang_width;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(500  + 15*NUM_LANGUAGES);
-	_data->cursor = 0;
+	_data->g_staticBuf = C2D_TextBufNew(512);
+	_data->cursor  = 0;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
-	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_toggle_titles);
-	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_report_user);
-	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_language_pick);
-	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_integrations);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_settings_misc);
-	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_back);
-	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
-	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
-	}
-	_data->selected_language = -1;
-	if (config.language != -1) {
-		for (int i = 0; i < NUM_LANGUAGES; i++) {
-			if (all_languages[i] == config.language) {
-				_data->selected_language = i;
-			}
-		}
-	}
-	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
+	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_settings_about);
+	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_download_data);
+	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_delete_data);
+	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_update_patches);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_back);
 }
 
 void N(render)(Scene* sc) {
@@ -70,7 +49,6 @@ void N(render)(Scene* sc) {
 	for (int i = 0; i < NUM_ENTRIES; i++) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
-	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 50, 0, 1, 1);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -106,38 +84,47 @@ SceneResult N(process)(Scene* sc) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = NUM_ENTRIES - 1;
 		if (_data->cursor > NUM_ENTRIES - 1) _data->cursor = 0;
-		if (_data->cursor == 2) {
-			int old_lang = _data->selected_language;
-			_data->selected_language += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
-			if (_data->selected_language < -1) _data->selected_language = -1;
-			if (_data->selected_language > NUM_LANGUAGES-1) _data->selected_language = NUM_LANGUAGES-1;
-			if (old_lang != _data->selected_language) {
-				config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
-				configWrite();
-			}
-		}
 		if (kDown & KEY_A) {
 			if (_data->cursor == 0) {
-				// toggle titles
-				sc->next_scene = getToggleTitlesScene();
+				// About
+				sc->next_scene = getAboutScene();
 				return scene_push;
 			}
 			if (_data->cursor == 1) {
-				// report users
-				sc->next_scene = getReportListScene();
+				// download personal data
+				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
+					char url[50];
+					snprintf(url, 50, "%s/data", BASE_URL);
+					Result res = httpRequest("GET", url, 0, 0, (void*)1, "/netpass_data.txt", 0);
+					if (R_FAILED(res)) {
+						printf("ERROR downloading all data: %ld\n", res);
+						return;
+					}
+					printf("Successfully downloaded all data!\n");
+					printf("File stored at sdmc:/netpass_data.txt\n");
+				}));
+				return scene_push;
+			}
+			if (_data->cursor == 2) {
+				// delete personal data
+				sc->next_scene = getLoadingScene(0, lambda(void, (void) {
+					char url[50];
+					snprintf(url, 50, "%s/data", BASE_URL);
+					Result res = httpRequest("DELETE", url, 0, 0, 0, 0, 0);
+					if (R_FAILED(res)) {
+						printf("ERROR deleting all data: %ld\n", res);
+						return;
+					}
+					printf("Successfully sent request to delete all data! This can take up to 15 days.\n");
+				}));
 				return scene_push;
 			}
 			if (_data->cursor == 3) {
-				// integrations
-				sc->next_scene = getIntegrationScene();
+				// update patches
+				sc->next_scene = getUpdatePatchesScene(NULL);
 				return scene_push;
 			}
-			if (_data->cursor == 4) {
-				// misc settings
-				sc->next_scene = getMiscSettingsScene();
-				return scene_push;
-			}
-			if (_data->cursor == 5) return scene_pop;
+			if (_data->cursor == 4) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;
@@ -145,7 +132,7 @@ SceneResult N(process)(Scene* sc) {
 	return scene_continue;
 }
 
-Scene* getSettingsScene(void) {
+Scene* getMiscSettingsScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
 	scene->init = N(init);

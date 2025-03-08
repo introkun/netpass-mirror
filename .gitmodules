@@ -4,3 +4,6 @@
 [submodule "patches/ssl"]
 	path = patches/ssl
 	url = https://github.com/TraceEntertains/3DS-SSL-Patch
+[submodule "bcmatools"]
+	path = bcmatools
+	url = https://github.com/LiquidFenrir/bcmatools

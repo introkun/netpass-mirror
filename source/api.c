@@ -456,7 +456,7 @@ void bgLoop(void* p) {
 }
 
 void bgLoopInit(void) {
-	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, main_thread_prio()-1, -2, false);
+	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, main_thread_prio()+1, -2, false);
 }
 
 void bgLoopExit(void) {

@@ -232,6 +232,7 @@ SceneResult N(process)(Scene* sc) {
 			if (kDown & KEY_B) return scene_pop;
 		}
 	}
+	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }

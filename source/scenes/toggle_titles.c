@@ -122,6 +122,10 @@ SceneResult N(process)(Scene* sc) {
 			return scene_pop;
 		}
 	}
+	if (kDown & KEY_B) {
+		configWrite();
+		return scene_pop;
+	}
 	if (kDown & KEY_START) {
 		configWrite();
 		return scene_stop;
