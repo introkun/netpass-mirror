@@ -56,7 +56,7 @@ str_b_cancel: '{b_button}キャンセル'
 str_a_ok: '{a_button}はい'
 str_update_patches_desc: NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで
   「Enable loading external FIRMs and modules 
-  」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押します。パッチを書き込んだ後でもできます。
+  」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押してください。パッチを書き込んだ後でもできます。
 str_integrations_message: 第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください！
 str_integrations: インテグレーション
 str_report_source_unknown: 未知元
