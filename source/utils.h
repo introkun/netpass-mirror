@@ -41,6 +41,10 @@ Result decryptMii(void* data, MiiData* mii);
 u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);
 void C2D_ImageDelete(C2D_Image* img);
 bool loadJpeg(C2D_Image* img, u8* data, u32 size);
+size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream);
+size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream);
+char* fgets_blk(char* str, int num, FILE* stream);
+int fputs_blk(const char* str, FILE* stream);
 
 typedef struct {
 	u32 magic; // 0x4F00

@@ -83,7 +83,7 @@ void load(void) {
 		return;
 	}
 	char line[200];
-	while (fgets(line, 200, f)) {
+	while (fgets_blk(line, 200, f)) {
 		char* separator = strchr(line, '=');
 		if (!separator) continue;
 		char* key = line;
@@ -165,24 +165,24 @@ void configWrite(void) {
 	}
 	char line[250];
 	snprintf(line, 250, "last_location=%d\n", config.last_location);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "year=%d\n", config.year);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "month=%d\n", config.month);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "day=%d\n", config.day);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "price=%ld\n", config.price);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
-	fputs(line, f);
+	fputs_blk(line, f);
 	if (config.language == -1) {
-		fputs("language=system\n", f);
+		fputs_blk("language=system\n", f);
 	} else {
 		for (int i = 0; i < NUM_LANGUAGES; i++) {
 			if (config.language == all_languages[i]) {
 				snprintf(line, 250, "language=%s\n", all_languages_str[i]);
-				fputs(line, f);
+				fputs_blk(line, f);
 				break;
 			}
 		}
@@ -192,7 +192,7 @@ void configWrite(void) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);
 	}
 	snprintf(line + 18 + (9*24), 250 - (18 + (9*24)), "\n");
-	fputs(line, f);
+	fputs_blk(line, f);
 	
 	fclose(f);
 }

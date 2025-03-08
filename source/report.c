@@ -38,8 +38,6 @@
 
 #define MAX_REPORT_ENTRIES_LEN 128
 
-#include <errno.h>
-
 #define SETUP_ENTRY(a, x) a* body = (a*)(((u8*)buf) + buf->total_header_size); \
 	entry->data = malloc(sizeof(x)); \
 	if (!entry->data) break; \
@@ -51,14 +49,14 @@ ReportList* loadReportList(void) {
 	if (!f) return NULL;
 
 	ReportListHeader header;
-	fread(&header, sizeof(ReportListHeader), 1, f);
+	fread_blk(&header, sizeof(ReportListHeader), 1, f);
 	if (header.magic != 0x454C524e || header.version != 1) return NULL;
 	fseek(f, 0, SEEK_SET);
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
 	ReportList* list = memalign(4, list_file_size);
 	if (!list) return NULL;
-	fread(list, list_file_size, 1, f);
+	fread_blk(list, list_file_size, 1, f);
 	fclose(f);
 	return list;
 }
@@ -78,14 +76,13 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	if (!buf) return false;
 	u16 source_ident = 0;
 	while (!r && (p=readdir(d)) && msgs->count < 12) {
-		svcSleepThread(1);
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (!f) goto cont_loop;
-		fread(buf, MAX_MESSAGE_SIZE, 1, f);
+		fread_blk(buf, MAX_MESSAGE_SIZE, 1, f);
 		if (buf->magic != 0x6060) {
 			fclose(f);
 			goto cont_loop;
@@ -210,7 +207,6 @@ void freeReportMessages(ReportMessages* msgs) {
 void saveSlotInLog(CecSlotHeader* slot) {
 	u8* ptr = ((u8*)slot) + sizeof(CecSlotHeader);
 	for (int i = 0; i < slot->message_count; i++) {
-		svcSleepThread(1);
 		CecMessageHeader* msg = (CecMessageHeader*)ptr;
 		saveMsgInLog(msg);
 		ptr += msg->message_size;
@@ -220,7 +216,6 @@ void saveSlotInLog(CecSlotHeader* slot) {
 void saveMsgInLog(CecMessageHeader* msg) {
 	ReportList* list;
 	FILE* f = fopen(LOG_INDEX, "rb");
-	svcSleepThread(1);
 	if (!f) {
 		// ok, file is empty, we have to create it
 		f = fopen(LOG_INDEX, "wb");
@@ -232,26 +227,24 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		list->header.version = 1;
 		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
 		list->header.cur_size = 0;
-		fwrite(list, sizeof(ReportList), 1, f);
+		fwrite_blk(list, sizeof(ReportList), 1, f);
 		free(list);
 		fclose(f);
 		f = fopen(LOG_INDEX, "rb");
 		if (!f) return;
 	}
-	svcSleepThread(1);
 	size_t list_file_size;
 	{
 		ReportListHeader header;
-		fread(&header, sizeof(ReportListHeader), 1, f);
+		fread_blk(&header, sizeof(ReportListHeader), 1, f);
 		if (header.magic != 0x454C524E || header.version != 1) return;
 		fseek(f, 0, SEEK_SET);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 		list = memalign(4, list_file_size);
 		if (!list) return;
-		fread(list, list_file_size, 1, f);
+		fread_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
-	svcSleepThread(1);
 	int found_i = -1;
 	// find if the transfer id already exists
 	for (int i = 0; i < list->header.cur_size; i++) {
@@ -265,14 +258,12 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	snprintf(filename, 100, "%s%lx/_%s", LOG_DIR, msg->transfer_id, b64name);
 	free(b64name);
 	bool edited = false;
-	svcSleepThread(1);
 	if (found_i < 0) {
 		// we have to add a new entry!
 		if (list->header.max_size == list->header.cur_size) {
 			// uho, all is full, gotta the first half of the list
 			int i = 0;
 			for (; i < MAX_REPORT_ENTRIES_LEN / 2; i++) {
-				svcSleepThread(1);
 				u32 rm_batch = list->entries[i].transfer_id;
 				char rm_dirname[100];
 				snprintf(rm_dirname, 100, "%s%lx", LOG_DIR, rm_batch);
@@ -281,7 +272,6 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			}
 			memmove(list->entries, ((u8*)list->entries) + sizeof(ReportListEntry)*i, list->header.cur_size * sizeof(ReportListEntry));
 		}
-		svcSleepThread(1);
 		ReportListEntry* e = &list->entries[list->header.cur_size];
 		e->transfer_id = msg->transfer_id;
 		memcpy(&e->received, &msg->received, sizeof(CecTimestamp));
@@ -289,7 +279,6 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		list->header.cur_size++;
 		edited = true;
 	}
-	svcSleepThread(1);
 	ReportListEntry* e = &list->entries[found_i];
 	if (msg->title_id == TITLE_MII_PLAZA) {
 		CecMessageBodyMiiPlaza* body = (CecMessageBodyMiiPlaza*)(((u8*)msg) + msg->total_header_size);
@@ -310,21 +299,18 @@ void saveMsgInLog(CecMessageHeader* msg) {
 			if (!R_FAILED(r)) edited = true;
 		}
 	}
-	svcSleepThread(1);
 
 	if (edited) {
 		f = fopen(LOG_INDEX, "wb");
 		if (!f) goto error;
-		fwrite(list, list_file_size, 1, f);
+		fwrite_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
-	svcSleepThread(1);
 	mkdir_p(filename);
 	f = fopen(filename, "wb");
 	if (!f) goto error;
-	fwrite(msg, msg->message_size, 1, f);
+	fwrite_blk(msg, msg->message_size, 1, f);
 	fclose(f);
-	svcSleepThread(1);
 
 error:
 	free(list);
@@ -349,7 +335,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (f) {
-			fread(msg, sizeof(CecMessageHeader), 1, f);
+			fread_blk(msg, sizeof(CecMessageHeader), 1, f);
 			fclose(f);
 			if (msg->magic == 0x6060 && msg->transfer_id == transfer_id) {
 				free(fname);
@@ -377,7 +363,6 @@ void reportInit(void) {
 	char filename[200];
 	bool has_spr_passes = false;
 	while ((p = readdir(d))) {
-		svcSleepThread(1);
 		size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 1;
 		struct stat statbuf;
 		snprintf(filename, len, "%s%s", LOG_SPR_DIR, p->d_name);
@@ -398,7 +383,7 @@ void reportInit(void) {
 			continue;
 		}
 		CecSlotHeader slot;
-		fread(&slot, sizeof(CecSlotHeader), 1, f);
+		fread_blk(&slot, sizeof(CecSlotHeader), 1, f);
 		if (slot.size > MAX_SLOT_SIZE) {
 			fclose(f);
 			printf("S");
@@ -413,7 +398,7 @@ void reportInit(void) {
 			continue;
 		}
 		rewind(f);
-		fread(buf_slot, slot.size, 1, f);
+		fread_blk(buf_slot, slot.size, 1, f);
 		fclose(f);
 		printf("=");
 		saveSlotInLog(buf_slot);
