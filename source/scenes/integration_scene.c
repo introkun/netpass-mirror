@@ -20,6 +20,7 @@
 #include "../integration.h"
 #define N(x) scenes_integration_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_INTEGRATIONS_LEN + STR_INTEGRATIONS_MESSAGE_LEN + STR_BACK_LEN + STR_TOGGLE_TITLES_OFF_LEN + STR_TOGGLE_TITLES_ON_LEN)
 
 typedef struct {
 	int cursor;
@@ -49,7 +50,7 @@ void N(init)(Scene* sc) {
 		sc->d = NULL;
 		return;
 	}
-	_data->g_staticBuf = C2D_TextBufNew(2000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + (_data->list->header.count*24));
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_integrations);
 	TextLangParse(&_data->g_subtitle, _data->g_staticBuf, str_integrations_message);
 	TextLangParse(&_data->g_back, _data->g_staticBuf, str_back);

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #define N(x) scenes_update_patches_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_UPDATE_PATCHES_LEN + STR_UPDATE_PATCHES_DESC_LEN + STR_UPDATE_PATCHES_ERROR_DESC_LEN + STR_UPDATE_PATCHES_POWEROFF_DESC_LEN + STR_A_OK_LEN + STR_B_CANCEL_LEN)
 
 enum State {Question, Poweroff, Error};
 
@@ -41,7 +42,7 @@ void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	__data__ = sc->d;
-	_data->g_staticBuf = C2D_TextBufNew(1000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->state = Question;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_update_patches);
 	TextLangParse(&_data->g_description, _data->g_staticBuf, str_update_patches_desc);

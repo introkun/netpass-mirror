@@ -24,6 +24,7 @@
 #include <malloc.h>
 #define N(x) scenes_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN)
 
 #define NUM_ENTRIES 6
 
@@ -40,7 +41,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(500  + 15*NUM_LANGUAGES);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_toggle_titles);

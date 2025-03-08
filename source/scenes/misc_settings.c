@@ -20,6 +20,7 @@
 #include "about.h"
 #define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_BACK_LEN)
 
 #define NUM_ENTRIES 5
 
@@ -33,7 +34,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(512);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor  = 0;
 	TextLangParse(&_data->g_title, _data->g_staticBuf, str_settings);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_settings_about);

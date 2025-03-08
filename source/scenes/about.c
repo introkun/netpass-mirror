@@ -19,6 +19,7 @@
 #include "about.h"
 #define N(x) scenes_about_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_B_GO_BACK_LEN + STR_ABOUT_LEAD_DEV_LEN + STR_ABOUT_REPORTS_LEN + STR_ABOUT_GRAPHICS_LEN + STR_ABOUT_MUSIC_LEN + STR_ABOUT_LOCALISATION_LEN + STR_ABOUT_NETPASS_COMMUNITY_LEN + STR_ABOUT_PRODUCTION_CAT_LEN + STR_ABOUT_SPECIAL_THANKS_LEN + STR_ABOUT_SPECIAL_THANKS_TXT_LEN)
 #define NUM_CREDIT_CATAGORIES 7
 
 typedef struct {
@@ -56,7 +57,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(2048 + 2048);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 150);
 	for (int i = 0; i < NUM_CREDIT_CATAGORIES; i++) {
 		TextLangParse(&_data->credits[i].name, _data->g_staticBuf, *N(raw_credits)[i].name);
 		if (N(raw_credits)[i].entries) {

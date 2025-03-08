@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #define N(x) scenes_location_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (MAX(STR_AT_TRAIN_STATION_LEN, STR_AT_PLAZA_LEN, STR_AT_MALL_LEN, STR_AT_BEACH_LEN, STR_AT_ARCADE_LEN, STR_AT_CATCAFE_LEN) + STR_CHECK_INBOXES_LEN + STR_BACK_ALLEY_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -53,7 +54,7 @@ const char* N(music)[NUM_LOCATIONS] = {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(2000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_location, _data->g_staticBuf, *N(locations)[sc->data]);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_check_inboxes);

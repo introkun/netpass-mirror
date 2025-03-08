@@ -21,6 +21,7 @@
 #include "../api.h"
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
 
 #define NUM_ENTRIES (NUM_LOCATIONS + 2)
 
@@ -36,7 +37,7 @@ typedef struct {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(2000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN);
 	_data->cursor = 0;
 	TextLangParse(&_data->g_home, _data->g_staticBuf, str_at_home);
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_goto_train_station);
