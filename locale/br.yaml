@@ -30,7 +30,7 @@ str_report_user_hint: 'Kastizañ "%s”'
 str_cancel: 'Nullañ'
 str_submit: 'Kinnig'
 str_back_alley: 'Karreg-vor'
-str_back_alley_message: 'Deomp da chaseal an emgavioù!'
+str_back_alley_message: 'Deomp da chaseal an emgavioù !'
 str_back_alley_pay: "Prenañ un alc’hhouez {playcoin}%d"
 str_check_inboxes: 'Kontrollañ ar voest-keleier'
 str_toggle_titles: 'Diuzit ar c''hoarioù'
@@ -55,7 +55,7 @@ str_update_patches_desc: Evit staliañ reizh NetPass e vo krouet kemmoù sysmodu
   derc'hel {select_button} stouet tra m'emañ ar goñsolenn o elumiñ {power_button}.
   Gallout a rit ober se goude m'eo bet skrivet ar c'hemmoù.
 str_integrations_message: Ne vez ket meret an enlakaadurioù trede gant NetPass. Implijit
-  anezho en ho riskloù!
+  anezho en ho riskloù !
 str_b_cancel: '{b_button} Nullañ'
 str_a_ok: '{a_button} Kadarnaat'
 str_update_patches: Freskaat an difazieroù
@@ -63,5 +63,5 @@ str_update_patches_error_desc: Ur gudenn zo c'hoarvezet e-pad ma oa bet staliet 
   Mar plij, kelaouit ar gudenn war GitLab, GBAtemp pe Discord.https://netpass.cafe/discord
 str_update_patches_poweroff_desc: Difazieroù staliet! Adloc'hañ a raio ho letrin bremañ.
 str_integrations: Enlakaadurioù
-str_report_source: 'Tarzh: %s'
+str_report_source: 'Tarzh : %s'
 str_report_source_unknown: Tarzh dianav
