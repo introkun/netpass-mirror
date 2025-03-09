@@ -50,3 +50,21 @@ str_report_mii_plaza_custom_reply: 'Hans/Hendes budskab: %s'
 str_report_tomodachi_life_island_name: 'Øens navn: %s'
 str_b_go_back: '{b_button} Tilbage'
 str_b_cancel: '{b_button} Annuller'
+str_settings_misc: Diverse
+str_about_reports: Rapporteringssystem
+str_update_patches_desc: For at installere NetPass korrekt vil der nu blive oprettet
+  nogle HHHH patches. For at de skal virke, skal du aktivere "Enable loading external
+  FIRMs and modules" i Luma3DS-indstillingerne. For at få adgang til indstillingerne
+  skal du slukke for konsollen og derefter trykke på {select_button}, mens du tænder
+  {power_button} konsollen. Du kan gøre dette, når patches er skrevet.
+str_update_patches_error_desc: Noget gik galt under opdateringen af patches. Rapporter
+  venligst dette problem på GitLab, GBAtemp eller Discord. https://netpass.cafe/discord
+str_a_ok: '{a_button} Bekræfte'
+str_update_patches: Opdater patches
+str_settings_about: Vedrørende
+str_about_lead_dev: Ledende Udvikler
+str_about_graphics: Kunst og Visuelle
+str_about_music: Musik
+str_about_localisation: Oversættelser
+str_about_netpass_community: NetPass fællesskabet
+str_about_special_thanks: Særligt Tak
