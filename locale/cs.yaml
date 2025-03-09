@@ -31,7 +31,7 @@ str_report_user_hint: 'Nahlásit "%s"'
 str_cancel: 'Zrušit'
 str_submit: 'Odeslat'
 str_back_alley: 'Postranní ulička'
-str_back_alley_message: 'Pojďme si najít nové ''''přátele'''''
+str_back_alley_message: 'Pojďme si najít nové ''''přátele''''!'
 str_back_alley_pay: "Koupit propustku {playcoin}%d"
 str_check_inboxes: 'Zkontrolujte Doručené'
 str_toggle_titles: 'Výběr her'
