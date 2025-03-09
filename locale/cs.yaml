@@ -5,32 +5,32 @@ str_libcurl_date_and_time: 'Ujistěte se, že datum a čas vašeho systému jsou
 str_httpstatus_error: 'HTTP stavový kód %d'
 str_3ds_error: 'Kód chyby 3DS %08lx'
 str_at_home: 'Jste doma.'
-str_goto_train_station: 'Cesta na Vlakové Nádraží'
-str_at_train_station: 'Jste na Vlakové Nádraží.'
-str_goto_plaza: 'Cesta na Tržiště'
-str_at_plaza: 'Jste na Tržiště.'
-str_goto_mall: 'Cesta na Nákupní Středisko'
-str_at_mall: 'Jste na Nákupní Středisko.'
-str_exit: 'Ukončete'
-str_settings: 'Parametry'
+str_goto_train_station: 'Jít na Vlakové nádraží'
+str_at_train_station: 'Jste na Vlakovém nádraží.'
+str_goto_plaza: 'Jít na Tržiště'
+str_at_plaza: 'Jste na Tržišti.'
+str_goto_mall: 'Jít do Nákupního centra'
+str_at_mall: 'Jste v Nákupním centru.'
+str_exit: 'Odejít'
+str_settings: 'Nastavení'
 str_download_data: 'Stáhnout osobní údaje'
 str_delete_data: 'Vymazat osobní údaje'
 str_back: 'Zpět'
 str_language: 'Čeština'
-str_goto_beach: 'Cesta na Pláž'
-str_at_beach: 'Jste na Pláž.'
-str_goto_arcade: 'Cesta na Herna'
-str_at_arcade: 'Jste na Herna.'
-str_goto_catcafe: 'Cesta na Kočičí kavárna'
-str_at_catcafe: 'Jste na Kočičí kavárna.'
-str_system_language: 'Systémový Jazyk'
+str_goto_beach: 'Jít na Pláž'
+str_at_beach: 'Jste na Pláži.'
+str_goto_arcade: 'Jít do Herny'
+str_at_arcade: 'Jste v Herně.'
+str_goto_catcafe: 'Jít do Kočičí kavárny'
+str_at_catcafe: 'Jste v Kočičí kavárně.'
+str_system_language: 'Jazyk systému'
 str_language_pick: 'Jazyk:'
 str_no_location_twice: 'Do stejného místa nelze vstoupit dvakrát za sebou!'
 str_report_user: 'Nahlásit uživatele'
 str_report_user_hint: 'Nahlásit "%s"'
 str_cancel: 'Zrušit'
-str_submit: 'Předložit'
-str_back_alley: 'Alej'
+str_submit: 'Odeslat'
+str_back_alley: 'Postranní ulička'
 str_back_alley_message: 'Pojďme si najít nové ''''přátele'''''
 str_back_alley_pay: "Koupit propustku {playcoin}%d"
 str_check_inboxes: 'Zkontrolujte Doručené'
@@ -41,3 +41,41 @@ str_toggle_titles_on: "(ANO)"
 str_toggle_titles_off: "(NE)"
 str_clear_spr_cache: ''
 str_write_patches: ''
+str_report_mii_name: 'Jméno postavičky Mii: %s'
+str_report_mario_kart_7_greeting: 'Pozdrav: %s'
+str_report_mii_plaza_last_game: 'Naposled spuštěno: %s'
+str_update_patches_desc: Aby se NetPass správně nainstaloval, bude vytvořen upravený
+  sysmodule. K tomu je zapotřebí zapnout funkci "Enable loading external FIRMs and
+  modules" v nastavení Luma3DS. Do něho se dostanete tak, že vypnete konzoli, podržíte
+  {select_button} a při jeho držení konzoli opět zapnete stiskem {power_button}. Můžete
+  to udělat, jakmile se upravený sysmodule uloží.
+str_about_netpass_community: NetPass komunita
+str_report_mii_plaza_country: 'Země: %s - %s'
+str_report_mii_plaza_greeting: 'Pozdrav: %s'
+str_report_mii_plaza_custom_message: 'Vlastní zpráva: %s'
+str_report_mii_plaza_custom_reply: 'Jejich vlastní odpověď: %s'
+str_report_tomodachi_life_island_name: 'Název ostrova: %s'
+str_b_go_back: '{b_button} Zpět'
+str_b_cancel: '{b_button} Zrušit'
+str_a_ok: '{b_button} OK'
+str_update_patches: Aktualizace patchů
+str_update_patches_error_desc: Při aktualizaci patchů se něco pokazilo. Nahlaste to
+  prosím na GitLabu, GBAtempu nebo Discordu. https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Patch byl úspěšně zaktualizován! Konzole se nyní
+  restartuje.
+str_integrations: Integrace
+str_integrations_message: Integrace třetích stran jsou mimo rozsah moderace NetPass
+  týmu. Pouze na vlastní riziko!
+str_report_source: 'Zdroj: %s'
+str_report_source_unknown: Neznámý zdroj
+str_settings_misc: Různé
+str_settings_about: O aplikaci
+str_about_lead_dev: Hlavní vývoj
+str_about_reports: Systém nahlašování
+str_about_graphics: Art a grafika
+str_about_music: Zvuk
+str_about_localisation: Lokalizace
+str_about_special_thanks: Speciální poděkování
+str_about_special_thanks_txt: 3DS homebrew komunita a její reverzní inženýrství a
+  dokumentace
+str_about_production_cat: Produkční čiči
