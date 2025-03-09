@@ -40,3 +40,22 @@ str_back_alley_message: Kumuha pa tayo ng mga passes!
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
 str_toggle_titles: I-toggle ang mga laro
+str_update_patches_error_desc: May naganap na isyu habang ina-update ang mga patch.
+  Pakireport ang isyung ito sa GitLab, GBAtemp, o Discord. https://netpass.cafe/discord
+str_update_patches_desc: Upang maayos na mai-install ang NetPass, maggagawa ngayon
+  ng mga sysmodule patches. Para gumana ang mga ito, kailangan mong i-enable ang "Enable
+  loading external FIRMs and modules" sa settings ng Luma3DS. Upang ma-access ang
+  settings, i-shutdown ang console at pagkatapos ay pindutin ang {select_button} habang
+  binubuksan {power_button} ang console. Maaari itong gawin pagkatapos maisulat ang
+  mga patch.
+str_report_mii_name: 'Pangalan ng Mii: %s'
+str_report_mario_kart_7_greeting: 'Pagbati: %s'
+str_report_mii_plaza_last_game: 'Huling Nilaro: %s'
+str_report_mii_plaza_country: 'Bansa: %s - %s'
+str_report_mii_plaza_greeting: 'Pagbati: %s'
+str_report_mii_plaza_custom_reply: 'Kanilang personal na tugon: %s'
+str_report_mii_plaza_custom_message: 'Iyong personal na mensahe: %s'
+str_report_tomodachi_life_island_name: 'Pangalan ng isla: %s'
+str_b_go_back: '{b_button} Bumalik'
+str_b_cancel: '{b_button} Ikansela'
+str_a_ok: '{a_button} Ok'
