@@ -4,7 +4,7 @@ str_libcurl_date_and_time: 'Sikr dig at dit systems dato og klokkeslæt er indst
   korrekt!'
 str_httpstatus_error: 'HTTP status kode %d'
 str_3ds_error: '3DS fejl kode %08lx'
-str_at_home: 'Du er hjemme.'
+str_at_home: 'Du er Hjemme.'
 str_goto_train_station: 'Tag til Togstationen'
 str_at_train_station: 'Du er på Togstationen.'
 str_goto_plaza: 'Gå ned på Torvet'
@@ -36,12 +36,12 @@ str_back_alley_pay: Køb et pas {playcoin}%d
 str_check_inboxes: Tjek indbakker
 str_toggle_titles_on: (TIL)
 str_toggle_titles_off: (FRA)
-str_toggle_titles: Spil Akt-/Deaktiver
-str_toggle_titles_message: Tryk på {a_button} for Akt-/Deaktiver udveksling af pas.
+str_toggle_titles: Spil De-/Aktivere
+str_toggle_titles_message: Tryk på {a_button} for De-/Aktivere udveksling af pas.
 str_clear_spr_cache: Ryd SPR-Cache
 str_write_patches: Indlæs SPR-Patches
 str_report_mii_name: 'Mii navn: %s'
-str_report_mario_kart_7_greeting: 'Hilsen (MK7): %s'
+str_report_mario_kart_7_greeting: 'Hilsen: %s'
 str_report_mii_plaza_greeting: 'Hilsen: %s'
 str_report_mii_plaza_last_game: 'Sidste Spil: %s'
 str_report_mii_plaza_country: 'Land: %s - %s'
@@ -68,3 +68,10 @@ str_about_music: Musik
 str_about_localisation: Oversættelser
 str_about_netpass_community: NetPass fællesskabet
 str_about_special_thanks: Særligt Tak
+str_update_patches_poweroff_desc: Opdatering af patches vellykket! Din konsol vil
+  nu genstarte.
+str_integrations_message: Tredjepartsintegrationer er uden for NetPass kontrol. Brug
+  dem på egen risiko!
+str_integrations: Integrationer
+str_report_source: 'Kilde: %s'
+str_report_source_unknown: Ukendt kilde
