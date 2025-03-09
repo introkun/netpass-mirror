@@ -55,7 +55,7 @@ str_b_cancel: '{b_button} Annuler'
 str_update_patches: Notes de mise à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
-str_report_source: 'Source: %s'
+str_report_source: 'Source : %s'
 str_update_patches_desc: Pour installer correctement NetPass, des modifications du
   sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent, vous devez
   activer "Enable loading external FIRMs and modules" dans les réglages de Luma3DS.
