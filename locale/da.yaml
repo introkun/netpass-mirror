@@ -31,7 +31,7 @@ str_report_user_hint: Rapport "%s"
 str_cancel: Annuller
 str_submit: Indsend
 str_back_alley: Baggyde
-str_back_alley_message: Lad os fuske nogle flere pas
+str_back_alley_message: Lad os fuske nogle flere pas!
 str_back_alley_pay: Køb et pas {playcoin}%d
 str_check_inboxes: Tjek indbakker
 str_toggle_titles_on: (TIL)
