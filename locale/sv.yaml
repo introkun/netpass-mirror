@@ -26,8 +26,8 @@ str_at_catcafe: 'Du är i Kattkaféet.'
 str_system_language: 'Systemspråk'
 str_language_pick: 'Språk:'
 str_no_location_twice: 'Du kan inte åka till samma destination två gånger i rad!'
-str_report_user: 'Anmäl en användare'
-str_report_user_hint: 'Anmäla "%s"'
+str_report_user: 'Rapportera en användare'
+str_report_user_hint: 'Rapport "%s"'
 str_cancel: 'Annullera'
 str_submit: 'Sända'
 str_back_alley: 'Återvändsgränd'
@@ -65,3 +65,12 @@ str_integrations_message: "Integrationer från tredje part ligger utanför NetPa
   Använd på egen risk!"
 str_report_source: "Källa: %s"
 str_report_source_unknown: "Okänd källa"
+str_settings_misc: Blandad
+str_settings_about: Angående
+str_about_lead_dev: Ledande Utvecklare
+str_about_reports: Rapporteringssystem
+str_about_graphics: Konst och Grafik
+str_about_music: Musik
+str_about_localisation: Språkanpassning
+str_about_netpass_community: Netpass gemenskapen
+str_about_special_thanks: Särskilt Tack
