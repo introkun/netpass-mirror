@@ -31,14 +31,14 @@ str_report_user_hint: 'Nahlásit "%s"'
 str_cancel: 'Zrušit'
 str_submit: 'Odeslat'
 str_back_alley: 'Postranní ulička'
-str_back_alley_message: 'Pojďme si najít nové ''''přátele''''!'
-str_back_alley_pay: "Koupit propustku {playcoin}%d"
-str_check_inboxes: 'Zkontrolujte Doručené'
-str_toggle_titles: 'Výběr her'
+str_back_alley_message: 'Pojďme ti zajistit více passů!'
+str_back_alley_pay: "Koupit pass {playcoin}%d"
+str_check_inboxes: 'Zkontrolovat Příchozí'
+str_toggle_titles: 'Vybrat hry'
 str_toggle_titles_message: "Stisknutím tlačítka {a_button} spustíte nebo zastavíte
-  výměnu průchodů."
-str_toggle_titles_on: "(ANO)"
-str_toggle_titles_off: "(NE)"
+  výměnu passů."
+str_toggle_titles_on: "(ZAP)"
+str_toggle_titles_off: "(VYP)"
 str_clear_spr_cache: ''
 str_write_patches: ''
 str_report_mii_name: 'Jméno postavičky Mii: %s'
