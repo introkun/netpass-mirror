@@ -32,7 +32,7 @@ str_report_user_hint: 'Ziņot "%s"'
 str_cancel: 'Atcelt'
 str_submit: 'Iesniegt'
 str_back_alley: 'Aleja'
-str_back_alley_message: 'Darīsim vēl dažas piespēles'
+str_back_alley_message: 'Darīsim vēl dažas piespēles!'
 str_back_alley_pay: "Iegādāties piespēle {playcoin}%d"
 str_check_inboxes: 'Pārbaudiet iesūtnes'
 str_toggle_titles: 'Pārslēgt Spēles'
