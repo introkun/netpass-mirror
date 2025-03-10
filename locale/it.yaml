@@ -37,7 +37,7 @@ str_toggle_titles_message: Premi {a_button} per iniziare o smettere di scambiare
 str_check_inboxes: Controlla la posta in arrivo
 str_toggle_titles_on: (ON)
 str_toggle_titles_off: (OFF)
-str_toggle_titles: Giochi
+str_toggle_titles: Attiva giochi
 str_write_patches: Installa patch
 str_clear_spr_cache: Pulisci cache spr
 str_report_mii_name: 'Nome Mii: %s'
@@ -66,3 +66,15 @@ str_integrations_message: Le integrazioni di terze parti non vengono moderate da
   Usale a tuo rischio e pericolo!
 str_report_source: 'Fonte: %s'
 str_report_source_unknown: Fonte sconosciuta
+str_settings_misc: Varie
+str_about_graphics: Arte e grafica
+str_settings_about: Info
+str_about_lead_dev: Sviluppatore principale
+str_about_reports: Sistema di segnalazioni
+str_about_music: Musica
+str_about_localisation: Traduzioni
+str_about_netpass_community: La comunità di NetPass
+str_about_special_thanks: Ringraziamenti speciali
+str_about_production_cat: Gatto di produzione
+str_about_special_thanks_txt: La comunità homebrew 3DS per la documentazione e il
+  reverse-engineering
