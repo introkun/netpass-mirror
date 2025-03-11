@@ -66,3 +66,15 @@ str_integrations_message: A harmadik feles integrációk kívül esnek a NetPass
   Használd saját felelőségedre!
 str_report_source: 'Forrás: %s'
 str_report_source_unknown: Ismeretlen forrás
+str_settings_misc: Egyéb
+str_about_netpass_community: A NetPass közösség
+str_settings_about: Névjegy
+str_about_lead_dev: Vezető fejlesztő
+str_about_graphics: Rajz és grafika
+str_about_music: Zene
+str_about_localisation: Fordítás
+str_about_special_thanks: Külön köszönet
+str_about_special_thanks_txt: A 3DS homebrew közösségnek az összes visszafejtésért
+  és dokumentációért
+str_about_reports: Bejelentő rendszer
+str_about_production_cat: Gyártómacska
