@@ -65,3 +65,15 @@ str_update_patches_desc: Aby poprawnie zainstalować NetPass, zostaną teraz utw
   FIRMs and modules” w ustawieniach Luma3DS. Aby uzyskać dostęp do ustawień, wyłącz
   konsolę, a następnie naciśnij {select_button} podczas włączania {power_button} konsoli.
   Możesz to zrobić po zaaplikowaniu łatek.
+str_settings_misc: Różne
+str_about_localisation: Lokalizacja
+str_about_special_thanks_txt: Społeczności 3ds homebrew za całą inżynierie wsteczną
+  i dokumentacje
+str_about_lead_dev: Główny Deweloper
+str_about_reports: System Raportowania
+str_about_graphics: Obrazy i Grafika
+str_about_music: Muzyka
+str_about_netpass_community: Społeczność NetPass
+str_about_special_thanks: Specjalne Podziękowania
+str_about_production_cat: Kot produkcyjny
+str_settings_about: O aplikacji
