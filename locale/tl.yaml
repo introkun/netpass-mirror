@@ -59,3 +59,15 @@ str_report_tomodachi_life_island_name: 'Pangalan ng isla: %s'
 str_b_go_back: '{b_button} Bumalik'
 str_b_cancel: '{b_button} Ikansela'
 str_a_ok: '{a_button} Ok'
+str_report_source: 'Pinagmulan: %s'
+str_update_patches_poweroff_desc: Matagumpay na pag-update ng mga patches! Mag-rerestart
+  na ang iyong console.
+str_integrations: Mga integrasyon
+str_update_patches: I-update ang patches
+str_about_reports: Sistema ng pagsumbong
+str_about_graphics: Sining at Grapiko
+str_about_music: Musika
+str_about_localisation: Lokalisasyon
+str_about_netpass_community: Ang komunidad ng NetPass
+str_about_special_thanks: Espesyal na pagsasalamat
+str_about_production_cat: Pusang produksiyon
