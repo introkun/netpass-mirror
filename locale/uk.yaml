@@ -72,8 +72,11 @@ str_about_localisation: Локалiзацiя
 str_about_netpass_community: Спiльнота NetPass
 str_about_special_thanks: Окрема подяка
 str_about_production_cat: Мила кицька
-str_about_lead_dev: Лідер розробки
+str_about_lead_dev: Лiдер розробки
 str_settings_misc: Iнше
 str_about_graphics: Iлюстрацiї та графiка
 str_about_special_thanks_txt: Homebrew-спiльнотi 3DS за весь реверс-iнжинiринг та
   документацiю
+str_scan_qr: Вiдсканувати QR-код
+str_x_switch_camera: '{x_button} Перемкнути камеру'
+str_prompt_verify: Ви впевненi, що хочете пiдтвердити цю 3DS?
