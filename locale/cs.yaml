@@ -79,3 +79,6 @@ str_about_special_thanks: Speciální poděkování
 str_about_special_thanks_txt: 3DS homebrew komunita a její reverzní inženýrství a
   dokumentace
 str_about_production_cat: Produkční čiči
+str_scan_qr: Naskenujte QR kód
+str_x_switch_camera: '{x_button} Přepnout kameru'
+str_prompt_verify: Opravdu chcete verifikovat toto 3DS?
