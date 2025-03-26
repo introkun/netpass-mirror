@@ -78,3 +78,6 @@ str_about_special_thanks: Agradecimientos Especiales
 str_about_special_thanks_txt: La comunidad homebrew de 3DS por toda la ingeniería
   inversa y la documentación
 str_about_production_cat: Gato de producción
+str_scan_qr: Escanear Código QR
+str_prompt_verify: ¿Estás seguro de que quieres verificar esta 3DS?
+str_x_switch_camera: '{x_button} Cambiar de cámara'
