@@ -77,3 +77,6 @@ str_about_netpass_community: Społeczność NetPass
 str_about_special_thanks: Specjalne Podziękowania
 str_about_production_cat: Kot produkcyjny
 str_settings_about: O aplikacji
+str_scan_qr: Skanuj Kod QR
+str_x_switch_camera: '{x_button} Przełącz Kamerę'
+str_prompt_verify: Jesteś pewien, że chcesz zweryfikować tego 3DS'a?
