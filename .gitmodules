@@ -7,3 +7,6 @@
 [submodule "bcmatools"]
 	path = bcmatools
 	url = https://github.com/LiquidFenrir/bcmatools
+[submodule "source/quirc"]
+	path = source/quirc
+	url = https://github.com/dlbeer/quirc

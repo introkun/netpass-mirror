@@ -24,9 +24,9 @@
 #include <malloc.h>
 #define N(x) scenes_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN)
 
-#define NUM_ENTRIES 6
+#define NUM_ENTRIES 7
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -48,8 +48,9 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_report_user);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_language_pick);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_integrations);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_settings_misc);
-	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_scan_qr);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_settings_misc);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
@@ -75,7 +76,7 @@ void N(render)(Scene* sc) {
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
-	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 	u32 blue = C2D_Color32(0x2B, 0xCF, 0xFF, 0xFF);
 	u32 pink = C2D_Color32(0xF5, 0xAB, 0xB9, 0xFF);
 	u32 white = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
@@ -134,11 +135,16 @@ SceneResult N(process)(Scene* sc) {
 				return scene_push;
 			}
 			if (_data->cursor == 4) {
+				// scan qr
+				sc->next_scene = getScanQrScene();
+				return scene_push;
+			}
+			if (_data->cursor == 5) {
 				// misc settings
 				sc->next_scene = getMiscSettingsScene();
 				return scene_push;
 			}
-			if (_data->cursor == 5) return scene_pop;
+			if (_data->cursor == 6) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

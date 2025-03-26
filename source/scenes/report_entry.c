@@ -21,7 +21,6 @@
 #include "../hmac_sha256/sha256.h"
 #include <stdlib.h>
 #include <malloc.h>
-#include <turbojpeg.h>
 #define N(x) scenes_report_entry_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define SETUP_EXDATA_INIT(a, x) if (!entry->data) break; \

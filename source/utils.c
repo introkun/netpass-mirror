@@ -387,3 +387,19 @@ char* fgets_blk(char* str, int num, FILE* stream) {
 int fputs_blk(const char* str, FILE* stream) {
 	return fwrite_blk((void*)str, strlen(str), 1, stream);
 }
+
+void open_url(char* url) {
+	if (!url) {
+		aptLaunchSystemApplet(APPID_WEB, 0, 0, 0);
+		return;
+	}
+	size_t url_len = strlen(url) + 1;
+	if (url_len > 0x400) return open_url(NULL);
+	size_t buffer_size = url_len + 1;
+	u8* buffer = malloc(buffer_size);
+	if (!buffer) return open_url(NULL);
+	memcpy(buffer, url, url_len);
+	buffer[url_len] = 0;
+	aptLaunchSystemApplet(APPID_WEB, buffer, buffer_size, 0);
+	free(buffer);
+}

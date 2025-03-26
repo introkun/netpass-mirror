@@ -54,6 +54,7 @@ size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream);
 size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream);
 char* fgets_blk(char* str, int num, FILE* stream);
 int fputs_blk(const char* str, FILE* stream);
+void open_url(char* url);
 
 typedef struct {
 	u32 magic; // 0x4F00

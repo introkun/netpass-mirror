@@ -187,7 +187,7 @@ void N(render)(Scene* sc) {
 
 		int x = 10;
 		int y = _data->cursor*25 + 55 + 5;
-		C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+		C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 	}
 }
 

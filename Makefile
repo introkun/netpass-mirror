@@ -34,7 +34,7 @@ include $(DEVKITARM)/3ds_rules
 TARGET			:=	netpass
 OUTDIR			:=	out
 BUILD			:=	build
-SOURCES			:=	source codegen source/scenes source/hmac_sha256
+SOURCES			:=	source codegen source/scenes source/hmac_sha256 source/quirc/lib
 DATA			:=	data
 INCLUDES		:=	include
 GRAPHICS		:=	gfx

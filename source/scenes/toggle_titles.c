@@ -85,7 +85,7 @@ void N(render)(Scene* sc) {
 	
 	int x = 22;
 	int y = _data->cursor*14 + 60 + 3;
-	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 1);
+	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 0);
 }
 
 void N(exit)(Scene* sc) {

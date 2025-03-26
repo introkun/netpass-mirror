@@ -53,7 +53,7 @@ void N(render)(Scene* sc) {
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
-	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+	C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 	u32 blue = C2D_Color32(0x2B, 0xCF, 0xFF, 0xFF);
 	u32 pink = C2D_Color32(0xF5, 0xAB, 0xB9, 0xFF);
 	u32 white = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
