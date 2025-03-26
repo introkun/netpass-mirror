@@ -77,3 +77,6 @@ str_about_production_cat: Милая кошечка
 str_settings_misc: Прочее
 str_about_special_thanks: Отдельная благодарность
 str_about_lead_dev: Лидер разработки
+str_scan_qr: Отсканировать QR-код
+str_prompt_verify: Вы уверены, что хотите подтвердить эту 3DS?
+str_x_switch_camera: '{x_button} Переключить камеру'
