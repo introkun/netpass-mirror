@@ -72,3 +72,6 @@ str_about_production_cat: プロダクションの猫
 str_settings_misc: 他のこと
 str_about_localisation: ローカリゼーション
 str_about_special_thanks_txt: リバースエンジニアリングとドキュメンテーションした3DS Homebrewのコミュニティ
+str_scan_qr: QRコードをスキャンする
+str_x_switch_camera: '{x_button} カメラを変える'
+str_prompt_verify: この3DSを検証するのは本当によろしいですか?
