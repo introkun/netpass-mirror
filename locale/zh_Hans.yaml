@@ -1,6 +1,6 @@
 str_loading: "正在加载    "
 str_libcurl_error: "libCURL 错误 (%d): %s"
-str_libcurl_date_and_time: '请确保你的系统的日期和时间是正确的！'
+str_libcurl_date_and_time: '请确保系统的日期和时间是正确的！'
 str_httpstatus_error: 'HTTP 状态码 %d'
 str_3ds_error: '3DS 错误码 %08lx'
 str_at_home: '你正在家中。'
@@ -24,14 +24,14 @@ str_goto_catcafe: '去猫咪咖啡馆'
 str_at_catcafe: '你正在猫咪咖啡馆里。'
 str_system_language: '系统语言'
 str_language_pick: '语言：'
-str_no_location_twice: '你不能连续两次选择同样的地方！'
+str_no_location_twice: '不能连续两次选择同样的地方！'
 str_report_user_hint: 举报 "%s"
 str_report_user: 举报用户
 str_cancel: 取消
 str_submit: 提交
 str_back_alley_pay: 购买瞬缘连接信息 {playcoin}%d
 str_back_alley: 后巷
-str_back_alley_message: 让我们获取一些新的瞬缘连接吧
+str_back_alley_message: 让我们获取一些新的瞬缘连接吧！
 str_check_inboxes: 检查瞬缘连接收件箱
 str_toggle_titles: 切换游戏
 str_toggle_titles_on: (启用)
@@ -48,3 +48,29 @@ str_report_tomodachi_life_island_name: 岛屿名：%s
 str_report_mario_kart_7_greeting: 问候语：%s
 str_report_mii_plaza_greeting: 问候语：%s
 str_b_go_back: '{b_button} 返回'
+str_x_switch_camera: '{x_button} 切换相机'
+str_prompt_verify: 你确定要验证该3DS吗？
+str_integrations: 集成插件
+str_integrations_message: 第三方集成插件不受NetPass约束。请自行承担使用风险！
+str_report_source: 来源：%s
+str_report_source_unknown: 未知来源
+str_a_ok: '{a_button} 确定'
+str_update_patches: 更新补丁
+str_update_patches_poweroff_desc: 更新补丁成功！主机将会重启。
+str_about_special_thanks_txt: 3DS Homebrew社区对所有逆向工程及文档作出的贡献
+str_about_production_cat: 生产猫猫
+str_about_lead_dev: 首席开发者
+str_settings_misc: 杂项
+str_settings_about: 关于
+str_about_reports: 举报系统
+str_about_graphics: 美术与图像
+str_about_music: 音乐
+str_about_localisation: 本地化
+str_about_netpass_community: NetPass社区
+str_about_special_thanks: 特别鸣谢
+str_scan_qr: 扫描二维码
+str_update_patches_desc: 为了正常安装NetPass，软件将会在系统模块（sysmodule）创建一些补丁。你需要在Luma3DS设置中启用
+  "Enable loading external FIRMs and modules"才能使补丁正常工作。你可以通过关闭主机，按住 {select_button}
+  并开机 {power_button} 的方式打开Luma3DS设置菜单。你可以在补丁写入完成后再进行该操作。
+str_update_patches_error_desc: 更新补丁时出错。请在GitLab、GBAtemp或Discord上报告该问题。https://netpass.cafe/discord
+str_b_cancel: '{b_button} 取消'
