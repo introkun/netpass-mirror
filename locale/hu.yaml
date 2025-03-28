@@ -78,3 +78,6 @@ str_about_special_thanks_txt: A 3DS homebrew közösségnek az összes visszafej
   és dokumentációért
 str_about_reports: Bejelentő rendszer
 str_about_production_cat: Gyártómacska
+str_prompt_verify: Biztos, hogy szeretnéd ellenőrizni ezt a 3DS-t?
+str_scan_qr: QR kód leolvasása
+str_x_switch_camera: '{x_button} Kamera váltása'
