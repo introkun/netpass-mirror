@@ -1,72 +1,82 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
+str_loading: "Yükleniyor · · · ·    "
+str_libcurl_error: "libCURL hatası (%d): %s"
+str_libcurl_date_and_time: 'Sisteminizin tarih ve saatinin doğru ayarlandığından emin
+  olun!'
+str_httpstatus_error: 'HTTP durum kodu %d'
+str_3ds_error: '3DS hata kodu %08lx'
+str_at_home: 'Şu anda evdesiniz.'
+str_goto_train_station: 'Tren istasyonuna git'
+str_at_train_station: 'Tren İstasyonundasınız.'
+str_goto_plaza: 'Plazaya git'
+str_at_plaza: 'Şuan Plazadasınız.'
+str_goto_mall: 'Alışveriş Merkezine Git'
+str_at_mall: 'Alışveriş merkezindesiniz.'
+str_exit: 'Çık'
+str_settings: 'Ayarlar'
+str_download_data: 'Kişisel verilerinizi indirin'
+str_delete_data: 'Kişisel verilerinizi silin'
+str_back: 'Geri'
+str_language: 'Türkçe'
+str_goto_beach: 'Sahile Git'
+str_at_beach: 'Şuan Sahildesiniz.'
+str_goto_arcade: 'Atari salonuna git'
+str_at_arcade: 'Atari salonundasınız.'
+str_goto_catcafe: 'Kedi Kafeye git'
+str_at_catcafe: 'Kedi Kafe''desiniz.'
+str_system_language: 'Sistem Dili'
+str_language_pick: 'Dil:'
+str_no_location_twice: 'Aynı yere arka arkaya iki kez giremezsiniz!'
+str_report_user: 'Bir kullanıcıyı bildirin'
+str_report_user_hint: 'Bildir "%s"'
+str_cancel: 'İptal et'
+str_submit: 'Gönder'
+str_back_alley: 'Arka Sokak'
+str_back_alley_message: 'Biraz daha pass toplayalım!'
+str_back_alley_pay: "Pass satın alın {playcoin}%d"
+str_check_inboxes: 'Gelen Kutusunu Kontrol Et'
+str_toggle_titles: 'Oyun Değiştirme'
+str_toggle_titles_message: "Pass değişimini başlatmak veya durdurmak için {a_button}
+  tuşuna basın."
+str_toggle_titles_on: "(AÇIK)"
+str_toggle_titles_off: "(KAPALI)"
+str_report_mii_name: "Mii ismi: %s"
+str_report_mario_kart_7_greeting: "Selamlama: %s"
+str_report_mii_plaza_last_game: "Son Oyun: %s"
+str_report_mii_plaza_country: "Ülke: %s - %s"
+str_report_mii_plaza_greeting: "Selamlama: %s"
+str_report_mii_plaza_custom_message: "Özel mesajınız: %s"
+str_report_mii_plaza_custom_reply: "Özel yanıtlar: %s"
+str_report_tomodachi_life_island_name: "Ada ismi: %s"
+str_b_go_back: "{b_button} Geri Dön"
+str_b_cancel: "{b_button} İptal"
+str_a_ok: "{a_button} Ok"
+str_update_patches: "Yamaları güncelle"
+str_update_patches_desc: "NetPass'ı düzgün bir şekilde yüklemek için şimdi bazı sysmodule
+  yamaları oluşturulacaktır. Bunların çalışması için Luma3DS ayarlarında “Enable loading
+  external FIRMs and modules” seçeneğini etkinleştirmeniz gerekir. Ayarlara erişmek
+  için konsolu kapatın ve ardından konsolu açarken {power_button} düğmesine basın.
+  Bunu yamalar yapıldıktan sonra yapabilirsiniz."
+str_update_patches_error_desc: "Yamaları güncellerken bir şeyler ters gitti. Lütfen
+  bu sorunu GitLab, GBAtemp veya Discord üzerinden bildirin. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Yamaların güncellenmesi başarılı! Konsolunuz şimdi
+  yeniden başlayacaktır."
+str_integrations: "Entegrasyonlar"
+str_integrations_message: "Üçüncü taraf entegrasyonları NetPass moderasyonunun dışındadır.
+  Riski size ait olmak üzere kullanın!"
+str_report_source: "Kaynak: %s"
+str_report_source_unknown: "Kaynak bilinmiyor"
+str_settings_misc: "Çeşitli"
+str_settings_about: "Hakkında"
+str_about_lead_dev: "Baş Yazılımcı"
+str_about_reports: "Rapor Sistemi"
+str_about_graphics: "Sanat ve Grafik"
+str_about_music: "Müzik"
+str_about_localisation: "Yerelleştirme"
+str_about_netpass_community: "NetPass topluluğu"
+str_about_special_thanks: "Özel Teşekkürler"
+str_about_special_thanks_txt: "Tüm tersine mühendislik ve dokümantasyon için 3DS homebrew
+  topluluğu"
+str_about_production_cat: "Prodiksiyon kedisi"
+str_scan_qr: "QR Kodu Tara"
+str_x_switch_camera: "{x_button} Kamera Değiştir"
+str_prompt_verify: "Bu 3DS'i doğrulamak istediğinizden emin misiniz?"
