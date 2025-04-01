@@ -71,3 +71,14 @@ str_about_localisation: Lokalisasyon
 str_about_netpass_community: Ang komunidad ng NetPass
 str_about_special_thanks: Espesyal na pagsasalamat
 str_about_production_cat: Pusang produksiyon
+str_integrations_message: Ang mga third-party na integrasyon ay wala sa saklaw ng
+  moderasyon ng NetPass. Gamitin ito sa iyong sariling panganib!
+str_report_source_unknown: Lingid na pinanggalingan
+str_settings_misc: Miscellaneous
+str_settings_about: Ukol
+str_about_lead_dev: Nangungunang Developer
+str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa mga reverse-engineering
+  at dokumentasyon
+str_x_switch_camera: '{x_button} Palitan ang Kamera'
+str_prompt_verify: Sigurado ka ba na gusto mong i-verify ang 3DS na ito?
+str_scan_qr: I-scan ang QR Code
