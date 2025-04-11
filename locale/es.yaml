@@ -81,3 +81,7 @@ str_about_production_cat: Gato de producción
 str_scan_qr: Escanear Código QR
 str_prompt_verify: ¿Estás seguro de que quieres verificar esta 3DS?
 str_x_switch_camera: '{x_button} Cambiar de cámara'
+str_continue: Continuar
+str_welcome: Bienvenido a NetPass
+str_view_rules: Ver Reglas
+str_view_privacy: Ver Política de Privacidad
