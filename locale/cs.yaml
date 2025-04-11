@@ -82,3 +82,9 @@ str_about_production_cat: Produkční čiči
 str_scan_qr: Naskenujte QR kód
 str_x_switch_camera: '{x_button} Přepnout kameru'
 str_prompt_verify: Opravdu chcete verifikovat toto 3DS?
+str_welcome: Vítejte v NetPass
+str_welcome_message: Před spuštěním NetPass si nejdříve přečtěte a akceptujte naše
+  pravidla a zásady ochrany osobních údajů.
+str_view_rules: Zobrazit pravidla
+str_view_privacy: Zobrazit zásady ochrany osobních údajů
+str_continue: Pokračovat
