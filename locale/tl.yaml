@@ -74,7 +74,7 @@ str_about_production_cat: Pusang produksiyon
 str_integrations_message: Ang mga third-party na integrasyon ay wala sa saklaw ng
   moderasyon ng NetPass. Gamitin ito sa iyong sariling panganib!
 str_report_source_unknown: Lingid na pinanggalingan
-str_settings_misc: Miscellaneous
+str_settings_misc: Iba pang settings
 str_settings_about: Ukol
 str_about_lead_dev: Nangungunang Developer
 str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa mga reverse-engineering
