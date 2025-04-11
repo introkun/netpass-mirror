@@ -80,3 +80,9 @@ str_settings_about: O aplikacji
 str_scan_qr: Skanuj Kod QR
 str_x_switch_camera: '{x_button} Przełącz Kamerę'
 str_prompt_verify: Jesteś pewien, że chcesz zweryfikować tego 3DS'a?
+str_view_rules: Wyświetl Zasady
+str_view_privacy: Wyświetl Politykę Prywatności
+str_continue: Kontynuuj
+str_welcome: Witaj w NetPass
+str_welcome_message: Przed uruchomiemiem NetPass proszę przeczytać i zaakceptować
+  nasze zasady oraz politykę prywatności.
