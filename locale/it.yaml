@@ -81,3 +81,9 @@ str_about_special_thanks_txt: La comunità homebrew 3DS per la documentazione e 
 str_scan_qr: Scansiona QR Code
 str_x_switch_camera: '{x_button} Cambia fotocamera'
 str_prompt_verify: Sei sicuro di voler verificare questa 3DS?
+str_welcome: Benvenuto su NetPass
+str_welcome_message: Prima di avviare NetPass, ti preghiamo di leggere e accettare
+  sia le nostre regole che la Politica sulla Privacy.
+str_view_rules: Vedi regole
+str_view_privacy: Vedi Politica sulla Privacy
+str_continue: Continua
