@@ -61,8 +61,8 @@ str_update_patches_desc: Zur Vollendung der Installation von NetPass werden ein 
   FIRMs and modules" in den Luma3DS-Einstellungen aktiviert sein. Um dies zu aktivieren,
   halte {select_button} gedrückt, während du deine Konsole startest. Du kannst dies
   auch nach der Installation erledigen.
-str_integrations: Einbindungen
-str_integrations_message: Drittanbieter-Einbindungen werden nicht von NetPass moderiert.
+str_integrations: Integrationen
+str_integrations_message: Drittanbieter-Integrationen werden nicht von NetPass moderiert.
   Benutzung auf eigene Gefahr!
 str_report_source: 'Quelle: %s'
 str_report_source_unknown: Unbekannte Quelle
@@ -81,3 +81,9 @@ str_about_production_cat: Produktions-Katze
 str_scan_qr: QR-Code scannen
 str_prompt_verify: Bist du sicher, dass du diesen 3DS verifizieren willst?
 str_x_switch_camera: '{x_button} Kamera wechseln'
+str_welcome: Willkommen bei NetPass
+str_view_rules: Regeln ansehen
+str_view_privacy: Datenschutzrichtlinien ansehen
+str_continue: Fortfahren
+str_welcome_message: Bevor du mit NetPass starten kannst, lese und akzeptiere bitte
+  unsere Regeln und Datenschutzrichtlinien.
