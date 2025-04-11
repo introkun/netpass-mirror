@@ -1,43 +1,44 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
+str_loading: "Lueden    "
+str_libcurl_error: "libCURL Anomalie (%d): %s"
+str_libcurl_date_and_time: 'Vergewëssert Iech datt den Datum an d''Zäit vun Ärem System
+  richteg agestallt sinn!'
+str_httpstatus_error: 'HTTP Statuscode %d'
+str_3ds_error: '3DS Anomaliecode %08lx'
+str_at_home: 'Dir sidd doheem.'
+str_goto_train_station: 'Gitt an d''Gare'
+str_at_train_station: 'Dir sidd an der Gare.'
+str_goto_plaza: 'Gitt op d''Plaz'
+str_at_plaza: 'Dir sidd op der Plaz.'
+str_goto_mall: 'Gitt an den Akafszenter'
+str_at_mall: 'Dir sidd an um Akafszenter.'
+str_exit: 'Verloossen'
+str_settings: 'Ëmschalten'
+str_download_data: 'Download perséinlech Donnéeën'
+str_delete_data: 'Läsche perséinlech Donnéeën'
+str_back: 'Erëm'
+str_language: 'Lëtzebuergesch'
+str_goto_beach: 'Gitt op d''Plage'
+str_at_beach: 'Dir sidd op der Plage.'
+str_goto_arcade: 'Gitt an d’Arkad'
+str_at_arcade: 'Dir sidd an der Arkad.'
+str_goto_catcafe: 'Gitt an de Bistrokaz'
+str_at_catcafe: 'Dir sidd an um Bistrokaz.'
+str_system_language: 'Systemsprooch'
+str_language_pick: 'Sprooch:'
+str_no_location_twice: 'Dir kënnt net zweemol hannereneen op déi selwecht Plaz goen!'
+str_report_user: 'Mellen e Benotzer'
+str_report_user_hint: 'Melle "%s"'
+str_cancel: 'Ofsoen'
+str_submit: 'Virleeën'
+str_back_alley: 'Schloff'
+str_back_alley_message: 'Loosst eis fir puer méi Spillpäss joen!'
+str_back_alley_pay: "Kaaft e Spillpass {playcoin}%d"
+str_check_inboxes: 'Infokëscht préiwen'
+str_toggle_titles: 'Spiller aschalten oder auszeschalten'
+str_toggle_titles_message: "Dréckt {a_button} fir Spillpäss demarréieren oder ze apaken."
+str_toggle_titles_on: "(JO)"
+str_toggle_titles_off: "(NEE)"
+str_report_mii_name: "Mii Numm: %s"
 str_report_mario_kart_7_greeting: ""
 str_report_mii_plaza_last_game: ""
 str_report_mii_plaza_country: ""
