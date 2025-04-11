@@ -12,7 +12,7 @@ str_at_plaza: 'Dir sidd op der Plaz.'
 str_goto_mall: 'Gitt an den Akafszenter'
 str_at_mall: 'Dir sidd an um Akafszenter.'
 str_exit: 'Verloossen'
-str_settings: 'Ëmschalten'
+str_settings: 'Astellungen'
 str_download_data: 'Download perséinlech Donnéeën'
 str_delete_data: 'Läsche perséinlech Donnéeën'
 str_back: 'Erëm'
@@ -34,45 +34,54 @@ str_back_alley: 'Schloff'
 str_back_alley_message: 'Loosst eis fir puer méi Spillpäss joen!'
 str_back_alley_pay: "Kaaft e Spillpass {playcoin}%d"
 str_check_inboxes: 'Infokëscht préiwen'
-str_toggle_titles: 'Spiller aschalten oder auszeschalten'
+str_toggle_titles: 'Spill aschalten oder ausschalten'
 str_toggle_titles_message: "Dréckt {a_button} fir Spillpäss demarréieren oder ze apaken."
 str_toggle_titles_on: "(JO)"
 str_toggle_titles_off: "(NEE)"
-str_report_mii_name: "Mii Numm: %s"
+str_report_mii_name: "Numm Mii: %s"
 str_report_mario_kart_7_greeting: "Grouss: %s"
 str_report_mii_plaza_last_game: "Lescht Spill: %s"
 str_report_mii_plaza_country: "Land: %s - %s"
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
+str_report_mii_plaza_greeting: "Begréissung: %s"
+str_report_mii_plaza_custom_message: "Äre personaliséiert Begréissung: %s"
+str_report_mii_plaza_custom_reply: "Hir personaliséiert Äntwert: %s"
+str_report_tomodachi_life_island_name: "Numm Insel: %s"
+str_b_go_back: "{b_button} Erëm"
+str_b_cancel: "{b_button} Ofsoen"
+str_a_ok: "{a_button} Okee"
+str_update_patches: "Aktualiséiere Patches"
+str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysmodule
+  Patches elo erstallt. Fir déi ze schaffen, musst Dir \"Enable loading external FIRMs
+  and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze
+  kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
+  d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Patches geschriwwe sinn."
+str_update_patches_error_desc: "Eppes ass falsch gaang beim aktualiséiere vun Patches.
+  Gewisen wannechgelift. dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Aktualiséiere Patches erfollegräich! Är Konsole
+  wäert elo nei ufänken."
+str_integrations: "Integratioun"
+str_integrations_message: "Drëttpartei Integratiounen sinn ausserhalb vun der NetPass
+  Moderatioun. Benotzt op Ären eegene Risiko!"
+str_report_source: "Quell: %s"
+str_report_source_unknown: "Hondsfriem Quell"
+str_settings_misc: "Verschiddenes"
+str_settings_about: "Iwwer"
+str_about_lead_dev: "Haaptentwéckler"
+str_about_reports: "Mellesystem"
+str_about_graphics: "Konscht a Grafiken"
+str_about_music: "Musek"
+str_about_localisation: "Iwwersetzungen"
+str_about_netpass_community: "D'NetPass Gemeinschaft"
+str_about_special_thanks: "Villmools Merci"
+str_about_special_thanks_txt: "D'3DS-Homebrew-Gemeinschaft fir all Nokonstruktioun
+  an Dokumentatioun"
+str_about_production_cat: "Produktioun Kaz"
+str_scan_qr: "QR-Code scannen"
+str_x_switch_camera: "{x_button} Kamera änneren"
+str_prompt_verify: "Sidd Dir sécher datt Dir dës 3DS verifizéiere wëllt?"
+str_welcome: "Wëllkomm op NetPass"
+str_welcome_message: "Ier Dir NetPass ufänkt, liest wannechgelift. eis Regelen a Privatsphär
+  Politik."
+str_view_rules: "Gesi Regelen"
+str_view_privacy: "Gesi Privatsphär Politik"
+str_continue: "Weidergoen"
