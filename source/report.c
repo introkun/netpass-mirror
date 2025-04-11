@@ -100,7 +100,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 			entry->mii = malloc(sizeof(MiiData));
 			if (entry->mii) {
 				Result r = decryptMii(&cfpb->nonce, entry->mii);
-				if (R_FAILED(r) || entry->mii->magic != 3) {
+				if (R_FAILED(r) || entry->mii->version != 3) {
 					free(entry->mii);
 					entry->mii = 0;
 				}
@@ -286,12 +286,12 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
 			if (body->cfpb.magic == 0x42504643) {
-				int prev_mii_id = e->mii.magic == 3 ? e->mii.mii_id : 0;
+				int prev_mii_id = e->mii.version == 3 ? e->mii.mii_id : 0;
 				Result r = decryptMii(&body->cfpb.nonce, &e->mii);
 				if (!R_FAILED(r) && prev_mii_id != e->mii.mii_id) edited = true;
 			}
 		}
-	} else if (e->mii.magic != 3) {
+	} else if (e->mii.version != 3) {
 		// search if there is a mii in this payload
 		CFPB* cfpb = (CFPB*)memsearch(((u8*)msg) + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
 		if (cfpb) {

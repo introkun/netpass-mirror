@@ -36,7 +36,7 @@ int main() {
 	amInit();
 	nsInit();
 	aptInit();
-	frdInit();
+	frdInit(false);
 	fsInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
@@ -121,6 +121,11 @@ int main() {
 	if (_PATCHES_VERSION_ > config.patches_version) {
 		printf("New patches version to apply!\n");
 		scene = getUpdatePatchesScene(scene);
+	}
+	
+	if (_WELCOME_VERSION_ > config.welcome_version) {
+		printf("New Welcome Screen to show!\n");
+		scene = getWelcomeScene(scene);
 	}
 
 	scene->init(scene);

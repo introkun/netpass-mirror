@@ -20,9 +20,9 @@
 #include "about.h"
 #define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_BACK_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_BACK_LEN)
 
-#define NUM_ENTRIES 5
+#define NUM_ENTRIES 7
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -41,7 +41,9 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_download_data);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_delete_data);
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_update_patches);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_view_privacy);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_view_rules);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
 }
 
 void N(render)(Scene* sc) {
@@ -125,7 +127,13 @@ SceneResult N(process)(Scene* sc) {
 				sc->next_scene = getUpdatePatchesScene(NULL);
 				return scene_push;
 			}
-			if (_data->cursor == 4) return scene_pop;
+			if (_data->cursor == 4) {
+				open_url(PRIVACY_URL);
+			}
+			if (_data->cursor == 5) {
+				open_url(RULES_URL);
+			}
+			if (_data->cursor == 6) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

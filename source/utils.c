@@ -227,7 +227,7 @@ Result decryptMii(void* data, MiiData* mii) {
 	MiiData* out = malloc(sizeof(MiiData) + 4);
 	Result res = APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out);
 	if (R_FAILED(res)) goto error;
-	if (out->magic != 0x03) {
+	if (out->version != 0x03) {
 		res = -1;
 		goto error;
 	}

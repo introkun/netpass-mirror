@@ -44,6 +44,7 @@ Config config = {
 	.month = 0,
 	.day = 0,
 	.price = 0,
+	.welcome_version = 0,
 	.patches_version = 0,
 };
 
@@ -125,6 +126,9 @@ void load(void) {
 		if (strcmp(key, "PRICE") == 0) {
 			config.price = atoi(value);
 		}
+		if (strcmp(key, "WELCOME_VERSION") == 0) {
+			config.welcome_version = atoi(value);
+		}
 		if (strcmp(key, "PATCHES_VERSION") == 0) {
 			config.patches_version = atoi(value);
 		}
@@ -168,11 +172,13 @@ void configWrite(void) {
 	fputs_blk(line, f);
 	snprintf(line, 250, "year=%d\n", config.year);
 	fputs_blk(line, f);
-	snprintf(line, 250, "month=%d\n", config.month);
+	snprintf(line, 250, "montconfig.h=%d\n", config.month);
 	fputs_blk(line, f);
 	snprintf(line, 250, "day=%d\n", config.day);
 	fputs_blk(line, f);
 	snprintf(line, 250, "price=%ld\n", config.price);
+	fputs_blk(line, f);
+	snprintf(line, 250, "welcome_version=%d\n", config.welcome_version);
 	fputs_blk(line, f);
 	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
 	fputs_blk(line, f);

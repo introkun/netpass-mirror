@@ -65,3 +65,4 @@ Scene* processScene(Scene* scene);
 #include "scenes/switch.h"
 #include "scenes/toggle_titles.h"
 #include "scenes/update_patches.h"
+#include "scenes/welcome.h"
