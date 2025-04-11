@@ -85,3 +85,5 @@ str_continue: Continuar
 str_welcome: Bienvenido a NetPass
 str_view_rules: Ver Reglas
 str_view_privacy: Ver Política de Privacidad
+str_welcome_message: Antes de iniciar NetPass, por favor lee y acepta nuestras reglas
+  y política de privacidad.
