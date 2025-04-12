@@ -1,9 +1,9 @@
 str_loading: "Lueden    "
-str_libcurl_error: "libCURL Anomalie (%d): %s"
+str_libcurl_error: "libCURL Iertum (%d): %s"
 str_libcurl_date_and_time: 'Vergewëssert Iech datt den Datum an d''Zäit vun Ärem System
   richteg agestallt sinn!'
 str_httpstatus_error: 'HTTP Statuscode %d'
-str_3ds_error: '3DS Anomaliecode %08lx'
+str_3ds_error: '3DS Iertumcode %08lx'
 str_at_home: 'Dir sidd doheem.'
 str_goto_train_station: 'Gitt an d''Gare'
 str_at_train_station: 'Dir sidd an der Gare.'
@@ -73,9 +73,9 @@ str_about_music: "Musek"
 str_about_localisation: "Iwwersetzungen"
 str_about_netpass_community: "D'NetPass Gemeinschaft"
 str_about_special_thanks: "Villmools Merci"
-str_about_special_thanks_txt: "D'3DS-Homebrew-Gemeinschaft fir all Nokonstruktioun
+str_about_special_thanks_txt: "D'3DS-Homebrew-Gemeinschaft fir all Rétro-konstruktion
   an Dokumentatioun"
-str_about_production_cat: "Produktioun Kaz"
+str_about_production_cat: "Produktioun Muuss"
 str_scan_qr: "QR-Code scannen"
 str_x_switch_camera: "{x_button} Kamera änneren"
 str_prompt_verify: "Sidd Dir sécher datt Dir dës 3DS verifizéiere wëllt?"
