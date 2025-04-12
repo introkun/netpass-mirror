@@ -29,7 +29,7 @@ str_cancel: キャンセル
 str_report_user: ユーザーを報告する
 str_report_user_hint: '"%s" を報告する'
 str_submit: 送信する
-str_back_alley_message: 今すぐすれちがいを購入する
+str_back_alley_message: 今すぐすれちがいを購入する!
 str_back_alley_pay: パスを購入する {playcoin}%d
 str_back_alley: 路地裏
 str_toggle_titles: ゲームを切り替える
@@ -75,3 +75,8 @@ str_about_special_thanks_txt: リバースエンジニアリングとドキュ�
 str_scan_qr: QRコードをスキャンする
 str_x_switch_camera: '{x_button} カメラを変える'
 str_prompt_verify: この3DSを検証するのは本当によろしいですか?
+str_welcome_message: NetPassを使って始める前に、利用規約とプライバシーポリシーを読んでください。
+str_view_rules: 利用規約を見る
+str_view_privacy: プライバシーポリシーを見る
+str_continue: 続ける
+str_welcome: NetPassへようこそ
