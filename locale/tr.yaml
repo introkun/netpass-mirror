@@ -80,3 +80,9 @@ str_about_production_cat: "Prodiksiyon kedisi"
 str_scan_qr: "QR Kodu Tara"
 str_x_switch_camera: "{x_button} Kamera Değiştir"
 str_prompt_verify: "Bu 3DS'i doğrulamak istediğinizden emin misiniz?"
+str_welcome: NetPass'e Hoşgeldiniz
+str_welcome_message: NetPass'i başlatmadan önce lütfen kurallarımızı ve gizlilik politikamızı
+  okuyun ve kabul edin.
+str_view_rules: Kuralları Görüntüle
+str_view_privacy: Gizlilik Politikasını Görüntüle
+str_continue: Devam et
