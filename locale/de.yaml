@@ -75,7 +75,7 @@ str_about_music: Musik
 str_about_localisation: Lokalisierung
 str_about_netpass_community: Die NetPass-Community
 str_about_special_thanks: Besonderen Dank
-str_about_special_thanks_txt: Die 3DS-Homebrew-Community für all das Nachkonstruktion
+str_about_special_thanks_txt: Die 3DS-Homebrew-Community für all das Reverse-Engineering
   und die Dokumentation
 str_about_production_cat: Produktions-Katze
 str_scan_qr: QR-Code scannen
