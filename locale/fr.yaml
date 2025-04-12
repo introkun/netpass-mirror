@@ -77,7 +77,7 @@ str_about_localisation: Localisation
 str_about_special_thanks: Remerciments
 str_settings_misc: Divers
 str_about_music: Musique
-str_about_netpass_community: Communauté NetPass
+str_about_netpass_community: La communauté NetPass
 str_scan_qr: Scannez le QR Code
 str_x_switch_camera: '{x_button} Changer de caméra'
 str_prompt_verify: Êtes-vous sûr de vouloir vérifier cette 3DS ?
