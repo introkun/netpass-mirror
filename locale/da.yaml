@@ -53,8 +53,8 @@ str_b_cancel: '{b_button} Annuller'
 str_settings_misc: Diverse
 str_about_reports: Rapporteringssystem
 str_update_patches_desc: For at installere NetPass korrekt vil der nu blive oprettet
-  nogle HHHH patches. For at de skal virke, skal du aktivere "Enable loading external
-  FIRMs and modules" i Luma3DS-indstillingerne. For at få adgang til indstillingerne
+  nogle sysmodule patches. For at de skal virke, skal du aktivere "Enable loading
+  external FIRMs and modules" i Luma3DS-indstillingerne. For at få adgang til indstillingerne
   skal du slukke for konsollen og derefter trykke på {select_button}, mens du tænder
   {power_button} konsollen. Du kan gøre dette, når patches er skrevet.
 str_update_patches_error_desc: Noget gik galt under opdateringen af patches. Rapporter
