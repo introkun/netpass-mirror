@@ -1,4 +1,4 @@
-str_loading: "Lastning    "
+str_loading: "Laddar    "
 str_libcurl_error: "libCURL fel (%d): %s"
 str_libcurl_date_and_time: 'Kontrollera att datum och tid är korrekt inställda i ditt
   system!'
@@ -9,8 +9,8 @@ str_goto_train_station: 'Gå till Järnvägsstationen'
 str_at_train_station: 'Du är vid Järnvägsstationen.'
 str_goto_plaza: 'Gå ner till Torget'
 str_at_plaza: 'Du är på Torget.'
-str_goto_mall: 'Gå till Esplanaden'
-str_at_mall: 'Du är på Esplanaden.'
+str_goto_mall: 'Gå till Köpcentrum'
+str_at_mall: 'Du är på Köpcentret.'
 str_exit: 'Stänga'
 str_settings: 'Inställning'
 str_download_data: 'Ladda ner personuppgifter'
@@ -30,12 +30,12 @@ str_report_user: 'Rapportera en användare'
 str_report_user_hint: 'Rapport "%s"'
 str_cancel: 'Annullera'
 str_submit: 'Sända'
-str_back_alley: 'Återvändsgränd'
-str_back_alley_message: 'Vi förfalskar fler spelpass!'
+str_back_alley: 'Bakgränd'
+str_back_alley_message: 'Vi får vi fram lite fler spelpass!'
 str_back_alley_pay: "Köp ett spelpass {playcoin}%d"
 str_check_inboxes: 'Kontrollera Inkorgar'
 str_toggle_titles: 'Spel In-/aktivera'
-str_toggle_titles_message: "Tryck på {a_button} för att slå på eller stoppa bytet
+str_toggle_titles_message: "Tryck på {a_button} för att slå på eller stoppa utbytet
   av spelpass."
 str_toggle_titles_on: "(PÅ)"
 str_toggle_titles_off: "(AV)"
@@ -52,10 +52,10 @@ str_b_cancel: "{b_button} Annullera"
 str_a_ok: "{a_button} Okej"
 str_update_patches: "Uppdatera programfixar"
 str_update_patches_desc: "För att korrekt installera NetPass kommer vissa sysmodule
-  programfixar att skapas nu. För att de ska fungera måste du aktivera ”Enable loading
+  programmfixar att skapas nu. För att de ska fungera måste du aktivera ”Enable loading
   external FIRMs and modules” i Luma3DS inställningarna. För att komma åt inställningarna,
   stäng av konsolen och tryck sedan på {select_button} medan du slår på {power_button}
-  konsolen. Du kan göra detta efter att programfixarna är skrivna."
+  konsolen. Du kan göra detta efter att programmfixarna är skrivna."
 str_update_patches_error_desc: "Något gick fel under uppdateringen av programfixar.
   Vänligen rapportera detta problem på GitLab, GBAtemp eller Discord.https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Uppdatering av programfixar framgångsrik! Din konsol
@@ -65,8 +65,8 @@ str_integrations_message: "Integrationer från tredje part ligger utanför NetPa
   Använd på egen risk!"
 str_report_source: "Källa: %s"
 str_report_source_unknown: "Okänd källa"
-str_settings_misc: Blandad
-str_settings_about: Angående
+str_settings_misc: Blandat
+str_settings_about: Om
 str_about_lead_dev: Ledande Utvecklare
 str_about_reports: Rapporteringssystem
 str_about_graphics: Konst och Grafik
@@ -76,3 +76,13 @@ str_about_netpass_community: Netpass gemenskapen
 str_about_special_thanks: Särskilt Tack
 str_about_special_thanks_txt: 3DS homebrew community för all baklängeskonstruktion
   och dokumentation.
+str_about_production_cat: Produktionskatt
+str_scan_qr: Scanna QR-kod
+str_x_switch_camera: '{x_button} Byt kamera'
+str_prompt_verify: Är du säker på att du vill verifiera den här 3DS?
+str_welcome: Välkommen till NetPass
+str_welcome_message: Innan du slå på NetPass bör du läsa och godkänna våra regler
+  och vår integritetspolicy.
+str_view_rules: Se regler
+str_view_privacy: Se Integritetspolicy
+str_continue: Fortsätta
