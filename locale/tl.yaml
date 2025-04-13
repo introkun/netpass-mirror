@@ -82,3 +82,9 @@ str_about_special_thanks_txt: Ang komunidad ng 3DS homebrew para sa mga reverse-
 str_x_switch_camera: '{x_button} Palitan ang Kamera'
 str_prompt_verify: Sigurado ka ba na gusto mong i-verify ang 3DS na ito?
 str_scan_qr: I-scan ang QR Code
+str_welcome_message: Bago simulan ang NetPass, pakiusap na basahin at tanggapin ang
+  aming mga alituntunin at patakaran sa privacy.
+str_view_rules: Tignan ang mga Alituntunin
+str_view_privacy: Tingnan ang Patakaran sa privacy
+str_continue: Magpatuloy
+str_welcome: Maligayang pagdating sa NetPass
