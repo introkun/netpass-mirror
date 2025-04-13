@@ -34,7 +34,7 @@ str_back_alley: 'Schloff'
 str_back_alley_message: 'Loosst eis fir puer méi Spillpäss joen!'
 str_back_alley_pay: "Kaaft e Spillpass {playcoin}%d"
 str_check_inboxes: 'Infokëscht préiwen'
-str_toggle_titles: 'Spill aschalten oder ausschalten'
+str_toggle_titles: 'Aschalten oder ausschalte spiller'
 str_toggle_titles_message: "Dréckt {a_button} fir Spillpäss demarréieren oder ze apaken."
 str_toggle_titles_on: "(JO)"
 str_toggle_titles_off: "(NEE)"
