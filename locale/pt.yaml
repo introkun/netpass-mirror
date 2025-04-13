@@ -78,3 +78,12 @@ str_about_special_thanks: Agradecimentos Especiais
 str_about_production_cat: Gato de produção
 str_about_special_thanks_txt: A comunidade homebrew do 3DS por toda a engenharia-reversa
   e documentação
+str_scan_qr: Escanear Código QR
+str_prompt_verify: Tem certeza de que deseja verificar esse 3DS?
+str_x_switch_camera: '{x_button} Mudar de Câmera'
+str_welcome: Bem-vindo(a) ao NetPass
+str_welcome_message: Antes de iniciar o NetPass, por favor leia e aceite nossas regras
+  & política de privacidade.
+str_view_rules: Ver Regras
+str_view_privacy: Ver Política de Privacidade
+str_continue: Continuar
