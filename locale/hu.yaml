@@ -81,3 +81,9 @@ str_about_production_cat: Gyártómacska
 str_prompt_verify: Biztos, hogy szeretnéd ellenőrizni ezt a 3DS-t?
 str_scan_qr: QR kód leolvasása
 str_x_switch_camera: '{x_button} Kamera váltása'
+str_welcome: Üdvözlünk a NetPass-ban
+str_welcome_message: Mielőtt használod a NetPass-t, kérjük olvasd el és fogadd el
+  a szabályainkat és adatvédelmi szabályzatunkat.
+str_view_rules: Szabályok megtekintése
+str_view_privacy: Adatvédelmi szabályzat megtekintése
+str_continue: Tovább
