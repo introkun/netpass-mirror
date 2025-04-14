@@ -21,8 +21,8 @@ str_goto_beach: 'Gitt op d''Plage'
 str_at_beach: 'Dir sidd op der Plage.'
 str_goto_arcade: 'Gitt an d’Arkad'
 str_at_arcade: 'Dir sidd an der Arkad.'
-str_goto_catcafe: 'Gitt an de Bistrokaz'
-str_at_catcafe: 'Dir sidd an um Bistrokaz.'
+str_goto_catcafe: 'Gitt an d’Kazbistro'
+str_at_catcafe: 'Dir sidd an der Kazbistro.'
 str_system_language: 'Systemsprooch'
 str_language_pick: 'Sprooch:'
 str_no_location_twice: 'Dir kënnt net zweemol hannereneen op déi selwecht Plaz goen!'
@@ -73,9 +73,9 @@ str_about_music: "Musek"
 str_about_localisation: "Iwwersetzungen"
 str_about_netpass_community: "D'NetPass Gemeinschaft"
 str_about_special_thanks: "Villmools Merci"
-str_about_special_thanks_txt: "D'3DS-Homebrew-Gemeinschaft fir all Rétro-konstruktion
+str_about_special_thanks_txt: "D'3DS Homebrew-Gemeinschaft fir all Rétro-konstruktion
   an Dokumentatioun"
-str_about_production_cat: "Produktioun Muuss"
+str_about_production_cat: "Produktioun-Muuss"
 str_scan_qr: "QR-Code scannen"
 str_x_switch_camera: "{x_button} Kamera änneren"
 str_prompt_verify: "Sidd Dir sécher datt Dir dës 3DS verifizéiere wëllt?"
