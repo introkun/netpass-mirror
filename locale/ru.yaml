@@ -35,8 +35,8 @@ str_back_alley: Переулок
 str_back_alley_pay: Купить "пасс" {playcoin}%d
 str_check_inboxes: Проверить входящие данные
 str_toggle_titles: Переключить игры
-str_toggle_titles_on: (ВКЛЮЧЕНО)
-str_toggle_titles_off: (ВЫКЛЮЧЕНО)
+str_toggle_titles_on: (Вкл)
+str_toggle_titles_off: (Выкл)
 str_toggle_titles_message: Нажмите {a_button}, чтобы начать или остановить обмен "пассами".
 str_report_mii_name: 'Имя Mii: %s'
 str_report_mii_plaza_greeting: 'Приветствие: %s'
@@ -54,7 +54,7 @@ str_report_source: 'Источник: %s'
 str_report_source_unknown: Неизвестный источник
 str_b_cancel: '{b_button} Отмена'
 str_a_ok: '{a_button} ОК'
-str_update_patches: Обновить патчи
+str_update_patches: Обновление патчей
 str_update_patches_error_desc: 'При обновлении патчей что-то пошло не так. Пожалуйста,
   сообщите об этой проблеме на GitLab, GBAtemp или в Discord: netpass.cafe/discord'
 str_update_patches_poweroff_desc: Патчи успешно обновлены! Сейчас ваша консоль перезагрузится.
@@ -80,3 +80,9 @@ str_about_lead_dev: Лидер разработки
 str_scan_qr: Отсканировать QR-код
 str_prompt_verify: Вы уверены, что хотите подтвердить эту 3DS?
 str_x_switch_camera: '{x_button} Переключить камеру'
+str_welcome: Добро пожаловать в NetPass
+str_welcome_message: Перед запуском NetPass, пожалуйста, прочитайте и примите наши
+  правила и политику конфиденциальности.
+str_view_rules: Просмотреть правила
+str_view_privacy: Просмотреть политику конфиденциальности
+str_continue: Далее
