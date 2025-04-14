@@ -1,6 +1,7 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome, SunOfLife1
+ * Copyright (C) 2024, 2025 Sorunome
+                 2024 SunOfLife1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +25,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <ctype.h>
+#include <dirent.h>
+#include "boss.h"
 
-static const char config_path[] = "/config/netpass/netpass.cfg";
+#define PATCHES_COPY_DSTDIR "sdmc:/luma/sysmodules/"
+#define PATCHES_COPY_SRCDIR "romfs:/patches/"
+#define SPRELAY_TITLE_ID 0x0004013000003400ll
+#define SPRELAY_TASK_ID "sprelay"
+
+static const char config_path[] = "sdmc:/config/netpass/netpass.cfg";
 
 Config config = {
 	.last_location = -1,
@@ -34,6 +44,8 @@ Config config = {
 	.month = 0,
 	.day = 0,
 	.price = 0,
+	.welcome_version = 0,
+	.patches_version = 0,
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -67,9 +79,12 @@ bool isTitleIgnored(u32 title_id) {
 
 void load(void) {
 	FILE* f = fopen(config_path, "r");
-	if (!f) return;
+	if (!f) {
+		perror("Error");
+		return;
+	}
 	char line[200];
-	while (fgets(line, 200, f)) {
+	while (fgets_blk(line, 200, f)) {
 		char* separator = strchr(line, '=');
 		if (!separator) continue;
 		char* key = line;
@@ -111,6 +126,12 @@ void load(void) {
 		if (strcmp(key, "PRICE") == 0) {
 			config.price = atoi(value);
 		}
+		if (strcmp(key, "WELCOME_VERSION") == 0) {
+			config.welcome_version = atoi(value);
+		}
+		if (strcmp(key, "PATCHES_VERSION") == 0) {
+			config.patches_version = atoi(value);
+		}
 		if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
 			// Open mbox_list now to avoid repeatedly doing it later
 			Result res = 0;
@@ -141,24 +162,33 @@ void load(void) {
 
 void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
+	if (!f) {
+		printf("Error, meh\n");
+		perror("Error");
+		return;
+	}
 	char line[250];
 	snprintf(line, 250, "last_location=%d\n", config.last_location);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "year=%d\n", config.year);
-	fputs(line, f);
-	snprintf(line, 250, "month=%d\n", config.month);
-	fputs(line, f);
+	fputs_blk(line, f);
+	snprintf(line, 250, "montconfig.h=%d\n", config.month);
+	fputs_blk(line, f);
 	snprintf(line, 250, "day=%d\n", config.day);
-	fputs(line, f);
+	fputs_blk(line, f);
 	snprintf(line, 250, "price=%ld\n", config.price);
-	fputs(line, f);
+	fputs_blk(line, f);
+	snprintf(line, 250, "welcome_version=%d\n", config.welcome_version);
+	fputs_blk(line, f);
+	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
+	fputs_blk(line, f);
 	if (config.language == -1) {
-		fputs("language=system\n", f);
+		fputs_blk("language=system\n", f);
 	} else {
 		for (int i = 0; i < NUM_LANGUAGES; i++) {
 			if (config.language == all_languages[i]) {
 				snprintf(line, 250, "language=%s\n", all_languages_str[i]);
-				fputs(line, f);
+				fputs_blk(line, f);
 				break;
 			}
 		}
@@ -168,7 +198,7 @@ void configWrite(void) {
 		snprintf(line + 18 + (9*i), 250 - (18 + (9*i)), "%08lx,", config.title_ids_ignored[i]);
 	}
 	snprintf(line + 18 + (9*24), 250 - (18 + (9*24)), "\n");
-	fputs(line, f);
+	fputs_blk(line, f);
 	
 	fclose(f);
 }
@@ -176,4 +206,74 @@ void configWrite(void) {
 void configInit(void) {
 	mkdir_p((char*)config_path);
 	load();
+}
+
+bool writePatches(void) {
+	mkdir_p(PATCHES_COPY_DSTDIR);
+	printf("Copying sysmodules...\n");
+	DIR* d = opendir(PATCHES_COPY_SRCDIR);
+	if (!d) {
+		printf("ERROR: src dir not found\n");
+		return false;
+	}
+	void* buffer = malloc(0x4000);
+	if (!buffer) {
+		printf("ERROR: malloc\n");
+		return false;
+	}
+	struct dirent* p;
+	char srcpath[100];
+	char dstpath[100];
+	while ((p = readdir(d))) {
+		snprintf(srcpath, 100, "%s%s", PATCHES_COPY_SRCDIR, p->d_name);
+		snprintf(dstpath, 100, "%s%s", PATCHES_COPY_DSTDIR, p->d_name);
+		struct stat statbuf;
+		if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
+			// ok we actually have a file, copy it
+			printf("%s...", p->d_name);
+			FILE* src = fopen(srcpath, "rb");
+			FILE* dst = fopen(dstpath, "wb+");
+			if (!src || !dst) {
+				if (src) fclose(src);
+				if (dst) fclose(dst);
+				printf("ERROR: open\n");
+				continue;
+			}
+			size_t len = fread(buffer, 1, 0x4000, src);
+			if (!len) {
+				fclose(src);
+				fclose(dst);
+				printf("ERROR: read\n");
+				continue;
+			}
+			if (!fwrite(buffer, len, 1, dst)) {
+				fclose(src);
+				fclose(dst);
+				printf("ERROR: write\n");
+				continue;
+			}
+			fclose(src);
+			fclose(dst);
+
+			printf("Done\n");
+		}
+	}
+	closedir(d);
+	printf("Updating patches version in config...");
+	config.patches_version = _PATCHES_VERSION_;
+	configWrite();
+	printf("Done\nCopying sysmodules done\n");
+	free(buffer);
+	return true;
+}
+
+void clearBossCacheAndReboot(void) {
+	printf("Clearing spr cache...");
+	bossInit(SPRELAY_TITLE_ID, false);
+	bossUnregisterTask(SPRELAY_TASK_ID, 0);
+	bossUnregisterTask(SPRELAY_TASK_ID, 0);
+	printf("Done\n");
+	nsInit();
+	NS_RebootSystem();
+	printf("Rebooting system...\n");
 }

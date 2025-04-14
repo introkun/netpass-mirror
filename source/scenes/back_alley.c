@@ -23,6 +23,7 @@
 #include <time.h>
 #define N(x) scenes_back_alley_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
+#define TEXT_BUF_LEN (STR_BACK_ALLEY_PAY_LEN + STR_BACK_ALLEY_LEN + STR_BACK_ALLEY_MESSAGE_LEN + STR_BACK_LEN)
 #define MAX_PRICE 10
 
 typedef struct {
@@ -147,7 +148,7 @@ void N(init)(Scene* sc) {
 	if (!_data) return;
 	
 	if (!N(init_playcoins)(sc)) return;
-	_data->g_staticBuf = C2D_TextBufNew(2000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12*24);
 	if (!N(init_gamelist)(sc)) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data->play_coins);
@@ -186,7 +187,7 @@ void N(render)(Scene* sc) {
 
 		int x = 10;
 		int y = _data->cursor*25 + 55 + 5;
-		C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 1);
+		C2D_DrawTriangle(x, y, clr, x, y + 18, clr, x + 15, y + 9, clr, 0);
 	}
 }
 
@@ -232,6 +233,7 @@ SceneResult N(process)(Scene* sc) {
 			if (kDown & KEY_B) return scene_pop;
 		}
 	}
+	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }

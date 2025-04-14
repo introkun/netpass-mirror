@@ -64,7 +64,7 @@ void N(init)(Scene* sc) {
 void N(render)(Scene* sc) {
 	if (!_data) return;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, 10, 0, 0.5, 0.5);
-	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft, 10, 35, 0, 0.5, 0.5);
+	C2D_DrawText(&_data->g_subtext, C2D_AlignLeft | C2D_WordWrap, 10, 35, 0, 0.5, 0.5, 270.);
 }
 
 void N(exit)(Scene* sc) {

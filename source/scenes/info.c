@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024, 2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 #include "info.h"
 #include <stdlib.h>
-#define N(x) scenes_scene_namespace_##x
+#define N(x) scenes_info_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define WIDTH_SCR 400
 #define HEIGHT_SCR 240
@@ -29,6 +29,7 @@
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_info;
+	C2D_Text g_a_ok;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -36,11 +37,13 @@ void N(init)(Scene* sc) {
 	if (!_data) return;
 	_data->g_staticBuf = C2D_TextBufNew(2000);
 	TextLangParse(&_data->g_info, _data->g_staticBuf, (void*)sc->data);
+	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
 }
 
 void N(render)(Scene* sc) {
 	C2D_DrawRectSolid(MARGIN, MARGIN, 0, WIDTH, HEIGHT, C2D_Color32(0xCC, 0xCC, 0xCC, 0xFF));
-	C2D_DrawText(&_data->g_info, C2D_AlignLeft, MARGIN + 5, MARGIN + 5, 0, 0.5, 0.5);
+	C2D_DrawText(&_data->g_info, C2D_AlignLeft | C2D_WordWrap, MARGIN + 5, MARGIN + 5, 0, 1, 1, (WIDTH - 2*MARGIN - 10) * 1.f);
+	C2D_DrawText(&_data->g_a_ok, C2D_AlignRight, MARGIN + WIDTH - 5, MARGIN + HEIGHT - 30, 0, 1, 1);
 }
 
 void N(exit)(Scene* sc) {
@@ -53,7 +56,7 @@ void N(exit)(Scene* sc) {
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
-	if (kDown & KEY_A) return scene_pop;
+	if (kDown & KEY_A || kDown & KEY_B) return scene_pop;
 	return scene_continue;
 }
 

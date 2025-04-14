@@ -227,7 +227,7 @@ Result decryptMii(void* data, MiiData* mii) {
 	MiiData* out = malloc(sizeof(MiiData) + 4);
 	Result res = APT_Unwrap(0x70, data, 12, 10, sizeof(MiiData) + 4, out);
 	if (R_FAILED(res)) goto error;
-	if (out->magic != 0x03) {
+	if (out->version != 0x03) {
 		res = -1;
 		goto error;
 	}
@@ -335,4 +335,71 @@ bool loadJpeg(C2D_Image* img, u8* data, u32 size) {
 	bool success = rgbToImage(img, width, height, njGetImage());
 	njDone();
 	return success;
+}
+
+size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream) {
+	size_t total_read = 0;
+	u8* buf = (u8*)buffer;
+	for (size_t i = 0; i < count; i++) {
+		size_t want_read = size;
+		while (want_read > 0) {
+			svcSleepThread(100);
+			size_t read_size = want_read > 512 ? 512 : want_read;
+			if (!fread(buf, read_size, 1, stream)) break;
+			want_read -= read_size;
+			total_read += read_size;
+			buf += read_size;
+		}
+	}
+	return total_read / size;
+}
+
+size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream) {
+	size_t total_write = 0;
+	u8* buf = (u8*)buffer;
+	for (size_t i = 0; i < nmemb; i++) {
+		size_t want_write = size;
+		while (want_write > 0) {
+			svcSleepThread(100);
+			size_t write_size = want_write > 512 ? 512 : want_write;
+			if (!fwrite(buf, write_size, 1, stream)) break;
+			want_write -= write_size;
+			total_write += write_size;
+			buf += write_size;
+		}
+	}
+	return total_write / size;
+}
+
+char* fgets_blk(char* str, int num, FILE* stream) {
+	char* buf = str;
+	int want_size = num;
+	while (want_size > 0) {
+		svcSleepThread(100);
+		int read_size = want_size > 512 ? 512 : want_size;
+		if (!fgets(buf, read_size, stream)) return NULL;
+		want_size -= read_size;
+		buf += read_size;
+	}
+	return str;
+}
+
+int fputs_blk(const char* str, FILE* stream) {
+	return fwrite_blk((void*)str, strlen(str), 1, stream);
+}
+
+void open_url(char* url) {
+	if (!url) {
+		aptLaunchSystemApplet(APPID_WEB, 0, 0, 0);
+		return;
+	}
+	size_t url_len = strlen(url) + 1;
+	if (url_len > 0x400) return open_url(NULL);
+	size_t buffer_size = url_len + 1;
+	u8* buffer = malloc(buffer_size);
+	if (!buffer) return open_url(NULL);
+	memcpy(buffer, url, url_len);
+	buffer[url_len] = 0;
+	aptLaunchSystemApplet(APPID_WEB, buffer, buffer_size, 0);
+	free(buffer);
 }

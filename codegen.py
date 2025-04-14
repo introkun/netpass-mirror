@@ -23,7 +23,11 @@ replace_map = {
 	"l_button": "\ue004",
 	"r_button": "\ue005",
 	"d_pad": "\ue006",
+	"start_button": "【start】",
+	"select_button": "【select】",
 	"playcoin": "\ue075",
+	"analog_stick": "\ue077",
+	"power_button": "\ue078",
 }
 
 def l(s):
@@ -36,11 +40,21 @@ def _s(s):
 
 translations = {}
 
+# we need en first so that we know how many total strings there are to be able
+# to create the threashold of when languages get included
+total_lang_strings = 0
+with open(SRCDIR + "/en.yaml", "r", encoding="utf-8") as f:
+	total_lang_strings = len(yaml.safe_load(f))
+
 for file in os.listdir(SRCDIR):
 	if file.endswith(".yaml"):
 		language = file[:-5]
 		with open(SRCDIR + "/" + file, "r", encoding="utf-8") as f:
-			translations[language] = yaml.safe_load(f)
+			strs = yaml.safe_load(f)
+			this_lang_strings = len(dict(filter(lambda s: s[1] is not None and s[1] != "", strs.items())))
+			print(f"{language} {total_lang_strings} {this_lang_strings}")
+			if this_lang_strings > total_lang_strings*0.5 or l(language) in NINTENDO_LANGUAGES:
+				translations[language] = strs
 
 headerfile = "#pragma once\n\n#include <3ds.h>\n"
 headerfile += f"#define NUM_NINTENDO_LANGUAGES {len(NINTENDO_LANGUAGES)}\n"
@@ -81,12 +95,20 @@ outfile += "};\n"
 for key in translations["en"].keys():
 	outfile += f"LanguageString {key} = {{\n"
 	headerfile += f"extern LanguageString {key};\n"
+	max_len = 0
+	total_len = 0
 	for lang in lang_keys:
 		s = "0"
 		if key in translations[lang] and translations[lang][key] != "":
 			s = json.dumps(translations[lang][key], ensure_ascii=False)
-		outfile += f"\t{{CFG_LANGUAGE_{l(lang)}, {_s(s)}}},\n"
+		string = _s(s)
+		outfile += f"\t{{CFG_LANGUAGE_{l(lang)}, {string}}},\n"
+		strlen = len(string)
+		max_len = strlen if strlen > max_len else max_len
+		total_len += strlen
 	outfile += "};\n";
+	headerfile += f"#define {key.upper()}_LEN {max_len}\n"
+	headerfile += f"#define {key.upper()}_TOTAL_LEN {total_len}\n"
 
 os.makedirs(DESTDIR, exist_ok=True)
 with open(DESTDIR + "/lang_strings.h", "w", encoding="utf-8") as f:

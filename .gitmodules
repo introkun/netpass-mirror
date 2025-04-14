@@ -1,3 +1,12 @@
 [submodule "source/hmac_sha256"]
 	path = source/hmac_sha256
 	url = https://github.com/h5p9sl/hmac_sha256
+[submodule "patches/ssl"]
+	path = patches/ssl
+	url = https://github.com/TraceEntertains/3DS-SSL-Patch
+[submodule "bcmatools"]
+	path = bcmatools
+	url = https://github.com/LiquidFenrir/bcmatools
+[submodule "source/quirc"]
+	path = source/quirc
+	url = https://github.com/dlbeer/quirc

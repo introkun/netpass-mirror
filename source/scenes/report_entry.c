@@ -21,7 +21,6 @@
 #include "../hmac_sha256/sha256.h"
 #include <stdlib.h>
 #include <malloc.h>
-#include <turbojpeg.h>
 #define N(x) scenes_report_entry_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define SETUP_EXDATA_INIT(a, x) if (!entry->data) break; \
@@ -64,6 +63,7 @@ typedef struct {
 	int y_offset;
 	void* extra_data[12];
 	C2D_Text go_back;
+	C2D_Text source_name;
 } N(DataStruct);
 
 char* N(send_msg);
@@ -185,6 +185,13 @@ void N(init)(Scene* sc) {
 	}
 	_data->y_offset = 0;
 	TextLangParse(&_data->go_back, _data->g_staticBuf, str_b_go_back);
+	if (_data->msgs->source_name) {
+		char name[50];
+		snprintf(name, 50, _s(str_report_source), _data->msgs->source_name);
+		C2D_TextFontParse(&_data->source_name, _font(str_report_source), _data->g_staticBuf, name);
+	} else {
+		TextLangParse(&_data->source_name, _data->g_staticBuf, str_report_source_unknown);
+	}
 
 	for (int i = 0; i < _data->msgs->count; i++) {
 		ReportMessagesEntry* entry = &_data->msgs->entries[i];
@@ -264,6 +271,8 @@ void N(render)(Scene* sc) {
 	ycursor += 14;
 	C2D_DrawText(&_data->g_title, C2D_AlignLeft, 10, ycursor, 0, 1, 1);
 	ycursor += 28;
+	C2D_DrawText(&_data->source_name, C2D_AlignLeft, 10, ycursor, 0, 0.5, 0.5);
+	ycursor += 18;
 	for (int i = 0; i < _data->msgs->count; i++) {
 		ReportMessagesEntry* entry = &_data->msgs->entries[i];
 		C2D_DrawText(&_data->g_game_names[i], C2D_AlignLeft, 20, ycursor, 0, 0.5, 0.5);

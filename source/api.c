@@ -251,29 +251,9 @@ Result doSlotExchange(void) {
 	}
 
 	// get cecd into the spr state
-	{
-		Handle state_change_handle;
-		error_origin = "Getting cecd into spr state";
-		res = cecdGetChangeStateEventHandle(&state_change_handle);
-		if (R_FAILED(res)) goto fail;
-		res = cecdStop(CEC_COMMAND_OVER_BOSS);
-		if (R_FAILED(res)) goto fail;
-		int num = 0;
-		while (true) {
-			svcWaitSynchronization(state_change_handle, 10e9);
-			CecStateAbbrev state;
-			res = cecdGetCecdState(&state);
-			num++;
-			if (num > 20) {
-				res = -1;
-				goto fail; // failed to switch cecd into spr mode
-			}
-			if (R_SUCCEEDED(res) && state == CEC_STATE_ABBREV_INACTIVE) {
-				break;
-			}
-		}
-		svcCloseHandle(state_change_handle);
-	}
+	error_origin = "Getting cecd into spr state";
+	res = waitForCecdState(false, CEC_COMMAND_OVER_BOSS, CEC_STATE_ABBREV_INACTIVE);
+	if (R_FAILED(res)) goto fail;
 
 	// now we init spr stuffs
 	res = cecdSprCreate();
@@ -362,7 +342,10 @@ Result doSlotExchange(void) {
 				break;
 			}
 		}
-		if (!found || slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
+		if (!found) {
+			continue; // the slot was disabled
+		}
+		if (slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
 			printf("=");
 			continue;
 		}
@@ -391,28 +374,6 @@ fail:
 	cecdSprDone(false);
 	printf("ERROR (%s): %08lx\n", error_origin, res);
 cleanup:
-	// get cecd into the normal state
-	{
-		Handle state_change_handle;
-		res = cecdGetChangeStateEventHandle(&state_change_handle);
-		if (R_FAILED(res)) return res;
-		res = cecdStart(CEC_COMMAND_STOP);
-		if (R_FAILED(res)) return res;
-		int num = 0;
-		while (true) {
-			svcWaitSynchronization(state_change_handle, 10e9);
-			CecStateAbbrev state;
-			res = cecdGetCecdState(&state);
-			num++;
-			if (num > 20) {
-				return -1; // failed to switch cecd into spr mode
-			}
-			if (R_SUCCEEDED(res) && state == CEC_STATE_ABBREV_IDLE) {
-				break;
-			}
-		}
-		svcCloseHandle(state_change_handle);
-	}
 	for (int i = 0; i < 12; i++) {
 		if (slotinfo.slots[i]) {
 			free(slotinfo.slots[i]);
@@ -427,6 +388,8 @@ cleanup:
 			title_extra_info[i].hmac_key = 0;
 		}
 	}
+	// get cecd into the normal state
+	res = waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 	return res;
 }
 
@@ -493,7 +456,7 @@ void bgLoop(void* p) {
 }
 
 void bgLoopInit(void) {
-	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, main_thread_prio()-1, -2, false);
+	bg_loop_thread = threadCreate(bgLoop, NULL, 8*1024, main_thread_prio()+1, -2, false);
 }
 
 void bgLoopExit(void) {

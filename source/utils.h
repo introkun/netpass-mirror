@@ -27,7 +27,16 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#define MAX(x, y) (x > y ? x : y)
+#define _GET_MACRO_MAX_(_1, _2, _3, _4, _5, _6, _7, _8, NAME, ...) NAME
+#define MAX(...) _GET_MACRO_MAX_(__VA_ARGS__, MAX8, MAX7, MAX6, MAX5, MAX4, MAX3, MAX2, MAX1)(__VA_ARGS__)
+#define MAX1(a) (a)
+#define MAX2(a, b) ((a) > (b) ? (a) : (b))
+#define MAX3(a, b, c) MAX2(a, MAX2(b, c))
+#define MAX4(a, b, c, d) MAX2(a, MAX3(b, c, d))
+#define MAX5(a, b, c, d, e) MAX2(a, MAX4(b, c, d, e))
+#define MAX6(a, b, c, d, e, f) MAX2(a, MAX5(b, c, d, e, f))
+#define MAX7(a, b, c, d, e, f, g) MAX2(a, MAX6(b, c, d, e, f, g))
+#define MAX8(a, b, c, d, e, f, g, h) MAX2(a, MAX7(b, c, d, e, f, g, h))
 
 void* cecGetExtHeader(CecMessageHeader* msg, u32 type);
 u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type);
@@ -41,6 +50,11 @@ Result decryptMii(void* data, MiiData* mii);
 u8* memsearch(u8* buf, size_t buf_len, u8* cmp, size_t cmp_len);
 void C2D_ImageDelete(C2D_Image* img);
 bool loadJpeg(C2D_Image* img, u8* data, u32 size);
+size_t fread_blk(void* buffer, size_t size, size_t count, FILE* stream);
+size_t fwrite_blk(void* buffer, size_t size, size_t nmemb, FILE* stream);
+char* fgets_blk(char* str, int num, FILE* stream);
+int fputs_blk(const char* str, FILE* stream);
+void open_url(char* url);
 
 typedef struct {
 	u32 magic; // 0x4F00

@@ -80,6 +80,7 @@ typedef struct {
 } ReportMessagesEntry;
 
 typedef struct {
+	char* source_name;
 	int count;
 	ReportMessagesEntry entries[12];
 } ReportMessages;

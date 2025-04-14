@@ -26,6 +26,7 @@
 #include "config.h"
 #include "boss.h"
 #include "report.h"
+#include "music.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -35,7 +36,7 @@ int main() {
 	amInit();
 	nsInit();
 	aptInit();
-	frdInit();
+	frdInit(false);
 	fsInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d\n", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
@@ -51,6 +52,7 @@ int main() {
 
 	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
+	musicInit(); // must be after romfsInit()
 
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
@@ -66,6 +68,8 @@ int main() {
 		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
 		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
 	}
+	
+	playMusic("home"); // start the default music
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
@@ -87,16 +91,17 @@ int main() {
 		// next, we gotta wait for having internet
 		char url[50];
 		snprintf(url, 50, "%s/ping", BASE_URL);
-	check_internet:
-		res = httpRequest("GET", url, 0, 0, 0, 0, 0);
-		if (R_FAILED(res)) {
-			if (res == -CURLE_COULDNT_RESOLVE_HOST) {
-				svcSleepThread((u64)1000000 * 100);
-				goto check_internet;
+		int check_count = 0;
+		while (true) {
+			res = httpRequest("GET", url, 0, 0, 0, 0, 0);
+			if (R_SUCCEEDED(res)) break;
+			check_count++;
+			if (check_count > 100) {
+				location = res;
+				return;
 			}
-			location = res;
-			return;
 		}
+		waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 		initTitleData();
 		doSlotExchange();
 		res = getLocation();
@@ -112,6 +117,16 @@ int main() {
 			}
 		}
 	}));
+
+	if (_PATCHES_VERSION_ > config.patches_version) {
+		printf("New patches version to apply!\n");
+		scene = getUpdatePatchesScene(scene);
+	}
+	
+	if (_WELCOME_VERSION_ > config.welcome_version) {
+		printf("New Welcome Screen to show!\n");
+		scene = getWelcomeScene(scene);
+	}
 
 	scene->init(scene);
 
@@ -135,6 +150,7 @@ int main() {
 	}
 	printf("Exiting...\n");
 	bgLoopExit();
+	musicExit();
 	C2D_Fini();
 	C3D_Fini();
 	//curlExit();

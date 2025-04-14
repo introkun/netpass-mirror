@@ -76,6 +76,7 @@ typedef enum {
 
 // seems to be the max number of bytes for transfering stuffs
 #define MAX_MESSAGE_SIZE 0x19000
+#define MAX_SLOT_SIZE (MAX_MESSAGE_SIZE + 0x14)
 
 typedef u8 CecMessageId[8];
 
@@ -85,6 +86,7 @@ typedef struct SlotMetadata {
 	u32 size;
 } SlotMetadata;
 
+Result waitForCecdState(bool start, int command, CecStateAbbrev state);
 Result cecdInit(void);
 Result cecdGetState(u32* state);
 Result cecdGetSystemInfo(u32 destbuf_size, void* destbuf);
@@ -144,7 +146,7 @@ typedef struct CecTimestamp {
 
 typedef struct CecMessageHeader {
 	u16 magic; // 0x6060 ``
-	u16 padding;
+	u16 padding_sourceident;
 	u32 message_size;
 	u32 total_header_size;
 	u32 body_size;

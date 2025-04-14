@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024 Sorunome
+ * Copyright (C) 2024-2025 Sorunome
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ void N(threadFn)(Scene* sc) {
 void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
-	_data->g_staticBuf = C2D_TextBufNew(100);
+	_data->g_staticBuf = C2D_TextBufNew(STR_LOADING_LEN + 3);
 	TextLangParse(&_data->g_loading, _data->g_staticBuf, str_loading);
 	C2D_TextParse(&_data->g_dots, _data->g_staticBuf, "...");
 	float height;

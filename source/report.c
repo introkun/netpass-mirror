@@ -17,6 +17,7 @@
  */
 
 #include "report.h"
+#include "cecd.h"
 #include "config.h"
 #include "utils.h"
 #include "strings.h"
@@ -29,10 +30,11 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
+#include "integration.h"
 
-#define LOG_DIR "/config/netpass/log/"
-#define LOG_INDEX "/config/netpass/log/index.nrle"
-#define LOG_SPR_DIR "/config/netpass/log_spr"
+#define LOG_DIR "sdmc:/config/netpass/log/"
+#define LOG_INDEX "sdmc:/config/netpass/log/index.nrle"
+#define LOG_SPR_DIR "sdmc:/config/netpass/log_spr/"
 
 #define MAX_REPORT_ENTRIES_LEN 128
 
@@ -43,18 +45,18 @@
 	memset(data, 0, sizeof(x));
 
 ReportList* loadReportList(void) {
-	FILE* f = fopen(LOG_INDEX, "rb");
+	FILE* f = fopen(LOG_INDEX, "r");
 	if (!f) return NULL;
 
 	ReportListHeader header;
-	fread(&header, sizeof(ReportListHeader), 1, f);
+	fread_blk(&header, sizeof(ReportListHeader), 1, f);
 	if (header.magic != 0x454C524e || header.version != 1) return NULL;
 	fseek(f, 0, SEEK_SET);
 	size_t list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 	
 	ReportList* list = memalign(4, list_file_size);
 	if (!list) return NULL;
-	fread(list, list_file_size, 1, f);
+	fread_blk(list, list_file_size, 1, f);
 	fclose(f);
 	return list;
 }
@@ -72,6 +74,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	int r = 0;
 	CecMessageHeader* buf = malloc(MAX_MESSAGE_SIZE);
 	if (!buf) return false;
+	u16 source_ident = 0;
 	while (!r && (p=readdir(d)) && msgs->count < 12) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
@@ -79,10 +82,13 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (!f) goto cont_loop;
-		fread(buf, MAX_MESSAGE_SIZE, 1, f);
+		fread_blk(buf, MAX_MESSAGE_SIZE, 1, f);
 		if (buf->magic != 0x6060) {
 			fclose(f);
 			goto cont_loop;
+		}
+		if (!source_ident) {
+			source_ident = buf->padding_sourceident;
 		}
 		fclose(f);
 		// we have the file now in buf, time to populate the specific entry
@@ -94,7 +100,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 			entry->mii = malloc(sizeof(MiiData));
 			if (entry->mii) {
 				Result r = decryptMii(&cfpb->nonce, entry->mii);
-				if (R_FAILED(r) || entry->mii->magic != 3) {
+				if (R_FAILED(r) || entry->mii->version != 3) {
 					free(entry->mii);
 					entry->mii = 0;
 				}
@@ -158,6 +164,23 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 		free(fname);
 	}
 	free(buf);
+	closedir(d);
+	
+	msgs->source_name = 0;
+	IntegrationList* list = get_integration_list();
+	if (list) {
+		if (source_ident == 0x504E) { // "NP"
+			msgs->source_name = "NetPass";
+		} else {
+			for (int i = 0; i < list->header.count; i++) {
+				if (list->entries[i].source_ident == source_ident) {
+					msgs->source_name = list->entries[i].name;
+					break;
+				}
+			}
+		}
+	}
+	
 
 	return true;
 }
@@ -204,7 +227,7 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		list->header.version = 1;
 		list->header.max_size = MAX_REPORT_ENTRIES_LEN;
 		list->header.cur_size = 0;
-		fwrite(list, sizeof(ReportList), 1, f);
+		fwrite_blk(list, sizeof(ReportList), 1, f);
 		free(list);
 		fclose(f);
 		f = fopen(LOG_INDEX, "rb");
@@ -213,16 +236,15 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	size_t list_file_size;
 	{
 		ReportListHeader header;
-		fread(&header, sizeof(ReportListHeader), 1, f);
+		fread_blk(&header, sizeof(ReportListHeader), 1, f);
 		if (header.magic != 0x454C524E || header.version != 1) return;
 		fseek(f, 0, SEEK_SET);
 		list_file_size = sizeof(ReportListHeader) + header.max_size * sizeof(ReportSendPayload);
 		list = memalign(4, list_file_size);
 		if (!list) return;
-		fread(list, list_file_size, 1, f);
+		fread_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
-
 	int found_i = -1;
 	// find if the transfer id already exists
 	for (int i = 0; i < list->header.cur_size; i++) {
@@ -264,12 +286,12 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		static const int cfpb_size = 0x88;
 		if (msg->message_size > msg->total_header_size + cfpb_offset + cfpb_size) {
 			if (body->cfpb.magic == 0x42504643) {
-				int prev_mii_id = e->mii.magic == 3 ? e->mii.mii_id : 0;
+				int prev_mii_id = e->mii.version == 3 ? e->mii.mii_id : 0;
 				Result r = decryptMii(&body->cfpb.nonce, &e->mii);
 				if (!R_FAILED(r) && prev_mii_id != e->mii.mii_id) edited = true;
 			}
 		}
-	} else if (e->mii.magic != 3) {
+	} else if (e->mii.version != 3) {
 		// search if there is a mii in this payload
 		CFPB* cfpb = (CFPB*)memsearch(((u8*)msg) + msg->total_header_size, msg->message_size, (u8*)"CFPB", 4);
 		if (cfpb) {
@@ -281,13 +303,13 @@ void saveMsgInLog(CecMessageHeader* msg) {
 	if (edited) {
 		f = fopen(LOG_INDEX, "wb");
 		if (!f) goto error;
-		fwrite(list, list_file_size, 1, f);
+		fwrite_blk(list, list_file_size, 1, f);
 		fclose(f);
 	}
 	mkdir_p(filename);
 	f = fopen(filename, "wb");
 	if (!f) goto error;
-	fwrite(msg, msg->message_size, 1, f);
+	fwrite_blk(msg, msg->message_size, 1, f);
 	fclose(f);
 
 error:
@@ -313,7 +335,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 		// we found a file
 		FILE* f = fopen(fname, "rb");
 		if (f) {
-			fread(msg, sizeof(CecMessageHeader), 1, f);
+			fread_blk(msg, sizeof(CecMessageHeader), 1, f);
 			fclose(f);
 			if (msg->magic == 0x6060 && msg->transfer_id == transfer_id) {
 				free(fname);
@@ -324,6 +346,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 		}
 		free(fname);
 	}
+	closedir(d);
 
 	if (!msg->magic) return -2; // nothing in directory
 
@@ -335,35 +358,53 @@ void reportInit(void) {
 	mkdir_p(LOG_SPR_DIR);
 
 	DIR* d = opendir(LOG_SPR_DIR);
-	if (d) {
-		printf("Add SPR passes ");
-		struct dirent* p;
-		while ((p = readdir(d))) {
-			size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 2;
-			char* buf = malloc(len);
-			if (buf) {
-				struct stat statbuf;
-				snprintf(buf, len, "%s/%s", LOG_SPR_DIR, p->d_name);
-				if (!stat(buf, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
-					FILE* f = fopen(buf, "rb");
-					if (f) {
-						CecSlotHeader slot;
-						fread(&slot, sizeof(CecSlotHeader), 1, f);
-						CecSlotHeader* buf_slot = malloc(slot.size);
-						if (buf_slot) {
-							fseek(f, 0, 0);
-							fread(buf_slot, slot.size, 1, f);
-							fclose(f);
-							printf("=");
-							saveSlotInLog(buf_slot);
-							free(buf_slot);
-						}
-					}
-					unlink(buf);
-				}
-				free(buf);
-			}
+	if (!d) return;
+	struct dirent* p;
+	char filename[200];
+	bool has_spr_passes = false;
+	while ((p = readdir(d))) {
+		size_t len = strlen(LOG_SPR_DIR) + strlen(p->d_name) + 1;
+		struct stat statbuf;
+		snprintf(filename, len, "%s%s", LOG_SPR_DIR, p->d_name);
+		if (stat(filename, &statbuf) && !S_ISDIR(statbuf.st_mode)) continue;
+		if (!has_spr_passes) {
+			has_spr_passes = true;
+			printf("Add SPR passes ");
 		}
-		printf(" Done\n");
+		FILE* f = fopen(filename, "rb");
+		if (!f) continue;
+		fseek(f, 0, SEEK_END);
+		size_t filesize = ftell(f);
+		rewind(f);
+		if (filesize < sizeof(CecSlotHeader)) {
+			fclose(f);
+			printf("/");
+			unlink(filename);
+			continue;
+		}
+		CecSlotHeader slot;
+		fread_blk(&slot, sizeof(CecSlotHeader), 1, f);
+		if (slot.size > MAX_SLOT_SIZE) {
+			fclose(f);
+			printf("S");
+			unlink(filename);
+			continue;
+		}
+		CecSlotHeader* buf_slot = malloc(slot.size);
+		if (!buf_slot) {
+			printf("B");
+			fclose(f);
+			unlink(filename);
+			continue;
+		}
+		rewind(f);
+		fread_blk(buf_slot, slot.size, 1, f);
+		fclose(f);
+		printf("=");
+		saveSlotInLog(buf_slot);
+		free(buf_slot);
+		unlink(filename);
 	}
+	closedir(d);
+	if (has_spr_passes) printf(" Done\n");
 }

@@ -20,6 +20,7 @@
 #include "toggle_titles.h"
 #include "../config.h"
 #include <stdlib.h>
+#define TEXT_BUF_LEN (STR_TOGGLE_TITLES_LEN + STR_TOGGLE_TITLES_MESSAGE_LEN + STR_BACK_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN)
 
 #define N(x) scenes_toggle_titles_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
@@ -50,7 +51,7 @@ void N(init)(Scene* sc) {
 	sc->d = malloc(sizeof(N(DataStruct)));
 	if (!_data) return;
 	
-	_data->g_staticBuf = C2D_TextBufNew(2000);
+	_data->g_staticBuf = C2D_TextBufNew(TEXT_BUF_LEN + 12 * 24);
 	if (!N(init_gamelist)(sc)) {
 		C2D_TextBufDelete(_data->g_staticBuf);
 		free(_data);
@@ -84,7 +85,7 @@ void N(render)(Scene* sc) {
 	
 	int x = 22;
 	int y = _data->cursor*14 + 60 + 3;
-	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 1);
+	C2D_DrawTriangle(x, y, clr, x, y + 10, clr, x + 8, y + 5, clr, 0);
 }
 
 void N(exit)(Scene* sc) {
@@ -121,6 +122,10 @@ SceneResult N(process)(Scene* sc) {
 			configWrite();
 			return scene_pop;
 		}
+	}
+	if (kDown & KEY_B) {
+		configWrite();
+		return scene_pop;
 	}
 	if (kDown & KEY_START) {
 		configWrite();

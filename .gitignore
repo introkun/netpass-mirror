@@ -9,6 +9,7 @@ netpass.cia
 netpass.cia.txt
 config.yaml
 romfs/gfx
+romfs/music
 codegen/
 out/
 patches/*/code.bin
