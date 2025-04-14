@@ -1,4 +1,4 @@
-str_loading: "Yükleniyor · · · ·    "
+str_loading: "Yükleniyor    "
 str_libcurl_error: "libCURL hatası (%d): %s"
 str_libcurl_date_and_time: 'Sisteminizin tarih ve saatinin doğru ayarlandığından emin
   olun!'
