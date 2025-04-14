@@ -21,4 +21,4 @@
 void musicInit(void);
 void musicExit(void);
 void stopMusic(void);
-Result playMusic(char* filename);
+Result playMusic(const char* filename);

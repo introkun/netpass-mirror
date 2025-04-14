@@ -130,7 +130,7 @@ fail:
 }
 
 
-Result playMusic(char* filename) {
+Result playMusic(const char* filename) {
 	Result res = 0;
 	// if we are already playing this file
 	if (strcmp(filename, curfilename) == 0) return res;
