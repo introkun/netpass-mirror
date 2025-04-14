@@ -1,7 +1,7 @@
 str_loading: "Завантаження    "
 str_libcurl_error: "Помилка libCURL (%d): %s"
 str_libcurl_date_and_time: 'Переконайтеся, що на вашiй системi встановлено правильнi
-  дата та час!'
+  дату та час!'
 str_httpstatus_error: 'Код статусу HTTP %d'
 str_3ds_error: 'Код помилки 3DS %08lx'
 str_at_home: 'Ви вдома.'
@@ -36,34 +36,34 @@ str_back_alley_pay: Придбати "пас" {playcoin}%d
 str_check_inboxes: Перевiрити вхiднi данi
 str_toggle_titles: Перемкнути iгри
 str_toggle_titles_message: Натиснiть {a_button}, щоб почати або зупинити обмiн "пасами".
-str_toggle_titles_on: (УВIМКНЕНО)
-str_toggle_titles_off: (ВИМКНЕНО)
+str_toggle_titles_on: (Так)
+str_toggle_titles_off: (Нi)
 str_write_patches: Записати патчi
 str_clear_spr_cache: Очистити кеш SPR
 str_report_mii_name: "Iм'я Mii: %s"
 str_report_mario_kart_7_greeting: 'Привiтання: %s'
 str_report_mii_plaza_last_game: 'Остання гра: %s'
-str_report_mii_plaza_country: 'Країна: %s - %s'
+str_report_mii_plaza_country: 'Краïна: %s - %s'
 str_report_mii_plaza_greeting: 'Привiтання: %s'
 str_report_mii_plaza_custom_message: 'Ваше спецiальне повiдомлення: %s'
-str_report_mii_plaza_custom_reply: 'Їхня спецiальна вiдповiдь: %s'
+str_report_mii_plaza_custom_reply: 'Ïхня спецiальна вiдповiдь: %s'
 str_report_tomodachi_life_island_name: 'Назва острову: %s'
 str_b_go_back: '{b_button} Назад'
-str_integrations: Iнтеграцiї
-str_integrations_message: NetPass не модерує iнтеграцiї вiд третiх осiб. Використовуйте
-  їх на власний ризик!
+str_integrations: Iнтеграцiï
+str_integrations_message: NetPass не модерує iнтеграцiï вiд третiх осiб. Використовуйте
+  ïх на власний ризик!
 str_update_patches_error_desc: 'При оновленнi патчiв щось пiшло не так. Будь ласка,
   повiдомте про цю проблему на GitLab, GBAtemp або в Discord: netpass.cafe/discord'
 str_report_source: 'Джерело: %s'
 str_report_source_unknown: Невiдоме джерело
 str_b_cancel: '{b_button} Скасувати'
 str_a_ok: '{a_button} ОК'
-str_update_patches: Оновити патчi
+str_update_patches: Оновлення патчiв
 str_update_patches_poweroff_desc: Патчi успiшно оновлено! Зараз ваша консоль перезавантажиться.
 str_update_patches_desc: Щоб установити NetPass належним чином, зараз буде створено
   деякi патчi системних модулiв. Щоби вони працювали, потрiбно ввiмкнути опцiю "Enable
   loading external FIRMS and modules" у налаштуваннях Luma3DS. Щоби потрапити до цих
-  налаштувань, вимкнiть консоль, а потiм увiмкнiть {power_button} її, утримуючи {select_button}.
+  налаштувань, вимкнiть консоль, а потiм увiмкнiть {power_button} ïï, утримуючи {select_button}.
   Це можна зробити пiсля того, як патчi будуть записанi.
 str_settings_about: Про застосунок
 str_about_reports: Система скарг
@@ -74,9 +74,15 @@ str_about_special_thanks: Окрема подяка
 str_about_production_cat: Мила кицька
 str_about_lead_dev: Лiдер розробки
 str_settings_misc: Iнше
-str_about_graphics: Iлюстрацiї та графiка
+str_about_graphics: Iлюстрацiï та графiка
 str_about_special_thanks_txt: Homebrew-спiльнотi 3DS за весь реверс-iнжинiринг та
   документацiю
 str_scan_qr: Вiдсканувати QR-код
 str_x_switch_camera: '{x_button} Перемкнути камеру'
 str_prompt_verify: Ви впевненi, що хочете пiдтвердити цю 3DS?
+str_welcome: Вiтаємо у NetPass
+str_welcome_message: Перед запуском NetPass, будь ласка, прочитайте та приймiть нашi
+  правила та полiтику конфiденцiйностi.
+str_view_rules: Переглянути правила
+str_view_privacy: Переглянути полiтику конфiденцiйностi
+str_continue: Далi
