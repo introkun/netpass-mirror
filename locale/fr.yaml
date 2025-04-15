@@ -1,6 +1,7 @@
 str_loading: "Chargement    "
 str_libcurl_error: "Erreur libCURL (%d) : %s"
-str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées !'
+str_libcurl_date_and_time: 'Assurez-vous que la date et l''heure soient bien réglées
+  !'
 str_httpstatus_error: 'Code de statut HTTP %d'
 str_3ds_error: 'Code d''erreur 3DS %08lx'
 str_at_home: 'Vous êtes à la Maison.'
@@ -41,21 +42,21 @@ str_toggle_titles_message: Appuyez sur {a_button} pour Activer/Désactiver les �
 str_check_inboxes: Vérifier boîtes
 str_write_patches: Écrire des corrections SPR
 str_clear_spr_cache: Supprimer le cache SPR
-str_report_mario_kart_7_greeting: 'Salutation : %s'
+str_report_mario_kart_7_greeting: 'Salutation : %s'
 str_report_mii_plaza_country: 'Région : %s - %s'
 str_report_mii_plaza_greeting: 'Salutation : %s'
-str_report_mii_plaza_custom_reply: 'Leur réponse personnalisée : %s'
-str_report_tomodachi_life_island_name: "Nom de l'île : %s"
+str_report_mii_plaza_custom_reply: 'Leur réponse personnalisée : %s'
+str_report_tomodachi_life_island_name: "Nom de l'île : %s"
 str_b_go_back: '{b_button} Retour'
-str_report_mii_name: 'Nom du Mii : %s'
+str_report_mii_name: 'Nom du Mii : %s'
 str_report_mii_plaza_last_game: 'Dernière Partie : %s'
-str_report_mii_plaza_custom_message: 'Ta salutation personnalisée : %s'
+str_report_mii_plaza_custom_message: 'Ta salutation personnalisée : %s'
 str_integrations: Intégrations
 str_b_cancel: '{b_button} Annuler'
 str_update_patches: Notes de mise à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
-str_report_source: 'Source : %s'
+str_report_source: 'Source : %s'
 str_update_patches_desc: Pour installer correctement NetPass, des modifications du
   sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent, vous devez
   activer "Enable loading external FIRMs and modules" dans les réglages de Luma3DS.
@@ -63,8 +64,8 @@ str_update_patches_desc: Pour installer correctement NetPass, des modifications 
   pendant que la console s'allume {power_button} . Vous pouvez faire cela après que
   les modifications ont été écrites.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par NetPass.
-  Utilisez-les à vos risques !
-str_update_patches_poweroff_desc: Mise à jour installée ! Votre console va maintenant
+  Utilisez-les à vos risques !
+str_update_patches_poweroff_desc: Mise à jour installée ! Votre console va maintenant
   redémarrer.
 str_update_patches_error_desc: Un problème est survenu pendant l'installation de la
   mise à jour. S'il vous plaît, reporter le problème sur GitLab, GBAtemp ou Discord.
