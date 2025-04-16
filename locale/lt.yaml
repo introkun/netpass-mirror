@@ -1,77 +1,86 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
+str_loading: "Įkeliama    "
+str_libcurl_error: "libCURL klaida (%d): %s"
+str_libcurl_date_and_time: 'Įsitikinkite, kad sistemos data ir laikas nustatyti teisingai!'
+str_httpstatus_error: 'HTTP statuso kodas %d'
+str_3ds_error: '3DS klaidos kodas %08lx'
+str_at_home: 'Esate Namuose.'
+str_goto_train_station: 'Vykti į Traukinių Stotį'
+str_at_train_station: 'Esate Traukinių Stotyje.'
+str_goto_plaza: 'Vykti į Aikštę'
+str_at_plaza: 'Esate Aikštėje.'
+str_goto_mall: 'Vykti į Prekybos Centrą'
+str_at_mall: 'Esate Prekybos Centre.'
+str_exit: 'Išeiti'
+str_settings: 'Nustatymai'
+str_download_data: 'Atsisiųsti asmeninius duomenis'
+str_delete_data: 'Ištrinti asmeninius duomenis'
+str_back: 'Grįžti'
+str_language: 'Lietuvių'
+str_goto_beach: 'Vykti į Paplūdimį'
+str_at_beach: 'Esate Paplūdimyje.'
+str_goto_arcade: 'Vykti į Žaidimų Salę'
+str_at_arcade: 'Esate Žaidimų Salėje.'
+str_goto_catcafe: 'Vykti į Kačių Kavinę'
+str_at_catcafe: 'Esate Kačių Kavinėje.'
+str_system_language: 'Sistemos Kalba'
+str_language_pick: 'Kalba:'
+str_no_location_twice: 'Negalima aplankyti tos pačios vietos du kartus iš eilės!'
+str_report_user: 'Pranešti apie vartotoją'
+str_report_user_hint: 'Pranešti apie "%s"'
+str_cancel: 'Atšaukti'
+str_submit: 'Pateikti'
+str_back_alley: 'Skersgatvis'
+str_back_alley_message: 'Nusipirkime daugiau susitikimų!'
+str_back_alley_pay: "Pirkti susitikimą {playcoin}%d"
+str_check_inboxes: 'Tikrinti pašto dėžutes'
+str_toggle_titles: 'Rodyti Žaidimus'
+str_toggle_titles_message: "Spauskite {a_button} kad pradėtumėte dalintis susitikimais."
+str_toggle_titles_on: "(ĮJ.)"
+str_toggle_titles_off: "(IŠJ.)"
+str_report_mii_name: "Mii vardas: %s"
+str_report_mario_kart_7_greeting: "Pasisveikinimas: %s"
+str_report_mii_plaza_last_game: "Paskutinis Žaidimas: %s"
+str_report_mii_plaza_country: "Šalis: %s - %s"
+str_report_mii_plaza_greeting: "Pasisveikinimas: %s"
+str_report_mii_plaza_custom_message: "Jūsų žinutė: %s"
+str_report_mii_plaza_custom_reply: "Jų atsakymas: %s"
+str_report_tomodachi_life_island_name: "Salos pavadinimas: %s"
+str_b_go_back: "{b_button} Grįžti"
+str_b_cancel: "{b_button} Atšaukti"
+str_a_ok: "{b_button} Gerai"
+str_update_patches: "Atnaujinti sysmodule pakeitimus"
+str_update_patches_desc: "Siekiant įdiegti NetPass, bus įgyvendinti sysmodule pakitimai.
+  Jiems įsigalioti, privalote įjungti \"Enable loading external FIRMs and modules\"\
+  \ Luma3DS nustatymuose. Siekiant patekti į šiuos nustatymus, turite išjungti konsolę
+  ir spausti {select_button} kol įjungiama {power_button} konsolė. Tai galite padaryti
+  po sysmodule pakitimų įrašymo."
+str_update_patches_error_desc: "Įvyko klaida atnaujinant pakitimus. Praneškite apie
+  šią klaidą Gitlab, GBAtemp arba Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Pakitimai išsaugoti! Jūsų konsolė dabar bus paleista
+  iš naujo."
+str_integrations: "Integracijos"
+str_integrations_message: "Trečiųjų šalių integracijos nėra prižiūrimos NetPass. Naudokitės
+  savo paties rizika!"
+str_report_source: "Šaltinis: %s"
+str_report_source_unknown: "Nežinomas šaltinis"
+str_settings_misc: "Kiti"
+str_settings_about: "Apie"
+str_about_lead_dev: "Pagrindinė Kūrėja"
+str_about_reports: "Pranešimų Sistema"
+str_about_graphics: "Grafika ir Dizainas"
+str_about_music: "Muzika"
+str_about_localisation: "Lokalizacija"
+str_about_netpass_community: "NetPass bendruomenė"
+str_about_special_thanks: "Dėkojame"
+str_about_special_thanks_txt: "3DS homebrew visuomenei už atvirkštinę inžineriją ir
+  dokumentaciją"
+str_about_production_cat: "Darbo katė"
+str_scan_qr: "Skenuoti QR Kodą"
+str_x_switch_camera: "{x_button} Pakeisti Kamerą"
+str_prompt_verify: "Ar tikrai norite patvirtinti šią 3DS konsolę?"
+str_welcome: "Sveiki atvykę į NetPass"
+str_welcome_message: "Prieš pradėdami naudoti NetPass, susipažinkite ir sutikite su
+  mūsų taisyklėmis ir privatumo politika."
+str_view_rules: "Skaityti Taisykles"
+str_view_privacy: "Skaityti Privatumo Politiką"
+str_continue: "Tęsti"
