@@ -73,59 +73,69 @@ int main() {
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
-	Scene* scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
-		if (R_FAILED(location) && location != -1) {
-			// something not working
-			return getConnectionErrorScene(location);
-		}
-
-		bgLoopInit();
-		if (location == -1) {
-			return getHomeScene(); // load home
-		}
-		return getLocationScene(location);
-	})), lambda(void, (void) {
-		Result res;
-		// first, we import the locally stored passes for reports to work
-		reportInit();
-		// next, we gotta wait for having internet
-		char url[50];
-		snprintf(url, 50, "%s/ping", BASE_URL);
-		int check_count = 0;
-		while (true) {
-			res = httpRequest("GET", url, 0, 0, 0, 0, 0);
-			if (R_SUCCEEDED(res)) break;
-			check_count++;
-			if (check_count > 100) {
-				location = res;
-				return;
-			}
-		}
-		waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
-		initTitleData();
-		doSlotExchange();
-		res = getLocation();
-		if (R_FAILED(res) && res != -1) {
-			printf("ERROR failed to get location: %ld\n", res);
-			location = -1;
-		} else {
-			location = res;
-			if (location == -1) {
-				printf("Got location home\n");
-			} else {
-				printf("Got location: %d\n", location);
-			}
-		}
-	}));
-
-	if (_PATCHES_VERSION_ > config.patches_version) {
-		printf("New patches version to apply!\n");
-		scene = getUpdatePatchesScene(scene);
-	}
+	Scene* scene;
+	{
+		OS_VersionBin nver, cver;
+		osGetSystemVersionData(&nver, &cver);
 	
-	if (_WELCOME_VERSION_ > config.welcome_version) {
-		printf("New Welcome Screen to show!\n");
-		scene = getWelcomeScene(scene);
+		if (SYSTEM_VERSION(cver.mainver, cver.minor, 0) < SYSTEM_VERSION(11, 15, 0)) {
+			scene = getBadOsVersionScene();
+		} else {
+			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
+				if (R_FAILED(location) && location != -1) {
+					// something not working
+					return getConnectionErrorScene(location);
+				}
+		
+				bgLoopInit();
+				if (location == -1) {
+					return getHomeScene(); // load home
+				}
+				return getLocationScene(location);
+			})), lambda(void, (void) {
+				Result res;
+				// first, we import the locally stored passes for reports to work
+				reportInit();
+				// next, we gotta wait for having internet
+				char url[50];
+				snprintf(url, 50, "%s/ping", BASE_URL);
+				int check_count = 0;
+				while (true) {
+					res = httpRequest("GET", url, 0, 0, 0, 0, 0);
+					if (R_SUCCEEDED(res)) break;
+					check_count++;
+					if (check_count > 100) {
+						location = res;
+						return;
+					}
+				}
+				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
+				initTitleData();
+				doSlotExchange();
+				res = getLocation();
+				if (R_FAILED(res) && res != -1) {
+					printf("ERROR failed to get location: %ld\n", res);
+					location = -1;
+				} else {
+					location = res;
+					if (location == -1) {
+						printf("Got location home\n");
+					} else {
+						printf("Got location: %d\n", location);
+					}
+				}
+			}));
+		
+			if (_PATCHES_VERSION_ > config.patches_version) {
+				printf("New patches version to apply!\n");
+				scene = getUpdatePatchesScene(scene);
+			}
+			
+			if (_WELCOME_VERSION_ > config.welcome_version) {
+				printf("New Welcome Screen to show!\n");
+				scene = getWelcomeScene(scene);
+			}
+		}
 	}
 
 	scene->init(scene);

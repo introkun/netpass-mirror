@@ -50,6 +50,7 @@ Scene* processScene(Scene* scene);
 
 #include "scenes/about.h"
 #include "scenes/back_alley.h"
+#include "scenes/bad_os_version.h"
 #include "scenes/connection_error.h"
 #include "scenes/home.h"
 #include "scenes/info.h"
