@@ -84,3 +84,10 @@ str_welcome_message: "Prieš pradėdami naudoti NetPass, susipažinkite ir sutik
 str_view_rules: "Skaityti Taisykles"
 str_view_privacy: "Skaityti Privatumo Politiką"
 str_continue: "Tęsti"
+str_update_patches_poweroff_clear_desc: Sėkmingai pašalinti pakeitimai! Įrenginys
+  dabar bus įjungtas iš naujo.
+str_bg_music: Fono Muzika
+str_bad_os_version: "NetPass reikalauja 3DS operacinės sistemos versijos 11.15.0 ar
+  naujesnės, kad veiktų teisingai. Panašu, kad naudojate senesnę versiją. Atnaujinkite
+  sistemą, tuomet iš naujo įjunkite NetPass.\n\nSpustelėkite bet kurį mygtuką, kad
+  išeitumėte."
