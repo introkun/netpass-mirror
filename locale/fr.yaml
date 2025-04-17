@@ -20,8 +20,8 @@ str_goto_beach: Aller à la Plage
 str_at_beach: Vous êtes à la Plage.
 str_goto_arcade: Aller à la Salle d'Arcade
 str_at_arcade: Vous êtes à la Salle d'Arcade.
-str_goto_catcafe: Aller au Café des chats
-str_at_catcafe: Vous êtes au Café des chats.
+str_goto_catcafe: Aller au Café félin
+str_at_catcafe: Vous êtes au Café félin.
 str_language: Français
 str_system_language: Langue Système
 str_language_pick: 'Langue :'
@@ -57,19 +57,19 @@ str_update_patches: Mettre les fichiers à jour
 str_a_ok: '{a_button} Confirmer'
 str_report_source_unknown: Source inconnue
 str_report_source: 'Source : %s'
-str_update_patches_desc: Pour installer correctement NetPass, des modifications du
-  sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent, vous devez
-  activer "Enable loading external FIRMs and modules" dans les réglages de Luma3DS.
+str_update_patches_desc: Pour installer correctement NetPass, des fichiers modifiant
+  le sysmodule vont maintenant être créées. Pour que celles-ci fonctionnent, vous
+  devez activer "Enable loading external FIRMs and modules" dans les réglages de Luma3DS.
   Pour accéder aux réglages, éteignez la console et tenir {select_button} enfoncé
   pendant que la console s'allume {power_button} . Vous pouvez faire cela après que
-  les modifications ont été écrites.
+  les modifications aient été écrites.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par NetPass.
   Utilisez-les à vos risques !
-str_update_patches_poweroff_desc: Mise à jour installée ! Votre console va maintenant
-  redémarrer.
-str_update_patches_error_desc: Un problème est survenu pendant l'installation de la
-  mise à jour. S'il vous plaît, reporter le problème sur GitLab, GBAtemp ou Discord.
-  https://netpass.cafe/discord
+str_update_patches_poweroff_desc: Mise à jour des fichiers installée ! Votre console
+  va maintenant redémarrer.
+str_update_patches_error_desc: Un problème est survenu pendant l'installation des
+  fichiers modificateurs. S'il vous plaît, reporter le problème sur GitLab, GBAtemp
+  ou Discord. https://netpass.cafe/discord
 str_settings_about: À propos
 str_about_lead_dev: Développeur principal
 str_about_reports: Système de signalement
@@ -94,3 +94,6 @@ str_continue: Continuer
 str_bad_os_version: "NetPass a besoin de l'OS 3DS version 11.15.0 ou plus récente
   pour fonctionner. Malhereusement, vous semblez avoir une version plus ancienne.
   Veuillez mettre à jour et redémarrer NetPass.\n\nAppuyer sur une touche pour sortir"
+str_update_patches_poweroff_clear_desc: Fichiers supprimés ! Votre console va maintenant
+  redémarrer.
+str_bg_music: Musique de fond
