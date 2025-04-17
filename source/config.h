@@ -39,6 +39,7 @@ bool isTitleIgnored(u32 title_id);
 void configInit(void);
 void configWrite(void);
 
+bool clearPatches(void);
 bool writePatches(void);
 void clearBossCacheAndReboot(void);
 

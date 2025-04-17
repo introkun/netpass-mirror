@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <ctype.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "boss.h"
 
 #define PATCHES_COPY_DSTDIR "sdmc:/luma/sysmodules/"
@@ -206,6 +207,40 @@ void configWrite(void) {
 void configInit(void) {
 	mkdir_p((char*)config_path);
 	load();
+}
+
+bool clearPatches(void) {
+	DIR* d = opendir(PATCHES_COPY_SRCDIR);
+	if (!d) {
+		printf("ERROR: src dir not found\n");
+		return false;
+	}
+	struct dirent* p;
+	char srcpath[100];
+	char dstpath[100];
+	bool deleted_file = false;
+	while ((p = readdir(d))) {
+		snprintf(srcpath, 100, "%s%s", PATCHES_COPY_SRCDIR, p->d_name);
+		snprintf(dstpath, 100, "%s%s", PATCHES_COPY_DSTDIR, p->d_name);
+		struct stat statbuf;
+		if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
+			// we skip the ssl patch
+			if (strcmp(p->d_name, "0004013000002F02.ips") == 0) continue;
+			// we skip files that don't exist
+			if (access(dstpath, F_OK) != 0) continue;
+			// ok we actually have a file, delete it
+			printf("%s...", p->d_name);
+			remove(dstpath);
+			printf("Done\n");
+			deleted_file = true;
+		}
+	}
+	closedir(d);
+	printf("Updating patches version in config...");
+	config.patches_version = _PATCHES_VERSION_;
+	configWrite();
+	printf("Done\nClearing sysmodules done\n");
+	return deleted_file;
 }
 
 bool writePatches(void) {

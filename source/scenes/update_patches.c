@@ -21,9 +21,9 @@
 #include <stdlib.h>
 #define N(x) scenes_update_patches_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_UPDATE_PATCHES_LEN + STR_UPDATE_PATCHES_DESC_LEN + STR_UPDATE_PATCHES_ERROR_DESC_LEN + STR_UPDATE_PATCHES_POWEROFF_DESC_LEN + STR_A_OK_LEN + STR_B_CANCEL_LEN)
+#define TEXT_BUF_LEN (STR_UPDATE_PATCHES_LEN + STR_UPDATE_PATCHES_DESC_LEN + STR_UPDATE_PATCHES_ERROR_DESC_LEN + STR_UPDATE_PATCHES_POWEROFF_DESC_LEN + STR_UPDATE_PATCHES_POWEROFF_CLEAR_DESC_LEN + STR_A_OK_LEN + STR_B_CANCEL_LEN)
 
-enum State {Question, Poweroff, Error};
+enum State {Question, Poweroff, Error, Pop, Poweroff_Clear};
 
 typedef struct {
 	int state;
@@ -32,6 +32,7 @@ typedef struct {
 	C2D_Text g_description;
 	C2D_Text g_description_error;
 	C2D_Text g_description_poweroff;
+	C2D_Text g_description_poweroff_clear;
 	C2D_Text g_a_ok;
 	C2D_Text g_b_cancel;
 } N(DataStruct);
@@ -48,6 +49,7 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_description, _data->g_staticBuf, str_update_patches_desc);
 	TextLangParse(&_data->g_description_error, _data->g_staticBuf, str_update_patches_error_desc);
 	TextLangParse(&_data->g_description_poweroff, _data->g_staticBuf, str_update_patches_poweroff_desc);
+	TextLangParse(&_data->g_description_poweroff_clear, _data->g_staticBuf, str_update_patches_poweroff_clear_desc);
 	TextLangParse(&_data->g_a_ok, _data->g_staticBuf, str_a_ok);
 	TextLangParse(&_data->g_b_cancel, _data->g_staticBuf, str_b_cancel);
 }
@@ -60,6 +62,8 @@ void N(render)(Scene* sc) {
 		C2D_DrawText(&_data->g_b_cancel, C2D_AlignLeft, 10, 200, 0, 1, 1);
 	} else if (_data->state == Poweroff) {
 		C2D_DrawText(&_data->g_description_poweroff, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
+	} else if (_data->state == Poweroff_Clear) {
+		C2D_DrawText(&_data->g_description_poweroff_clear, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
 	} else {
 		C2D_DrawText(&_data->g_description_error, C2D_AlignLeft | C2D_WordWrap, 30, 38, 0, 0.5, 0.5, 350.);
 	}
@@ -77,9 +81,19 @@ SceneResult N(process)(Scene* sc) {
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	if (_data) {
+		if (_data->state == Pop) {
+			return scene_pop;
+		}
 		if ((_data->state == Question && (kDown & KEY_B)) || (_data->state == Error && (kDown & KEY_A))) {
 			if (sc->next_scene) return scene_switch;
-			return scene_pop;
+			sc->next_scene = getLoadingScene(0, lambda(void, (void) {
+				if (clearPatches()) {
+					__data__->state = Poweroff_Clear;
+				} else {
+					__data__->state = Pop;
+				}
+			}));
+			return scene_push;
 		}
 		if (_data->state == Question && (kDown & KEY_A)) {
 			sc->next_scene = getLoadingScene(0, lambda(void, (void) {
@@ -91,7 +105,7 @@ SceneResult N(process)(Scene* sc) {
 			}));
 			return scene_push;
 		}
-		if (_data->state == Poweroff && (kDown & KEY_A)) {
+		if ((_data->state == Poweroff || _data->state == Poweroff_Clear) && (kDown & KEY_A)) {
 			clearBossCacheAndReboot();
 			return scene_continue;
 		}
