@@ -52,7 +52,7 @@ str_write_patches: Schreib SPR-Patches
 str_b_cancel: '{b_button} Abbrechen'
 str_a_ok: '{a_button} Ok'
 str_update_patches: Patches aktualisieren
-str_update_patches_error_desc: Ein Fehler ist während der Aktualisierung aufgetreten.
+str_update_patches_error_desc: Ein Fehler ist während der Patch-Aktualisierung aufgetreten.
   Bitte melde dieses Problem auf GitLab, GBAtemp oder auf Discord. https://netpass.cafe/discord
 str_update_patches_poweroff_desc: Patches erfolgreich aktualisiert! Deine Konsole
   wird nun neu gestartet.
