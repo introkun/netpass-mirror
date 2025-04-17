@@ -55,8 +55,8 @@ str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysm
   and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze
   kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
   d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Patches geschriwwe sinn."
-str_update_patches_error_desc: "Eppes ass falsch gaang beim aktualiséiere vun Patches.
-  Gewisen wannechgelift. dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
+str_update_patches_error_desc: "En Iertum ass geschitt wärend bei Patches-aktualiséiere.
+  Gewisen wannechgelift dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Aktualiséiere Patches erfollegräich! Är Konsole
   wäert elo nei ufänken."
 str_integrations: "Integratioun"
@@ -72,7 +72,7 @@ str_about_graphics: "Konscht a Grafiken"
 str_about_music: "Musek"
 str_about_localisation: "Iwwersetzungen"
 str_about_netpass_community: "D'NetPass Gemeinschaft"
-str_about_special_thanks: "Villmools Merci"
+str_about_special_thanks: "Mercien"
 str_about_special_thanks_txt: "D'3DS Homebrew-Gemeinschaft fir all Rétro-konstruktion
   an Dokumentatioun"
 str_about_production_cat: "Produktioun-Muuss"
@@ -80,8 +80,13 @@ str_scan_qr: "QR-Code scannen"
 str_x_switch_camera: "{x_button} Kamera änneren"
 str_prompt_verify: "Sidd Dir sécher datt Dir dës 3DS verifizéiere wëllt?"
 str_welcome: "Wëllkomm op NetPass"
-str_welcome_message: "Ier Dir NetPass ufänkt, liest wannechgelift. eis Regelen a Privatsphär
-  Politik."
+str_welcome_message: "Ier Dir NetPass ufänkt, liest eis Regelen a Privatsphär Politik."
 str_view_rules: "Gesi Regelen"
 str_view_privacy: "Gesi Privatsphär Politik"
 str_continue: "Weiderfueren"
+str_update_patches_poweroff_clear_desc: Patches erfollegräich geläscht! Är Konsole
+  wäert elo demarréieren.
+str_bg_music: Hannergrondmusek
+str_bad_os_version: "NetPass erfuerdert 3DS OS 11.15.0 oder méi spéit fir richteg
+  ze funktionéieren. Leider schéngt et datt Dir eng méi al Versioun benotzt. Aktualiséieren
+  an demarréieren dann NetPass nees, villmools merci.\n\nDréckt all Taste fir ze verloossen"
