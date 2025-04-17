@@ -30,6 +30,7 @@ typedef struct {
 	int patches_version;
 	int welcome_version;
 	u32 title_ids_ignored[24];
+	bool bg_music;
 } Config;
 
 void addIgnoredTitle(u32 title_id);

@@ -19,23 +19,26 @@
 #include "settings.h"
 #include "../curl-handler.h"
 #include "../utils.h"
+#include "../music.h"
 #include "misc_settings.h"
 #include <stdlib.h>
 #include <malloc.h>
 #define N(x) scenes_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN + STR_BG_MUSIC_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN)
 
-#define NUM_ENTRIES 7
+#define NUM_ENTRIES 8
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
 	C2D_Text g_title;
 	C2D_Text g_entries[NUM_ENTRIES];
 	C2D_Text g_languages[NUM_LANGUAGES + 1];
+	C2D_Text g_on_off[2];
 	int cursor;
 	int selected_language;
 	float lang_width;
+	float bg_music_width;
 } N(DataStruct);
 
 void N(init)(Scene* sc) {
@@ -47,14 +50,17 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[0], _data->g_staticBuf, str_toggle_titles);
 	TextLangParse(&_data->g_entries[1], _data->g_staticBuf, str_report_user);
 	TextLangParse(&_data->g_entries[2], _data->g_staticBuf, str_language_pick);
-	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_integrations);
-	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_scan_qr);
-	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_settings_misc);
-	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_bg_music);
+	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_integrations);
+	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_scan_qr);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings_misc);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
 	for (int i = 0; i < NUM_LANGUAGES; i++) {
 		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
 	}
+	TextLangParse(&_data->g_on_off[0], _data->g_staticBuf, str_toggle_titles_off);
+	TextLangParse(&_data->g_on_off[1], _data->g_staticBuf, str_toggle_titles_on);
 	_data->selected_language = -1;
 	if (config.language != -1) {
 		for (int i = 0; i < NUM_LANGUAGES; i++) {
@@ -64,6 +70,7 @@ void N(init)(Scene* sc) {
 		}
 	}
 	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
+	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
 }
 
 void N(render)(Scene* sc) {
@@ -73,6 +80,9 @@ void N(render)(Scene* sc) {
 		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft, 30, 10 + (i+1)*25, 0, 1, 1);
 	}
 	C2D_DrawText(&_data->g_languages[_data->selected_language + 1], C2D_AlignLeft, 35 + _data->lang_width, 35 + 50, 0, 1, 1);
+	u32 onClr = C2D_Color32(10, 200, 10, 0xff);
+	u32 offClr = C2D_Color32(200, 10, 10, 0xff);
+	C2D_DrawText(&_data->g_on_off[config.bg_music], C2D_AlignLeft | C2D_WithColor, 35 + _data->bg_music_width, 35 + 75, 0, 1, 1, config.bg_music ? onClr : offClr);
 	u32 clr = C2D_Color32(0, 0, 0, 0xff);
 	int x = 10;
 	int y = 10 + (_data->cursor + 1)*25 + 5;
@@ -130,21 +140,26 @@ SceneResult N(process)(Scene* sc) {
 				return scene_push;
 			}
 			if (_data->cursor == 3) {
+				// bg music
+				toggleBgMusic();
+				return scene_continue;
+			}
+			if (_data->cursor == 4) {
 				// integrations
 				sc->next_scene = getIntegrationScene();
 				return scene_push;
 			}
-			if (_data->cursor == 4) {
+			if (_data->cursor == 5) {
 				// scan qr
 				sc->next_scene = getScanQrScene();
 				return scene_push;
 			}
-			if (_data->cursor == 5) {
+			if (_data->cursor == 6) {
 				// misc settings
 				sc->next_scene = getMiscSettingsScene();
 				return scene_push;
 			}
-			if (_data->cursor == 6) return scene_pop;
+			if (_data->cursor == 7) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;

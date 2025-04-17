@@ -18,6 +18,7 @@
 
 #include "music.h"
 #include "api.h"
+#include "config.h"
 
 #include <opus/opusfile.h>
 #include <stdlib.h>
@@ -137,6 +138,9 @@ Result playMusic(const char* filename) {
 	strncpy(curfilename, filename, sizeof(curfilename) - 1);
 	curfilename[sizeof(curfilename) - 1] = '\0';
 	stopMusic();
+	if (!config.bg_music) {
+		return res;
+	}
 	// first open the file
 	char f[50];
 	snprintf(f, 50, "romfs:/music/%s.opus", filename);
@@ -154,6 +158,20 @@ void stopMusic(void) {
 		threadFree(music_thread);
 		music_thread = 0;
 	}
+}
+
+void toggleBgMusic(void) {
+	config.bg_music = !config.bg_music;
+	if (!config.bg_music) {
+		stopMusic();
+	} else {
+		char filename[sizeof(curfilename)];
+		strncpy(filename, curfilename, sizeof(filename) - 1);
+		filename[sizeof(filename) - 1] = '\0';
+		memset(curfilename, 0, sizeof(curfilename));
+		playMusic(filename);
+	}
+	configWrite();
 }
 
 void musicInit(void) {

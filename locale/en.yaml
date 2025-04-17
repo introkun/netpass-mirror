@@ -84,3 +84,4 @@ str_continue: "Continue"
 str_bad_os_version: "NetPass requires 3DS OS 11.15.0 or later to function properly. Unfortunately, it seems that you are using an older verison. Please update and then start NetPass again.\n\nPress any key to exit"
 str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your console will
   now restart."
+str_bg_music: "BG Music"

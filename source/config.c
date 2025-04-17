@@ -47,6 +47,7 @@ Config config = {
 	.price = 0,
 	.welcome_version = 0,
 	.patches_version = 0,
+	.bg_music = 1,
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -133,6 +134,9 @@ void load(void) {
 		if (strcmp(key, "PATCHES_VERSION") == 0) {
 			config.patches_version = atoi(value);
 		}
+		if (strcmp(key, "BG_MUSIC") == 0) {
+			config.bg_music = strcmp(value, "TRUE") == 0;
+		}
 		if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
 			// Open mbox_list now to avoid repeatedly doing it later
 			Result res = 0;
@@ -182,6 +186,8 @@ void configWrite(void) {
 	snprintf(line, 250, "welcome_version=%d\n", config.welcome_version);
 	fputs_blk(line, f);
 	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
+	fputs_blk(line, f);
+	snprintf(line, 250, "bg_music=%s\n", config.bg_music ? "true" : "false");
 	fputs_blk(line, f);
 	if (config.language == -1) {
 		fputs_blk("language=system\n", f);
