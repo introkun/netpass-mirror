@@ -86,3 +86,9 @@ str_continue: Kontynuuj
 str_welcome: Witaj w NetPass
 str_welcome_message: Przed uruchomieniem NetPass proszę przeczytać i zaakceptować
   nasze zasady oraz politykę prywatności.
+str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą aby prawidłowo
+  funkcjonować. Niestety wygląda na to że używasz starszej wersji. Proszę zaauktalizować
+  i otworzyć NetPass ponownie.\n\nWciśnij dowolny przycisk aby wyjść"
+str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola uruchomi
+  się teraz ponownie.
+str_bg_music: Muzyka w Tle
