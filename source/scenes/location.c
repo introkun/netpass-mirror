@@ -44,7 +44,7 @@ LanguageString* N(locations)[NUM_LOCATIONS] = {
 
 const char* N(music)[NUM_LOCATIONS] = {
 	"train_station",
-	"home",
+	"plaza",
 	"mall",
 	"home",
 	"home",
