@@ -100,11 +100,16 @@ int main() {
 				char url[50];
 				snprintf(url, 50, "%s/ping", BASE_URL);
 				int check_count = 0;
+				int max_count = 100;
 				while (true) {
 					res = httpRequest("GET", url, 0, 0, 0, 0, 0);
 					if (R_SUCCEEDED(res)) break;
 					check_count++;
-					if (check_count > 100) {
+					if (check_count > max_count) {
+						if (res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
+							max_count += 100;
+							continue;
+						}
 						location = res;
 						return;
 					}
