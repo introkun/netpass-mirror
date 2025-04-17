@@ -88,7 +88,7 @@ str_continue: Fortfahren
 str_welcome_message: Bevor du mit NetPass starten kannst, lese und akzeptiere bitte
   unsere Regeln und Datenschutzrichtlinien.
 str_update_patches_poweroff_clear_desc: Patches erfolgreich entfernt! Deine Konsole
-  wird jetzt neu gestartet.
+  wird nun neu gestartet.
 str_bg_music: Hintergrundmusik
 str_bad_os_version: "NetPass benötigt 3DS OS 11.15.0 oder höher, um ordnungsgemäß
   zu funktionieren. Leider scheinst du eine ältere Version zu verwenden. Bitte aktualisieren
