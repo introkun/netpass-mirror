@@ -172,7 +172,7 @@ void configWrite(void) {
 	fputs_blk(line, f);
 	snprintf(line, 250, "year=%d\n", config.year);
 	fputs_blk(line, f);
-	snprintf(line, 250, "montconfig.h=%d\n", config.month);
+	snprintf(line, 250, "month=%d\n", config.month);
 	fputs_blk(line, f);
 	snprintf(line, 250, "day=%d\n", config.day);
 	fputs_blk(line, f);
