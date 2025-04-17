@@ -242,11 +242,14 @@ void curl_multi_loop_request_setup(int i) {
 	
 	FriendKey friend_key;
 	Result res = FRD_GetMyFriendKey(&friend_key);
+	char header_fc[100];
 	char header_friend_key[100];
 	if (R_SUCCEEDED(res)) {
 		u64 fc;
 		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
 		if (R_SUCCEEDED(res)) {
+			snprintf(header_fc, 100, "3ds-fc: %016llX", fc);
+			headers = curl_slist_append(headers, header_fc);
 			u64 fc_seed;
 			res = CFGI_GetLocalFriendCodeSeed(&fc_seed);
 			if (R_SUCCEEDED(res)) {

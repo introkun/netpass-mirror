@@ -115,20 +115,9 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 		return res;
 	}
 
-	// iterate over the slot messages and actually send them
-	snprintf(url, 50, "%s/outbox/upload", BASE_URL);
-	u32 message_count = ((CecSlotHeader*)slot)->message_count;
-	u32 slot_offset = sizeof(CecSlotHeader);
-	for (u32 i = 0; i < message_count; i++) {
-		
-		u32 msg_size = ((CecMessageHeader*)(slot + slot_offset))->message_size;
-		res = httpRequest("POST", url, msg_size, slot + slot_offset, 0, extra->title_name, extra->hmac_key);
-		if (R_FAILED(res)) {
-			free(slot);
-			return res;
-		}
-		slot_offset += msg_size;
-	}
+	// now upload the slot
+	snprintf(url, 50, "%s/outbox/slot", BASE_URL);
+	res = httpRequest("POST", url, metadata->size, slot, 0, extra->title_name, extra->hmac_key);
 	free(slot);
 	return res;
 }
