@@ -47,17 +47,17 @@ str_report_mii_plaza_custom_reply: "Jų atsakymas: %s"
 str_report_tomodachi_life_island_name: "Salos pavadinimas: %s"
 str_b_go_back: "{b_button} Grįžti"
 str_b_cancel: "{b_button} Atšaukti"
-str_a_ok: "{b_button} Gerai"
+str_a_ok: "{b_button} Patvirtinti"
 str_update_patches: "Atnaujinti sysmodule pakeitimus"
-str_update_patches_desc: "Siekiant įdiegti NetPass, bus įgyvendinti sysmodule pakitimai.
-  Jiems įsigalioti, privalote įjungti \"Enable loading external FIRMs and modules\"\
-  \ Luma3DS nustatymuose. Siekiant patekti į šiuos nustatymus, turite išjungti konsolę
-  ir spausti {select_button} kol įjungiama {power_button} konsolė. Tai galite padaryti
-  po sysmodule pakitimų įrašymo."
+str_update_patches_desc: "Siekiant įdiegti NetPass, bus įgyvendinti sysmodule pakeitimai.
+  Jiems įsigalioti, privalote pažymėti parinktį \"Enable loading external FIRMs and
+  modules\" Luma3DS nustatymuose. Siekiant patekti į šiuos nustatymus, turite išjungti
+  įrenginį ir spausti {select_button} kol įjungiate {power_button} Jūsų įrenginį.
+  Tai galite padaryti po sysmodule pakeitimų įrašymo."
 str_update_patches_error_desc: "Įvyko klaida atnaujinant pakitimus. Praneškite apie
   šią klaidą Gitlab, GBAtemp arba Discord. https://netpass.cafe/discord"
-str_update_patches_poweroff_desc: "Pakitimai išsaugoti! Jūsų konsolė dabar bus paleista
-  iš naujo."
+str_update_patches_poweroff_desc: "Pakeitimai išsaugoti! Jūsų įrenginys dabar bus
+  paleista iš naujo."
 str_integrations: "Integracijos"
 str_integrations_message: "Trečiųjų šalių integracijos nėra prižiūrimos NetPass. Naudokitės
   savo paties rizika!"
@@ -90,4 +90,4 @@ str_bg_music: Fono Muzika
 str_bad_os_version: "NetPass reikalauja 3DS operacinės sistemos versijos 11.15.0 ar
   naujesnės, kad veiktų teisingai. Panašu, kad naudojate senesnę versiją. Atnaujinkite
   sistemą, tuomet iš naujo įjunkite NetPass.\n\nSpustelėkite bet kurį mygtuką, kad
-  išeitumėte."
+  išeitumėte"
