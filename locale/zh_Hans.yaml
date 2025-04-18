@@ -74,3 +74,12 @@ str_update_patches_desc: 为了正常安装NetPass，软件将会在系统模块
   并开机 {power_button} 的方式打开Luma3DS设置菜单。你可以在补丁写入完成后再进行该操作。
 str_update_patches_error_desc: 更新补丁时出错。请在GitLab、GBAtemp或Discord上报告该问题。https://netpass.cafe/discord
 str_b_cancel: '{b_button} 取消'
+str_bg_music: 背景音乐
+str_update_patches_poweroff_clear_desc: 成功移除补丁！主机现在将会重启。
+str_bad_os_version: "为了让 NetPass 正常工作， 3DS 操作系统需要至少 11.15.0 版本。不幸的是，你似乎正在使用一个更老的系统版本。请升级后再重新打开
+  NetPass。\n\n按任意键退出"
+str_welcome: 欢迎来到 NetPass
+str_welcome_message: 在使用 NetPass 前，请阅读并接受我们的规则与隐私条款。
+str_view_rules: 查看规则
+str_view_privacy: 查看隐私条款
+str_continue: 继续
