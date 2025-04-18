@@ -59,7 +59,8 @@ str_update_patches_error_desc: "Something went wrong while updating patches. Ple
 str_update_patches_poweroff_desc: "Updating patches successful! Your console will
   now restart."
 str_integrations: "Integrations"
-str_integrations_message: "Third-party integrations are outside of NetPass moderation. Use at your own risk!"
+str_integrations_message: "Third-party integrations are outside of NetPass moderation.
+  Use at your own risk!"
 str_report_source: "Source: %s"
 str_report_source_unknown: "Unknown source"
 str_settings_misc: "Miscellaneous"
@@ -68,21 +69,25 @@ str_about_lead_dev: "Lead Developer"
 str_about_reports: "Report System"
 str_about_graphics: "Art and Graphics"
 str_about_music: "Music"
-str_about_localisation: "Localisation"
+str_about_localisation: "Localization"
 str_about_netpass_community: "The NetPass community"
 str_about_special_thanks: "Special Thanks"
-str_about_special_thanks_txt: "The 3DS homebrew community for all the reverse-engineering and documentation"
+str_about_special_thanks_txt: "The 3DS homebrew community for all the reverse-engineering
+  and documentation"
 str_about_production_cat: "Production cat"
 str_scan_qr: "Scan QR Code"
 str_x_switch_camera: "{x_button} Switch Camera"
 str_prompt_verify: "Are you sure you want to verify this 3DS?"
 str_welcome: "Welcome to NetPass"
-str_welcome_message: "Before starting NetPass, please read and accept our rules and privacy policy."
+str_welcome_message: "Before starting NetPass, please read and accept our rules and
+  privacy policy."
 str_view_rules: "View Rules"
 str_view_privacy: "View Privacy Policy"
 str_continue: "Continue"
-str_bad_os_version: "NetPass requires 3DS OS 11.15.0 or later to function properly. Unfortunately, it seems that you are using an older verison. Please update and then start NetPass again.\n\nPress any key to exit"
-str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your console will
-  now restart."
+str_bad_os_version: "NetPass requires 3DS OS 11.15.0 or later to function properly.
+  Unfortunately, it seems that you are using an older verison. Please update and then
+  start NetPass again.\n\nPress any key to exit"
+str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your console
+  will now restart."
 str_bg_music: "BG Music"
 str_prompt_dl_pass: "Are you sure you want to download this pass?"
