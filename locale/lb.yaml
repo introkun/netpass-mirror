@@ -36,8 +36,8 @@ str_back_alley_pay: "Kaaft e Spillpass {playcoin}%d"
 str_check_inboxes: 'Infokëscht préiwen'
 str_toggle_titles: 'Aschalten/ausschalte spiller'
 str_toggle_titles_message: "Dréckt {a_button} fir Spillpäss demarréieren oder ze apaken."
-str_toggle_titles_on: "(JO)"
-str_toggle_titles_off: "(NEE)"
+str_toggle_titles_on: "(OP)"
+str_toggle_titles_off: "(AUS)"
 str_report_mii_name: "Numm Mii: %s"
 str_report_mario_kart_7_greeting: "Grouss: %s"
 str_report_mii_plaza_last_game: "Lescht Spill: %s"
