@@ -91,3 +91,5 @@ str_bad_os_version: "NetPass requiere 3DS OS 11.15.0 o mayor para funcionar corr
   Desafortunadamente, parece que estás usando una versión mas antigua. Por favor actualice
   y luego inicie NetPass nuevamente.\n\nPresioné cualquier tecla para salir"
 str_bg_music: Música BG
+str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su consola
+  se reiniciará.
