@@ -88,8 +88,8 @@ str_view_privacy: Ver Política de Privacidad
 str_welcome_message: Antes de iniciar NetPass, por favor lee y acepta nuestras reglas
   y política de privacidad.
 str_bad_os_version: "NetPass requiere 3DS OS 11.15.0 o mayor para funcionar correctamente.
-  Desafortunadamente, parece que estás usando una versión mas antigua. Por favor actualice
-  y luego inicie NetPass nuevamente.\n\nPresioné cualquier tecla para salir"
+  Desafortunadamente, parece que estás usando una versión mas antigua. Por favor,
+  actualice y luego inicie NetPass nuevamente.\n\nPresione cualquier botón para salir"
 str_bg_music: Música BG
 str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su consola
   se reiniciará.
