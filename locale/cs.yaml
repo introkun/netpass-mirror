@@ -93,5 +93,5 @@ str_update_patches_poweroff_clear_desc: Patche byly úspěšně odebrány! Vaše
 str_bg_music: Hudba na pozadí
 str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního systému
   3DS alespoň 11.15.0 nebo novější. Bohužel to vypadá, že Vaše verze je starší. Prosím
-  aktualizujte Váš operační systém a spusťe Netpass znovu.\n\nStiskněte libovolné
+  aktualizujte Váš operační systém a spusťe NetPass znovu.\n\nStiskněte libovolné
   tlačítko pro opuštění aplikace"
