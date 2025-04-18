@@ -88,3 +88,6 @@ str_view_rules: Tignan ang mga Alituntunin
 str_view_privacy: Tingnan ang Patakaran sa privacy
 str_continue: Magpatuloy
 str_welcome: Maligayang pagdating sa NetPass
+str_bg_music: Musika sa BG
+str_update_patches_poweroff_clear_desc: Matagumpay na natanggal ang mga patches! Mag-rerestart
+  na ang iyong console.
