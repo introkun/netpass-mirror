@@ -80,3 +80,7 @@ str_view_rules: 利用規約を見る
 str_view_privacy: プライバシーポリシーを見る
 str_continue: 続ける
 str_welcome: NetPassへようこそ
+str_bg_music: BGM
+str_bad_os_version: "NetPassが正しく働くために、3DSの ファームウェア11.15.0以上は必要です。あいにく、あなたのゲーム機は古い
+  ファームウェアを使っている。 アップデートした後に、NetPassを開けてください\n\nボタンを押すと、NetPassが閉まる"
+str_update_patches_poweroff_clear_desc: パッチを外すのは成功しました! 今から、3DS本体が再起動 します。
