@@ -91,3 +91,7 @@ str_welcome: Maligayang pagdating sa NetPass
 str_bg_music: Musika sa BG
 str_update_patches_poweroff_clear_desc: Matagumpay na natanggal ang mga patches! Mag-rerestart
   na ang iyong console.
+str_bad_os_version: "Kailangan ng NetPass ng 3DS OS 11.15.0 o mas bago upang gumana
+  nang maayos. Sa kasamaang palad, mukhang gumagamit ka ng lumang bersyon. Mangyaring
+  mag-update at pagkatapos ay simulan muli ang NetPass.\n\nPindutin ang anumang key
+  upang umalis"
