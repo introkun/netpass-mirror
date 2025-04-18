@@ -19,6 +19,7 @@
 #include "home.h"
 #include <stdlib.h>
 #include "../api.h"
+#include "../config.h"
 #define N(x) scenes_home_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_AT_HOME_LEN + STR_GOTO_TRAIN_STATION_LEN + STR_GOTO_PLAZA_LEN + STR_GOTO_MALL_LEN + STR_GOTO_BEACH_LEN + STR_GOTO_ARCADE_LEN + STR_GOTO_CATCAFE_LEN + STR_SETTINGS_LEN + STR_EXIT_LEN)
@@ -67,9 +68,10 @@ void N(render)(Scene* sc) {
 	u32 bgclr = C2D_Color32(0, 0, 0, 0x50);
 	C2D_DrawRectSolid(8, 8, 0, _data->width + 4, 35 + NUM_ENTRIES*14, bgclr);
 	u32 clr = C2D_Color32(0xff, 0xff, 0xff, 0xff);
+	u32 clr_inactive = C2D_Color32(0, 0, 0, 0x80);
 	C2D_DrawText(&_data->g_home, C2D_AlignLeft | C2D_WithColor, 10, 10, 0, 1, 1, clr);
 	for (int i = 0; i < NUM_ENTRIES; i++) {
-		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 35 + i*14, 0, 0.5, 0.5, clr);
+		C2D_DrawText(&_data->g_entries[i], C2D_AlignLeft | C2D_WithColor, 30, 35 + i*14, 0, 0.5, 0.5, config.last_location == i ? clr_inactive : clr);
 	}
 	int x = 22;
 	int y = 35 + _data->cursor*14 + 3;
