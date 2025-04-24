@@ -1,6 +1,7 @@
 str_loading: "Ładowanie    "
 str_libcurl_error: "Błąd libCURL (%d): %s"
-str_libcurl_date_and_time: 'Upewnij się, że data i czas systemowy jest ustawiony poprawnie!'
+str_libcurl_date_and_time: 'Upewnij się, że data i czas twojej konsoli jest ustawiony
+  prawidłowo!'
 str_httpstatus_error: 'Błąd HTTP o kodzie %d'
 str_3ds_error: 'Błąd 3DS o kodzie %08lx'
 str_at_home: 'Jesteś w Domu.'
