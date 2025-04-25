@@ -64,7 +64,7 @@ str_update_patches_desc: Pour installer correctement NetPass, des fichiers modif
   pendant que la console s'allume {power_button} . Vous pouvez faire cela après que
   les modifications aient été écrites.
 str_integrations_message: Les intégrations tierces ne sont pas gérées par NetPass.
-  Utilisez-les à vos risques et périls!
+  Utilisez-les à vos risques et périls !
 str_update_patches_poweroff_desc: Mise à jour des fichiers réussie ! Votre console
   va maintenant redémarrer.
 str_update_patches_error_desc: Un problème est survenu pendant l'installation des
