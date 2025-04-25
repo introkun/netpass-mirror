@@ -97,3 +97,4 @@ str_bad_os_version: "Votre 3DS doit être en 11.15 ou pluspour pouvoir utiliser 
 str_update_patches_poweroff_clear_desc: Fichiers supprimés ! Votre console va maintenant
   redémarrer.
 str_bg_music: Musique de fond
+str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
