@@ -94,3 +94,4 @@ str_bad_os_version: "NetPass benötigt 3DS OS 11.15.0 oder höher, um ordnungsge
   zu funktionieren. Leider scheinst du eine ältere Version zu verwenden. Bitte aktualisieren
   dein System und starte anschließend NetPass erneut.\n\nZum Beenden eine beliebige
   Taste drücken"
+str_prompt_dl_pass: Bist du sicher, dass du diese Begegnung herunterladen möchtest?
