@@ -271,6 +271,17 @@ SceneResult N(process)(Scene* sc) {
 						})));
 						return scene_push;
 					};
+					case QR_METHOD_DL_PASS: {
+						sc->next_scene = getPromptScene(str_prompt_dl_pass, getLoadingScene(NULL, lambda(void, (void) {
+							Result res = qr_dl_pass(N(qr_buffer));
+							if (R_FAILED(res)) {
+								printf("Verification failed: %lx\n", res);
+							} else {
+								printf("Verification successful!\n");
+							}
+						})));
+						return scene_push;
+					}
 					default:
 						printf("Unknown method %ld\n", method);
 				}

@@ -22,6 +22,7 @@
 typedef enum : u32 {
 	QR_METHOD_VERIFY = 1,
 	QR_METHOD_JOIN,
+	QR_METHOD_DL_PASS,
 } QrMethods;
 
 typedef struct {
@@ -36,3 +37,4 @@ u32 qr_read_u32(QrBuffer* buffer);
 u32 qr_read_string(QrBuffer* buffer, char* string, u32 length);
 bool qr_buf_equal(QrBuffer* buffer, u8* buf, u32 len);
 Result qr_verify(QrBuffer* buffer);
+Result qr_dl_pass(QrBuffer* buffer);

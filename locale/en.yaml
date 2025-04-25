@@ -85,3 +85,4 @@ str_bad_os_version: "NetPass requires 3DS OS 11.15.0 or later to function proper
 str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your console will
   now restart."
 str_bg_music: "BG Music"
+str_prompt_dl_pass: "Are you sure you want to download this pass?"

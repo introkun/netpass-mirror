@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "api.h"
+#include "cecd.h"
+#include "curl-handler.h"
 
 bool qr_buffer_consume(QrBuffer* buffer, u32 length) {
 	if (buffer->cur + length > buffer->end) return false;
@@ -67,6 +69,30 @@ Result qr_verify(QrBuffer* buffer) {
 	res = httpRequest("POST", url, strlen(token) + 1, (u8*)token, 0, 0, 0);
 	if (R_FAILED(res)) return res;
 	int http_code = res;
-	if (http_code < 200 || http_code >= 300) return -2;
+	if (http_code < 200 || http_code >= 300) return -res;
+	return res;
+}
+
+Result qr_dl_pass(QrBuffer* buffer) {
+	char url[300];
+	Result res = 0;
+	if (qr_read_string(buffer, url, 300) == 0) {
+		return -1;
+	}
+	CurlReply* reply;
+	res = httpRequest("GET", url, 0, 0, &reply, 0, 0);
+	if (R_FAILED(res)) goto fail;
+	int http_code = res;
+	if (http_code < 200 || http_code >= 300) {
+		res = -res;
+		goto fail;
+	}
+	if (reply->len < sizeof(CecMessageHeader)) {
+		res = -1;
+		goto fail;
+	}
+	res = addStreetpassMessage(reply->ptr);
+fail:
+	curlFreeHandler(reply->offset);
 	return res;
 }
