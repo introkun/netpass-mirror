@@ -87,3 +87,9 @@ str_welcome_message: Mielőtt használod a NetPass-t, kérjük olvasd el és fog
 str_view_rules: Szabályok megtekintése
 str_view_privacy: Adatvédelmi szabályzat megtekintése
 str_continue: Tovább
+str_update_patches_poweroff_clear_desc: A patchek eltávolítása sikeres. A konzolod
+  most újraindul.
+str_bg_music: Háttérzene
+str_bad_os_version: "A NetPass-nak 3DS OS 11.15.0 vagy későbbi verzióra van szüksége
+  a megfelelő működéshez. Sajnos úgy tűnik, hogy régebbi verziót használsz. Kérjük
+  frissíts, majd indítsd el újra a NetPass-t.\n\nPress any key to exit"
