@@ -178,14 +178,14 @@ ifneq ($(ROMFS),)
 	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: all clean translations patches
+.PHONY: all clean translations patches submodulecheck
 
 MAKEROM		?=	makerom
 
 MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSION_MAJOR} -minor ${NETPASS_VERSION_MINOR} -micro ${NETPASS_VERSION_MICRO} -icon $(OUTPUT).smdh -banner "$(BUILD)/banner.bnr"
 
 #---------------------------------------------------------------------------------
-3dsx: codegen $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR) smdh
+3dsx: codegen submodulecheck $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES) $(OUTDIR) smdh
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
@@ -235,6 +235,9 @@ clean:
 	@echo clean ...
 	@$(MAKE) -C patches clean
 	@rm -fr $(BUILD) $(GFXBUILD) $(MUSICBUILD) $(DEPSDIR) $(OUTDIR) $(TOPDIR)/codegen
+
+submodulecheck:
+	@test -f source/hmac_sha256/hmac_sha256.h || (echo "ERROR: Submodules not pulled!"; exit 1)
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
