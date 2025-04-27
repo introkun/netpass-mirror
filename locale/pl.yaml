@@ -93,3 +93,4 @@ str_bad_os_version: "NetPass wymaga wersję systemu 3DS 11.15.0 bądź nowszą a
 str_update_patches_poweroff_clear_desc: Pomyślnie usunięto łatki! Twoja konsola uruchomi
   się teraz ponownie.
 str_bg_music: Muzyka w Tle
+str_prompt_dl_pass: Czy jesteś pewien, że chcesz pobrać to spotkanie?
