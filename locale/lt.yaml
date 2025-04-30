@@ -91,3 +91,4 @@ str_bad_os_version: "NetPass reikalauja 3DS operacinės sistemos versijos 11.15.
   naujesnės, kad veiktų teisingai. Panašu, kad naudojate senesnę versiją. Atnaujinkite
   sistemą, tuomet iš naujo įjunkite NetPass.\n\nSpustelėkite bet kurį mygtuką, kad
   išeitumėte"
+str_prompt_dl_pass: Ar tikrai norite atsisiųsti šį susitikimą?
