@@ -91,3 +91,4 @@ str_bg_music: Música de fons
 str_bad_os_version: "NetPass requereix de 3DS OS 11.15.0 o major per funcionar correctament.
   Desafortunadament, pareix que estàs utilitzant una versió més antiga. Si us plau,
   actualitza i després inicia NetPass de nou\n\nOprimeix qualsevol tecla per eixir"
+str_prompt_dl_pass: Segur que vols descarregar aquest passi?
