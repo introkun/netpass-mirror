@@ -164,7 +164,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	} else {
 		curlFreeHandler(curl_handle_slot);
 	}
-	fclose(file);
+	if (file) fclose(file);
 	return res;
 }
 
