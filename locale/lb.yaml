@@ -1,9 +1,9 @@
 str_loading: "Lueden    "
-str_libcurl_error: "libCURL Iertum (%d): %s"
+str_libcurl_error: "libCURL feeler (%d): %s"
 str_libcurl_date_and_time: 'Vergewëssert Iech datt den Datum an d''Zäit vun Ärem System
   richteg agestallt sinn!'
 str_httpstatus_error: 'HTTP Statuscode %d'
-str_3ds_error: '3DS Iertumcode %08lx'
+str_3ds_error: '3DS Feelercode %08lx'
 str_at_home: 'Dir sidd doheem.'
 str_goto_train_station: 'Gitt an d''Gare'
 str_at_train_station: 'Dir sidd an der Gare.'
@@ -55,7 +55,7 @@ str_update_patches_desc: "Fir NetPass richteg z'installéieren, ginn e puer Sysm
   and modules\" an de Luma3DS Astellungen. Aktivéiere Fir Zougang zu Astellungen ze
   kréien, schalt d'Konsole aus an dréckt dann op {select_button} wärend Dir {power_button}
   d'Konsole aktivéiert. Dir kënnt dat maachen nodeems d'Patches geschriwwe sinn."
-str_update_patches_error_desc: "En Iertum ass geschitt wärend bei Patches-aktualiséiere.
+str_update_patches_error_desc: "En Feeler ass geschitt wärend bei Patches-aktualiséiere.
   Gewisen wannechgelift dëst Thema op GitLab, GBAtemp oder Discord. https://netpass.cafe/discord"
 str_update_patches_poweroff_desc: "Aktualiséiere Patches erfollegräich! Är Konsole
   wäert elo nei ufänken."
