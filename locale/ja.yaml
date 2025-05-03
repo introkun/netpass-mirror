@@ -13,7 +13,9 @@ str_at_mall: 'ショッピングモールに滞在中。'
 str_exit: '終了する'
 str_settings: '設定'
 str_download_data: 'サーバーから自分のデータをダウンロードする'
-str_delete_data: 'サーバーから自分のデータを消去する'
+str_delete_data: 'サーバーから自分のデータを
+
+  消去する'
 str_back: '戻る'
 str_language: '日本語'
 str_goto_beach: 'ビーチへ出かける'
@@ -57,11 +59,11 @@ str_a_ok: '{a_button}はい'
 str_update_patches_desc: NetPassを正しくインストールするために、sysmoduleパッチが作成されます。これらを動作させるには、lumasのコンフィギュレーションで
   「Enable loading external FIRMs and modules 
   」を有効にする必要があります。コンフィギュレーションを表示するには、3DSの電源を切り、{power_button}の電源を入れながら{select_button}を押してください。パッチを書き込んだ後でもできます。
-str_integrations_message: 第三者のインテグレーションはNetPassのモデレーション以外です。自己責任で使ってください！
+str_integrations_message: "第三者のインテグレーションはNetPassのモデレーション以外です。\n自己責任で使ってください！"
 str_integrations: インテグレーション
 str_report_source_unknown: 未知元
 str_report_source: '元：%s'
-str_settings_about: NetPassにつて
+str_settings_about: NetPassについて
 str_about_lead_dev: 主要な開発元
 str_about_reports: 報告システム
 str_about_graphics: アートとグラフィック
