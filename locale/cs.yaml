@@ -95,3 +95,4 @@ str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního s
   3DS alespoň 11.15.0 nebo novější. Bohužel to vypadá, že Vaše verze je starší. Prosím
   aktualizujte Váš operační systém a spusťe NetPass znovu.\n\nStiskněte libovolné
   tlačítko pro opuštění aplikace"
+str_prompt_dl_pass: Jste si opravdu jisti, že chcete stáhnout tento pass?
