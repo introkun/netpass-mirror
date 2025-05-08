@@ -354,7 +354,12 @@ SceneResult N(process)(Scene* sc) {
 	u32 kDown = hidKeysDown();
 	u32 kHeld = hidKeysHeld();
 	if (kDown & KEY_A) {
-		return N(report)(sc);
+		if (_data->msgs->source_id == 0x504E) { // "NP"
+			return N(report)(sc);
+		} else {
+			sc->next_scene = getInfoScene(str_report_integration);
+			return scene_push;
+		}
 	}
 	if (kDown & KEY_B) return scene_pop;
 	if (kDown & KEY_START) return scene_stop;

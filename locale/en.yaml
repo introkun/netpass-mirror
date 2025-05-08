@@ -91,3 +91,4 @@ str_update_patches_poweroff_clear_desc: "Successfully removed patches! Your cons
   will now restart."
 str_bg_music: "BG Music"
 str_prompt_dl_pass: "Are you sure you want to download this pass?"
+str_report_integration: "This message is originating from an integration. To report it, please message the moderation team of said integration."

@@ -167,6 +167,7 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	closedir(d);
 	
 	msgs->source_name = 0;
+	msgs->source_id = source_ident;
 	IntegrationList* list = get_integration_list();
 	if (list) {
 		if (source_ident == 0x504E) { // "NP"

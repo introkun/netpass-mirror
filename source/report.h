@@ -81,6 +81,7 @@ typedef struct {
 
 typedef struct {
 	char* source_name;
+	u16 source_id;
 	int count;
 	ReportMessagesEntry entries[12];
 } ReportMessages;
