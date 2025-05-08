@@ -98,3 +98,5 @@ str_update_patches_poweroff_clear_desc: Fichiers supprimés ! Votre console va
   redémarrer.
 str_bg_music: Musique de fond
 str_prompt_dl_pass: Êtes-vous certain de vouloir télécharger cette rencontre ?
+str_report_integration: Ce message provient d'une intégration. Pour le signaler, demander
+  à l'équipe de modération de l'intégration.
