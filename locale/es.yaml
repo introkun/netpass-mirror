@@ -94,3 +94,5 @@ str_bg_music: Música BG
 str_update_patches_poweroff_clear_desc: ¡Parches eliminados con éxito! Su consola
   se reiniciará.
 str_prompt_dl_pass: ¿Estas seguro que quieres descargar este pase?
+str_report_integration: Este mensaje proviene de una integración. Para denunciarlo,
+  por favor, envía un mensaje al equipo de moderación de dicha integración.
