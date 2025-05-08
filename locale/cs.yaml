@@ -96,3 +96,5 @@ str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního s
   aktualizujte Váš operační systém a spusťe NetPass znovu.\n\nStiskněte libovolné
   tlačítko pro opuštění aplikace"
 str_prompt_dl_pass: Jste si opravdu jisti, že chcete stáhnout tento pass?
+str_report_integration: Tato zpráva pochází z integrace. Pro nahlášení této zprávy
+  napiště moderačnímu týmu dané integrace.
