@@ -97,3 +97,6 @@ str_bad_os_version: "NetPass benötigt 3DS OS 11.15.0 oder höher, um ordnungsge
 str_prompt_dl_pass: Bist du sicher, dass du diese Begegnung herunterladen möchtest?
 str_report_integration: Diese Nachricht stammt aus einer Integration. Bitte wende
   dich an das Moderationsteam dieser Integration, um sie zu melden.
+str_skip: Überspringen
+str_install: Installieren
+str_remove: Entfernen
