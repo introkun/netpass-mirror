@@ -94,3 +94,6 @@ str_bad_os_version: "NetPass requereix de 3DS OS 11.15.0 o major per funcionar c
 str_prompt_dl_pass: Segur que vols descarregar aquest passi?
 str_report_integration: Aquest missatge és provist per una integració. Per denunciar-lo,
   si us plau, envieu-li un missatge a l'equip de moderació d'aquesta integració.
+str_skip: Ometre
+str_install: Instal·lar
+str_remove: Eliminar
