@@ -77,6 +77,8 @@ int main() {
 	{
 		OS_VersionBin nver, cver;
 		osGetSystemVersionData(&nver, &cver);
+		printf("Detected system version (cver): %d.%d.%d%c\n", cver.mainver, cver.minor, cver.build, cver.region);
+		printf("Detected system version (nver): %d.%d.%d%c\n", nver.mainver, nver.minor, nver.build, nver.region);
 	
 		if (SYSTEM_VERSION(cver.mainver, cver.minor, 0) < SYSTEM_VERSION(11, 15, 0)) {
 			scene = getBadOsVersionScene();
