@@ -88,6 +88,6 @@ str_bad_os_version: "NetPassが正しく働くために、3DSの ファームウ
 str_update_patches_poweroff_clear_desc: パッチは無事に外されました! 3DS本体を再起動 します。
 str_prompt_dl_pass: このすれちがい通信をダウンロードするのは本当によろしいですか?
 str_report_integration: このメッセージは統合機能を通じて送信されたものです。このエラーを報告する場合は、統合先のモデレーションチームにご連絡ください。
-str_remove: 取り除く
-str_skip: 抜かす
-str_install: 入れる
+str_remove: 削除する
+str_skip: スキップする
+str_install: インストール
