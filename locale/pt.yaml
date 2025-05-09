@@ -97,3 +97,6 @@ str_bg_music: Música de fundo
 str_report_integration: Esta mensagem origina de uma integração. Para denunciá-lo,
   por favor, contate o time de moderação responsável da integração.
 str_prompt_dl_pass: Você tem certeza de que quer instalar este passe?
+str_skip: Pular
+str_install: Instalar
+str_remove: Remover
