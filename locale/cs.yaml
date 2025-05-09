@@ -98,3 +98,6 @@ str_bad_os_version: "NetPass vyžaduje pro správnou funkci verzi operačního s
 str_prompt_dl_pass: Jste si opravdu jisti, že chcete stáhnout tento pass?
 str_report_integration: Tato zpráva pochází z integrace. Pro nahlášení této zprávy
   napiště moderačnímu týmu dané integrace.
+str_skip: Přeskočit
+str_install: Instalovat
+str_remove: Odstranit
