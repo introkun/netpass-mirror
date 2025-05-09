@@ -1,23 +1,22 @@
 str_loading: "Laddar    "
 str_libcurl_error: "libCURL fel (%d): %s"
-str_libcurl_date_and_time: 'Kontrollera att datum och tid är korrekt inställda i ditt
-  system!'
-str_httpstatus_error: 'HTTP status kod %d'
-str_3ds_error: '3DS fel kod %08lx'
-str_at_home: 'Du är Hemma.'
-str_goto_train_station: 'Gå till Järnvägsstationen'
-str_at_train_station: 'Du är vid Järnvägsstationen.'
-str_goto_plaza: 'Gå ner till Torget'
+str_libcurl_date_and_time: 'Kontrollera att systemets tid och datum är korrekt inställda!'
+str_httpstatus_error: 'HTTP statuskod %d'
+str_3ds_error: '3DS felkod %08lx'
+str_at_home: 'Du är hemma.'
+str_goto_train_station: 'Gå till Tågstationen'
+str_at_train_station: 'Du är vid Tågstationen.'
+str_goto_plaza: 'Gå till Torget'
 str_at_plaza: 'Du är på Torget.'
-str_goto_mall: 'Gå till Köpcentrum'
+str_goto_mall: 'Gå till Köpcentret'
 str_at_mall: 'Du är på Köpcentret.'
-str_exit: 'Stänga'
-str_settings: 'Inställning'
-str_download_data: 'Ladda ner personuppgifter'
-str_delete_data: 'Radera personuppgifter'
+str_exit: 'Avsluta'
+str_settings: 'Inställningar'
+str_download_data: 'Ladda ner personlig data'
+str_delete_data: 'Radera personlig data'
 str_back: 'Tillbaka'
-str_language: 'Svenska'
-str_goto_beach: 'Åka till Stranden'
+str_language: 'Engelska'
+str_goto_beach: 'Gå till Stranden'
 str_at_beach: 'Du är på Stranden.'
 str_goto_arcade: 'Gå till Spelhallen'
 str_at_arcade: 'Du är i Spelhallen.'
@@ -25,64 +24,77 @@ str_goto_catcafe: 'Gå till Kattkaféet'
 str_at_catcafe: 'Du är i Kattkaféet.'
 str_system_language: 'Systemspråk'
 str_language_pick: 'Språk:'
-str_no_location_twice: 'Du kan inte åka till samma destination två gånger i rad!'
+str_no_location_twice: 'Du kan inte gå till samma plats två gånger i rad!'
 str_report_user: 'Rapportera en användare'
-str_report_user_hint: 'Rapport "%s"'
-str_cancel: 'Annullera'
-str_submit: 'Sända'
+str_report_user_hint: 'Rapportera "%s"'
+str_cancel: 'Avbryt'
+str_submit: 'Skicka'
 str_back_alley: 'Bakgränd'
-str_back_alley_message: 'Vi får vi fram lite fler spelpass!'
-str_back_alley_pay: "Köp ett spelpass {playcoin}%d"
+str_back_alley_message: 'Låt oss samla in lite fler Pass!'
+str_back_alley_pay: "Köp ett Pass {playcoin}%d"
 str_check_inboxes: 'Kontrollera Inkorgar'
-str_toggle_titles: 'Spel In-/aktivera'
-str_toggle_titles_message: "Tryck på {a_button} för att slå på eller stoppa utbytet
-  av spelpass."
+str_toggle_titles: 'Slå På/Av Spel'
+str_toggle_titles_message: "Tryck på {a_button} för att påbörja eller stoppa utbytet
+  av Pass."
 str_toggle_titles_on: "(PÅ)"
 str_toggle_titles_off: "(AV)"
-str_report_mii_name: "Mii namn: %s"
-str_report_mario_kart_7_greeting: "Hälsning (MK7): %s"
-str_report_mii_plaza_last_game: "Sista Spelen: %s"
+str_report_mii_name: "Mii-namn: %s"
+str_report_mario_kart_7_greeting: "Hälsning: %s"
+str_report_mii_plaza_last_game: "Senast spelade: %s"
 str_report_mii_plaza_country: "Land: %s - %s"
 str_report_mii_plaza_greeting: "Hälsning: %s"
-str_report_mii_plaza_custom_message: "Din hälsning: %s"
-str_report_mii_plaza_custom_reply: "Deras skräddarsydda svar: %s"
-str_report_tomodachi_life_island_name: "Öns namn: %s"
-str_b_go_back: "{b_button} Tillbaka"
-str_b_cancel: "{b_button} Annullera"
+str_report_mii_plaza_custom_message: "Din angivna hälsning: %s"
+str_report_mii_plaza_custom_reply: "Deras angivna svar: %s"
+str_report_tomodachi_life_island_name: "Ö-namn: %s"
+str_b_go_back: "{b_button} Gå Tillbaka"
+str_b_cancel: "{b_button} Avbryt"
 str_a_ok: "{a_button} Okej"
-str_update_patches: "Uppdatera programfixar"
-str_update_patches_desc: "För att korrekt installera NetPass kommer vissa sysmodule
-  programmfixar att skapas nu. För att de ska fungera måste du aktivera ”Enable loading
-  external FIRMs and modules” i Luma3DS inställningarna. För att komma åt inställningarna,
-  stäng av konsolen och tryck sedan på {select_button} medan du slår på {power_button}
-  konsolen. Du kan göra detta efter att programmfixarna är skrivna."
-str_update_patches_error_desc: "Något gick fel under uppdateringen av programfixar.
-  Vänligen rapportera detta problem på GitLab, GBAtemp eller Discord.https://netpass.cafe/discord"
-str_update_patches_poweroff_desc: "Uppdatering av programfixar framgångsrik! Din konsol
-  kommer nu att slå på om."
-str_integrations: "integrationer"
+str_update_patches: "Installera patcher"
+str_update_patches_desc: "För att korrekt installera NetPass kommer vissa patcher
+  för \"sysmodule\" att skapas nu. För att de ska fungera måste du aktivera ”Enable
+  loading external FIRMs and modules” i inställningarna för Luma3DS. För att komma
+  åt dessa inställningar, stäng först av konsolen och håll sedan in {select_button}
+  medan du startar {power_button} konsolen. Du kan göra detta efter att patcherna
+  är skrivna."
+str_update_patches_error_desc: "Något gick fel under uppdateringen av progampatcher.
+  Vänligen rapportera detta problem på GitLab, GBAtemp eller Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Uppdatering av patcher lyckades! Din konsol kommer
+  nu att starta om."
+str_integrations: "Integrationer"
 str_integrations_message: "Integrationer från tredje part ligger utanför NetPass moderering.
   Använd på egen risk!"
 str_report_source: "Källa: %s"
 str_report_source_unknown: "Okänd källa"
-str_settings_misc: Blandat
+str_settings_misc: Övrigt
 str_settings_about: Om
 str_about_lead_dev: Ledande Utvecklare
-str_about_reports: Rapporteringssystem
+str_about_reports: Rapportera System
 str_about_graphics: Konst och Grafik
 str_about_music: Musik
 str_about_localisation: Språkanpassning
-str_about_netpass_community: Netpass gemenskapen
+str_about_netpass_community: NetPass-gemenskapen
 str_about_special_thanks: Särskilt Tack
-str_about_special_thanks_txt: 3DS homebrew community för all baklängeskonstruktion
-  och dokumentation.
+str_about_special_thanks_txt: 3DS homebrew-gemenskapen för all reverse-engineering
+  och dokumentation
 str_about_production_cat: Produktionskatt
-str_scan_qr: Scanna QR-kod
-str_x_switch_camera: '{x_button} Byt kamera'
-str_prompt_verify: Är du säker på att du vill verifiera den här 3DS?
+str_scan_qr: Skanna QR-kod
+str_x_switch_camera: '{x_button} Växla Kamera'
+str_prompt_verify: Är du säker på att du vill verifiera detta 3DS?
 str_welcome: Välkommen till NetPass
-str_welcome_message: Innan du slå på NetPass bör du läsa och godkänna våra regler
-  och vår integritetspolicy.
-str_view_rules: Se regler
+str_welcome_message: Innan du kan använda NetPass måste du läsa och godkänna våra
+  regler och integritetspolicy.
+str_view_rules: Se Regler
 str_view_privacy: Se Integritetspolicy
-str_continue: Fortsätta
+str_continue: Fortsätt
+str_bg_music: Bakgrundsmusik
+str_update_patches_poweroff_clear_desc: Borttagning av patcher lyckades! Din spelkonsol
+  kommer nu att starta om.
+str_report_integration: Detta meddelande härstammar från en integration. För att rapportera,
+  vänligen kontakta moderationsteamet bakom integrationen.
+str_skip: Hoppa över
+str_install: Installera
+str_remove: Ta bort
+str_prompt_dl_pass: Är du säker på att du vill ladda ner detta Pass?
+str_bad_os_version: "NetPass kräver 3DS OS 11.15.0 eller senare för att fungera ordentligt.
+  Det verkar tyvärr som att du använder en äldre version. Vänligen uppdatera ditt
+  operativsystem och starta sedan NetPass igen.\n\nTryck på valfri knapp för att avsluta"
