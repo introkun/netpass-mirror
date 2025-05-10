@@ -91,3 +91,8 @@ str_bad_os_version: "NetPass erfuerdert 3DS OS 11.15.0 oder méi spéit fir rich
   ze funktionéieren. Leider schéngt et datt Dir eng méi al Versioun benotzt. Aktualiséieren
   an demarréieren dann NetPass nees, villmools merci.\n\nDréckt all Taste fir ze verloossen"
 str_prompt_dl_pass: Sidd Dir sécher datt Dir dëse Spillpass erofluede wëllt?
+str_report_integration: Dëse Message staamt aus enger Integratioun. Fir et ze mellen,
+  schéckt wannechgelift d'Moderatioun-Ekipp vun der Integratioun.
+str_skip: Iwwersprangen
+str_install: Installéieren
+str_remove: Suppriméieren
