@@ -90,4 +90,4 @@ str_prompt_dl_pass: このすれちがい通信をダウンロードするのは
 str_report_integration: このメッセージは統合機能を通じて送信されたものです。このエラーを報告する場合は、統合先のモデレーションチームにご連絡ください。
 str_remove: 削除する
 str_skip: スキップする
-str_install: インストール
+str_install: インストールする
