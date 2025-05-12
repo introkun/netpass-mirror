@@ -94,3 +94,8 @@ str_bad_os_version: "A NetPass-nak 3DS OS 11.15.0 vagy későbbi verzióra van s
   a megfelelő működéshez. Sajnos úgy tűnik, hogy régebbi verziót használsz. Kérjük
   frissíts, majd indítsd el újra a NetPass-t.\n\nPress any key to exit"
 str_prompt_dl_pass: Biztosan szeretnéd letölteni ezt a pass-t?
+str_report_integration: Ez az üzenet egy integrációtól származik. A bejelentéshez
+  kérjük üzenj az adott integráció moderációs csapatának.
+str_skip: Átugrik
+str_install: Telepítés
+str_remove: Eltávolítás
