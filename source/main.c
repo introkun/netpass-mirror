@@ -19,6 +19,7 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include <stdlib.h>
+#include "debug.h"
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -46,14 +47,21 @@ int main() {
 	romfsInit();
 	init_main_thread_prio();
 
+	DEBUG_PRINTF("DEBUG ON\n");
+	DEBUG_PRINTF("EMULATOR SUPPORT ON\n");
+
 	cecdInit();
-	curlInit();
+	Result curlInitResult = curlInit();
+	if (R_FAILED(curlInitResult)) {
+		DEBUG_PRINTF("Curl initialization failed\n");
+	}
 	srand(time(NULL));
 
 	configInit(); // must be after cecdInit()
 	stringsInit(); // must be after configInit()
 	musicInit(); // must be after romfsInit()
 
+#ifndef EMULATOR
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
 		u32 extdata_lowpathdata[3];
@@ -68,6 +76,10 @@ int main() {
 		archiveMount(ARCHIVE_SHARED_EXTDATA, extdata_path, "sharedextdata_b");
 		FSUSER_OpenArchive(&sharedextdata_b, ARCHIVE_SHARED_EXTDATA, extdata_path);
 	}
+#else
+	// TODO: work around in emulator mode
+	#pragma message("Work around for emulator")
+#endif
 	
 	playMusic("home"); // start the default music
 
@@ -79,7 +91,12 @@ int main() {
 		osGetSystemVersionData(&nver, &cver);
 		printf("Detected system version (cver): %d.%d.%d%c\n", cver.mainver, cver.minor, cver.build, cver.region);
 		printf("Detected system version (nver): %d.%d.%d%c\n", nver.mainver, nver.minor, nver.build, nver.region);
-	
+
+#ifdef EMULATOR
+		cver.mainver = 11;
+		cver.minor = 15;
+		cver.build = 0;
+#endif
 		if (SYSTEM_VERSION(cver.mainver, cver.minor, 0) < SYSTEM_VERSION(11, 15, 0)) {
 			scene = getBadOsVersionScene();
 		} else {
@@ -99,14 +116,17 @@ int main() {
 				// first, we import the locally stored passes for reports to work
 				reportInit();
 				// next, we gotta wait for having internet
+				DEBUG_PRINTF("Waiting internet\n");
 				char url[50];
 				snprintf(url, 50, "%s/ping", BASE_URL);
 				int check_count = 0;
 				int max_count = 100;
 				while (true) {
+					DEBUG_PRINTF("Ping!\n");
 					res = httpRequest("GET", url, 0, 0, 0, 0, 0);
 					if (R_SUCCEEDED(res)) break;
 					check_count++;
+					DEBUG_PRINTF("check_count %d!\n", check_count);
 					if (check_count > max_count) {
 						if (res == -CURLE_COULDNT_RESOLVE_HOST && max_count < 400) {
 							max_count += 100;

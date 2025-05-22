@@ -69,6 +69,20 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-ffunction-sections \
 			$(ARCH)
 
+# Set DEBUG-related flags
+ifeq ($(DEBUG),1)
+    CFLAGS += -DDEBUG -g -O0
+    $(info [INFO] Compiling with DEBUG enabled)
+else
+    CFLAGS += -O2
+endif
+
+# Set DEBUG-related flags
+ifeq ($(EMULATOR),1)
+    CFLAGS += -DEMULATOR
+    $(info [INFO] Compiling with EMULATOR support)
+endif
+
 CFLAGS	+=	$(INCLUDE) -D__3DS__
 CFLAGS	+=	-D_VERSION_MAJOR_=$(NETPASS_VERSION_MAJOR) \
 			-D_VERSION_MINOR_=$(NETPASS_VERSION_MINOR) \

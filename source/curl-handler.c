@@ -21,6 +21,7 @@
 #include "api.h"
 #include "hmac_sha256/hmac_sha256.h"
 #include "utils.h"
+#include "debug.h"
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
@@ -152,9 +153,9 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 	handles[curl_handle_slot].status = CURL_HANDLE_STATUS_PENDING;
 	// request is being sent, let's wait until it is back
-	
+
 	while (handles[curl_handle_slot].status != CURL_HANDLE_STATUS_DONE) {
-		//printf("%d", handles[curl_handle_slot].status);
+		DEBUG_PRINTF("%d", handles[curl_handle_slot].status);
 		svcSleepThread((u64)1000000 * 100);
 	}
 
@@ -171,6 +172,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 static CURLM* curl_multi_handle;
 
 void curl_multi_loop_request_finish(int i) {
+	DEBUG_PRINTF("curl_multi_loop_request_finish %d", i);
 	struct CurlHandle* h = &handles[i];
 	h->res = h->result;
 	if (h->res != CURLE_OK) {
@@ -207,6 +209,7 @@ void getNetpassId(char* value, u32 size) {
 }
 
 void curl_multi_loop_request_setup(int i) {
+	DEBUG_PRINTF("curl_multi_loop_request_setup()");
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
 	if (!h->handle) {
@@ -276,6 +279,10 @@ void curl_multi_loop_request_setup(int i) {
 	}
 
 	// set some options
+#ifdef DEBUG
+	DEBUG_PRINTF("Enabled verbose curl messages\n");
+	curl_easy_setopt(h->handle, CURLOPT_VERBOSE, 1L);
+#endif
 	curl_easy_setopt(h->handle, CURLOPT_URL, h->url);
 	curl_easy_setopt(h->handle, CURLOPT_NOPROGRESS, 1);
 	curl_easy_setopt(h->handle, CURLOPT_USERAGENT, "3ds");
@@ -288,7 +295,19 @@ void curl_multi_loop_request_setup(int i) {
 	curl_easy_setopt(h->handle, CURLOPT_SERVER_RESPONSE_TIMEOUT, 10);
 	curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 0);
-	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1);
+	//curl_easy_setopt(h->handle, CURLOPT_TIMEOUT, 20L);
+	//curl_easy_setopt(h->handle, CURLOPT_CONNECTTIMEOUT, 5L);
+	//curl_easy_setopt(h->handle, CURLOPT_LOW_SPEED_TIME, 5L);
+	//curl_easy_setopt(h->handle, CURLOPT_LOW_SPEED_LIMIT, 50L);
+	//curl_easy_setopt(h->handle, CURLOPT_NOSIGNAL, 1L);
+#ifdef DEBUG
+	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYHOST, 0L);
+	DEBUG_PRINTF("SSL verification disabled!\n");
+#else
+	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYPEER, 1L);
+	curl_easy_setopt(h->handle, CURLOPT_SSL_VERIFYHOST, 2L);
+#endif
 	curl_easy_setopt(h->handle, CURLOPT_CAINFO, "romfs:/certs.pem");
 	curl_easy_setopt(h->handle, CURLOPT_HEADERFUNCTION, curlHeader);
 	curl_easy_setopt(h->handle, CURLOPT_HEADERDATA, NULL);
@@ -308,6 +327,7 @@ void curl_multi_loop_request_setup(int i) {
 }
 
 void curl_multi_loop(void* p) {
+	DEBUG_PRINTF("curl_multi_loop\n");
 	curl_multi_handle = curl_multi_init();
 	running = true;
 	int openHandles = 0;
@@ -356,17 +376,26 @@ void curl_multi_loop(void* p) {
 }
 
 Result curlInit(void) {
+	DEBUG_PRINTF("curlInit\n");
 	Result res;
 	// ok, we have to init this first
 	SOC_buffer = (u32*)memalign(SOC_ALIGN, SOC_BUFFERSIZE);
 	if (!SOC_buffer) return -1;
 	res = socInit(SOC_buffer, SOC_BUFFERSIZE);
 	if (R_FAILED(res)) return res;
+	DEBUG_PRINTF("about to curl_global_init\n");
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	u32 device_id;
+	DEBUG_PRINTF("getting device id\n");
+#ifndef EMULATOR
 	res = AM_GetDeviceId(&device_id);
 	if (R_FAILED(res)) return res;
+#else
+	device_id = 123456789;
+#endif
+
+	DEBUG_PRINTF("getting mac\n");
 	res = getMac(mac);
 	if (R_FAILED(res)) return res;
 
@@ -374,6 +403,7 @@ Result curlInit(void) {
 	hmac_sha256(&device_id, 4, mac, 6, netpass_id_buf, 32);
 	netpass_id = b64encode(netpass_id_buf, 32);
 
+	DEBUG_PRINTF("curl_multi_loop start in thread\n");
 	curl_multi_thread = threadCreate(curl_multi_loop, NULL, 8*1024, main_thread_prio()-1, -2, false);
 
 	return res;
