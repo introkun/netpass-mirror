@@ -94,8 +94,13 @@ int main() {
 
 #ifdef EMULATOR
 		cver.mainver = 11;
-		cver.minor = 15;
+		cver.minor = 17;
 		cver.build = 0;
+		cver.region = 'U';
+		nver.mainver = 50;
+		nver.minor = 0;
+		nver.build = 0;
+		nver.region = 'U';
 #endif
 		if (SYSTEM_VERSION(cver.mainver, cver.minor, 0) < SYSTEM_VERSION(11, 15, 0)) {
 			scene = getBadOsVersionScene();

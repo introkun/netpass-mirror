@@ -71,13 +71,11 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 
 # Set DEBUG-related flags
 ifeq ($(DEBUG),1)
-    CFLAGS += -DDEBUG -g -O0
+    CFLAGS += -DDEBUG
     $(info [INFO] Compiling with DEBUG enabled)
-else
-    CFLAGS += -O2
 endif
 
-# Set DEBUG-related flags
+# Set EMULATOR-related flags
 ifeq ($(EMULATOR),1)
     CFLAGS += -DEMULATOR
     $(info [INFO] Compiling with EMULATOR support)

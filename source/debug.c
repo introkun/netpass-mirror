@@ -16,16 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <stdio.h>
+#include "debug.h"
+#include <3ds.h>
 #include <stdarg.h>
 
-void debug_printf(const char *format, ...);
+#define LOG_FILE_PATH "sdmc:/netpass.log"
 
-#ifdef DEBUG
-    #include <stdio.h>
-    #define DEBUG_PRINTF(...) debug_printf(__VA_ARGS__)
-#else
-    #define DEBUG_PRINTF(...) ((void)0)
-#endif
+void debug_printf(const char *format, ...) {
+    va_list args;
+
+    // --- Print to screen ---
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+
+    // --- Log to file ---
+    FILE *f = fopen(LOG_FILE_PATH, "a");
+    if (!f) return;
+
+    va_start(args, format);
+    vfprintf(f, format, args);
+    va_end(args);
+
+    fclose(f);
+}
