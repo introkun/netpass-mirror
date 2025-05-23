@@ -19,6 +19,7 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include <stdlib.h>
+#include "debug.h"
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -46,8 +47,13 @@ int main() {
 	romfsInit();
 	init_main_thread_prio();
 
+	DEBUG_PRINTF("DEBUG ON\n");
+
 	cecdInit();
-	curlInit();
+	Result curlInitResult = curlInit();
+	if (R_FAILED(curlInitResult)) {
+		DEBUG_PRINTF("Curl initialization failed\n");
+	}
 	srand(time(NULL));
 
 	configInit(); // must be after cecdInit()
@@ -106,6 +112,7 @@ int main() {
 				// first, we import the locally stored passes for reports to work
 				reportInit();
 				// next, we gotta wait for having internet
+                DEBUG_PRINTF("Waiting internet\n");
 				char url[50];
 				snprintf(url, 50, "%s/ping", BASE_URL);
 				int check_count = 0;
