@@ -76,14 +76,14 @@ int main() {
 	Scene* scene;
 	{
 		OS_VersionBin ver;
-		Result ret = get_os_version(&ver);
+		Result res = get_os_version(&ver);
 		if (R_FAILED(res)) {
-			printf("osGetSystemVersionData res: %08lX\n", ret);
+			printf("osGetSystemVersionData res: %08lX\n", res);
 			
 			printf("Detected system version (cver): %d.%d.%d%c\n", ver.mainver, ver.minor, ver.build, ver.region);
 			u8 region;
-			ret = CFGU_SecureInfoGetRegion(&region);
-			printf("Get region (%08lX): %d\n", ret, region);
+			res = CFGU_SecureInfoGetRegion(&region);
+			printf("Get region (%08lX): %d\n", res, region);
 		}
 
 	
