@@ -1,6 +1,6 @@
 /**
  * NetPass
- * Copyright (C) 2024-2025 Introkun
+ * Copyright (C) 2025 Introkun
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #ifdef DEBUG
     #include <stdio.h>
     #define DEBUG_PRINTF(...) \
-        do { fprintf(stderr, "[DEBUG] "); fprintf(stderr, __VA_ARGS__); } while (0)
+        do { printf("[DEBUG] "); printf(__VA_ARGS__); } while (0)
 #else
     #define DEBUG_PRINTF(...) ((void)0)
 #endif

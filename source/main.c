@@ -50,8 +50,8 @@ int main() {
 	DEBUG_PRINTF("DEBUG ON\n");
 
 	cecdInit();
-	Result curlInitResult = curlInit();
-	if (R_FAILED(curlInitResult)) {
+	Result res = curlInit();
+	if (R_FAILED(res)) {
 		DEBUG_PRINTF("Curl initialization failed\n");
 	}
 	srand(time(NULL));
@@ -108,7 +108,6 @@ int main() {
 				}
 				return getLocationScene(location);
 			})), lambda(void, (void) {
-				Result res;
 				// first, we import the locally stored passes for reports to work
 				reportInit();
 				// next, we gotta wait for having internet
