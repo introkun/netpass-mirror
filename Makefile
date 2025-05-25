@@ -101,7 +101,7 @@ LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
 # Cppcheck options
 CPPCHECK_FLAGS = --enable=warning,unusedFunction,performance,portability,missingInclude --std=c11
-CPPCHECK_FLAGS += --language=c --quiet --suppressions-list=.cppcheck.suppress --template=gcc
+CPPCHECK_FLAGS += --language=c --quiet --suppressions-list=.cppcheck.suppress --template=gcc --check-level=exhaustive
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
