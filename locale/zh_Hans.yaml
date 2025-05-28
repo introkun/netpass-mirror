@@ -83,3 +83,8 @@ str_welcome_message: 在使用 NetPass 前，请阅读并接受我们的规则�
 str_view_rules: 查看规则
 str_view_privacy: 查看隐私条款
 str_continue: 继续
+str_skip: 跳过
+str_install: 安装
+str_remove: 移除
+str_prompt_dl_pass: 你确定要下载这个瞬缘连接吗？
+str_report_integration: 该信息来自某个集成插件。 请向该插件的管理团队进行报告。
