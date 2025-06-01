@@ -1,85 +1,99 @@
-str_loading: ""
-str_libcurl_error: ""
-str_libcurl_date_and_time: ''
-str_httpstatus_error: ''
-str_3ds_error: ''
-str_at_home: ''
-str_goto_train_station: ''
-str_at_train_station: ''
-str_goto_plaza: ''
-str_at_plaza: ''
-str_goto_mall: ''
-str_at_mall: ''
-str_exit: ''
-str_settings: ''
-str_download_data: ''
-str_delete_data: ''
-str_back: ''
-str_language: ''
-str_goto_beach: ''
-str_at_beach: ''
-str_goto_arcade: ''
-str_at_arcade: ''
-str_goto_catcafe: ''
-str_at_catcafe: ''
-str_system_language: ''
-str_language_pick: ''
-str_no_location_twice: ''
-str_report_user: ''
-str_report_user_hint: ''
-str_cancel: ''
-str_submit: ''
-str_back_alley: ''
-str_back_alley_message: ''
-str_back_alley_pay: ""
-str_check_inboxes: ''
-str_toggle_titles: ''
-str_toggle_titles_message: ""
-str_toggle_titles_on: ""
-str_toggle_titles_off: ""
-str_report_mii_name: ""
-str_report_mario_kart_7_greeting: ""
-str_report_mii_plaza_last_game: ""
-str_report_mii_plaza_country: ""
-str_report_mii_plaza_greeting: ""
-str_report_mii_plaza_custom_message: ""
-str_report_mii_plaza_custom_reply: ""
-str_report_tomodachi_life_island_name: ""
-str_b_go_back: ""
-str_b_cancel: ""
-str_a_ok: ""
-str_update_patches: ""
-str_update_patches_desc: ""
-str_update_patches_error_desc: ""
-str_update_patches_poweroff_desc: ""
-str_integrations: ""
-str_integrations_message: ""
-str_report_source: ""
-str_report_source_unknown: ""
-str_settings_misc: ""
-str_settings_about: ""
-str_about_lead_dev: ""
-str_about_reports: ""
-str_about_graphics: ""
-str_about_music: ""
-str_about_localisation: ""
-str_about_netpass_community: ""
-str_about_special_thanks: ""
-str_about_special_thanks_txt: ""
-str_about_production_cat: ""
-str_scan_qr: ""
-str_x_switch_camera: ""
-str_prompt_verify: ""
-str_welcome: ""
-str_welcome_message: ""
-str_view_rules: ""
-str_view_privacy: ""
-str_continue: ""
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
+str_loading: "Laster    "
+str_libcurl_error: "libCURL-feil (%d): %s"
+str_libcurl_date_and_time: 'Kontroller at dato og klokkeslett er innstilt riktig på
+  systemet ditt!'
+str_httpstatus_error: 'HTTP-statuskode %d'
+str_3ds_error: '3DS-feilkode %08lx'
+str_at_home: 'Du er hjemme.'
+str_goto_train_station: 'Dra til togstasjon'
+str_at_train_station: 'Du er på togstasjonen.'
+str_goto_plaza: 'Dra til torg'
+str_at_plaza: 'Du er på torget.'
+str_goto_mall: 'Dra til kjøpesenter'
+str_at_mall: 'Du er på kjøpesenteret.'
+str_exit: 'Avslutt'
+str_settings: 'Innstillinger'
+str_download_data: 'Last ned personlig data'
+str_delete_data: 'Slett personlig data'
+str_back: 'Tilbake'
+str_language: 'Norsk bokmål'
+str_goto_beach: 'Dra til stranda'
+str_at_beach: 'Du er på stranda.'
+str_goto_arcade: 'Dra til spillehall'
+str_at_arcade: 'Du er i spillehallen.'
+str_goto_catcafe: 'Dra til kattekaféen'
+str_at_catcafe: 'Du er i kattekaféen.'
+str_system_language: 'Systemspråk'
+str_language_pick: 'Språk:'
+str_no_location_twice: 'Du kan ikke dra til samme sted to ganger på rad!'
+str_report_user: 'Rapporter en bruker'
+str_report_user_hint: 'Rapporter «%s»'
+str_cancel: 'Avbryt'
+str_submit: 'Send'
+str_back_alley: 'Bakgate'
+str_back_alley_message: 'La oss samle inn flere passeringer!'
+str_back_alley_pay: "Kjøp en passering {playcoin}%d"
+str_check_inboxes: 'Sjekk innkurver'
+str_toggle_titles: 'Slå spill av/på'
+str_toggle_titles_message: "Trykk {a_button} for å starte eller stoppe passeringsveksling."
+str_toggle_titles_on: "(PÅ)"
+str_toggle_titles_off: "(AV)"
+str_report_mii_name: "Navn på Mii: %s"
+str_report_mario_kart_7_greeting: "Hilsen: %s"
+str_report_mii_plaza_last_game: "Siste spill: %s"
+str_report_mii_plaza_country: "Land: %s - %s"
+str_report_mii_plaza_greeting: "Hilsen: %s"
+str_report_mii_plaza_custom_message: "Din personlige hilsen: %s"
+str_report_mii_plaza_custom_reply: "Vedkommendes personlige svar: %s"
+str_report_tomodachi_life_island_name: "Navn på øy: %s"
+str_b_go_back: "{b_button} Tilbake"
+str_b_cancel: "{b_button} Avbryt"
+str_a_ok: "{a_button} OK"
+str_update_patches: "Oppdater lapping"
+str_update_patches_desc: "For å installere NetPass riktig, må noen sysmodule-lappinger
+  skapes. For at de skal fungere, må du slå på «Enable loading external FIRMs and
+  modules» i Luma3DS-innstillingene. For å åpne innstillinger, må du slå av konsollen
+  og deretter trykke {select_button} mens du {power_button} slår systemet på. Du kan
+  gjøre dette etter lappingene er skrevet."
+str_update_patches_error_desc: "Noe gikk galt under oppdatering av lappinger. Vennligst
+  rapporter problemet på GitLab, GBAtemp eller Discord. https://netpass.cafe/discord"
+str_update_patches_poweroff_desc: "Oppdatering av lappinger vellykket! Konsollen din
+  startes nå på nytt."
+str_integrations: "Integreringer"
+str_integrations_message: "Tredjepartsintegreringer er utenfor tilsynet til NetPass.
+  Bruk dem på egen risiko!"
+str_report_source: "Kilde: %s"
+str_report_source_unknown: "Ukjent kilde"
+str_settings_misc: "Diverse"
+str_settings_about: "Om NetPass"
+str_about_lead_dev: "Ledende utvikler"
+str_about_reports: "Rapporteringssystem"
+str_about_graphics: "Kunst og grafikk"
+str_about_music: "Musikk"
+str_about_localisation: "Oversettelse"
+str_about_netpass_community: "NetPass-fellesskapet"
+str_about_special_thanks: "Takk til"
+str_about_special_thanks_txt: "3DS-homebrew-fellesskapet for all dekonstruering og
+  dokumentering"
+str_about_production_cat: "Produksjonskatt"
+str_scan_qr: "Skann QR-kode"
+str_x_switch_camera: "{x_button} Bytt kamera"
+str_prompt_verify: "Er du sikker på at du vil verifisere denne 3DS-en?"
+str_welcome: "Velkommen til NetPass"
+str_welcome_message: "Vennligst les og aksepter våre regler og vår personvernerklæring
+  før du bruker NetPass."
+str_view_rules: "Les regler"
+str_view_privacy: "Les personvernerklæring"
+str_continue: "Fortsett"
+str_bad_os_version: "NetPass krever 3DS-OS 11.15.0 eller senere for å fungere ordentlig.
+  Dessverre ser du ut til å være på en eldre versjon. Vennligst oppdater og start
+  NetPass på nytt.\n\nTrykk på en knapp for å avslutte"
+str_update_patches_poweroff_clear_desc: "Fjerning av lappinger vellykket! Konsollen
+  din startes nå på nytt."
+str_bg_music: "Bakgrunnsmusikk"
+str_prompt_dl_pass: "Er du sikker på at du vil laste ned denne passeringen?"
+str_report_integration: "Denne meldingen stammer fra en integrering. Vennligst kontakt
+  integreringens moderasjonsgruppe for å rapportere."
+str_skip: "Hopp over"
+str_install: "Installer"
+str_remove: "Fjern"
