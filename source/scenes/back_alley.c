@@ -200,7 +200,7 @@ void N(exit)(Scene* sc) {
 
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
-	u32 kDown = hidKeysDown();
+	u32 kDown = hidKeysDownRepeat();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->show_games) {

@@ -71,6 +71,7 @@ void N(init)(Scene* sc) {
 	}
 	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
 	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
+	hidSetRepeatParameters(1, 1);
 }
 
 void N(render)(Scene* sc) {
@@ -113,7 +114,7 @@ void N(exit)(Scene* sc) {
 
 SceneResult N(process)(Scene* sc) {
 	hidScanInput();
-	u32 kDown = hidKeysDown();
+	u32 kDown = hidKeysDownRepeat();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
 		if (_data->cursor < 0) _data->cursor = NUM_ENTRIES - 1;
