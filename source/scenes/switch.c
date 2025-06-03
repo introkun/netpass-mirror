@@ -25,7 +25,9 @@ void N(render)(Scene* sc) { }
 void N(exit)(Scene* sc) { }
 
 SceneResult N(process)(Scene* sc) {
-	sc->next_scene = ((Scene*(*)(void))sc->data)();
+	Scene* next_scene = ((Scene*(*)(void))sc->data)();
+	sc->next_scene = next_scene;
+	if (next_scene->is_popup) return scene_push;
 	return scene_switch;
 }
 
@@ -37,7 +39,7 @@ Scene* getSwitchScene(Scene*(*next_scene)(void)) {
 	scene->exit = N(exit);
 	scene->process = N(process);
 	scene->data = (u32)next_scene;
-	scene->is_popup = true;
+	scene->is_popup = false;
 	scene->need_free = true;
 	return scene;
 }

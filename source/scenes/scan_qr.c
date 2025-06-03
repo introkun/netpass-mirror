@@ -264,6 +264,7 @@ SceneResult N(process)(Scene* sc) {
 						sc->next_scene = getPromptScene(str_prompt_verify, getLoadingScene(NULL, lambda(void, (void) {
 							Result res = qr_verify(N(qr_buffer));
 							if (R_FAILED(res)) {
+								_e(res);
 								printf("Verification failed: %lx\n", res);
 							} else {
 								printf("Verification successful!\n");
@@ -275,6 +276,7 @@ SceneResult N(process)(Scene* sc) {
 						sc->next_scene = getPromptScene(str_prompt_dl_pass, getLoadingScene(NULL, lambda(void, (void) {
 							Result res = qr_dl_pass(N(qr_buffer));
 							if (R_FAILED(res)) {
+								_e(res);
 								printf("Verification failed: %lx\n", res);
 							} else {
 								printf("Verification successful!\n");

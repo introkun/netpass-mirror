@@ -101,7 +101,8 @@ SceneResult N(process)(Scene* sc) {
 			if (_data->cursor == _data->list->header.count) {
 				return scene_pop;
 			}
-			toggle_integration(_data->list->entries[_data->cursor].id);
+			Result res = toggle_integration(_data->list->entries[_data->cursor].id);
+			_e(res);
 			return scene_continue;
 		}
 	}

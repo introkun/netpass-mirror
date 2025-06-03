@@ -135,6 +135,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 		// we have a file reply
 		file = fopen(title_name, "wb");
 		if (!file) {
+			_e(-1);
 			return -2;
 		}
 	}

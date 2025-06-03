@@ -439,7 +439,8 @@ void triggerDownloadInboxes(void) {
 void bgLoop(void* p) {
 	do {
 		dl_inbox_status = 2;
-		doSlotExchange();
+		Result res = doSlotExchange();
+		_e(res);
 		dl_inbox_status = 0;
 		for(int i = 0; i < 10*60*5; i++) {
 			svcSleepThread((u64)1000000 * 100);

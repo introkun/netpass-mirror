@@ -19,6 +19,7 @@
 #pragma once
 
 #include "cecd.h"
+#include "scene.h"
 #include <3ds.h>
 #include <3ds/types.h>
 #include <citro2d.h>
@@ -56,6 +57,8 @@ char* fgets_blk(char* str, int num, FILE* stream);
 int fputs_blk(const char* str, FILE* stream);
 void open_url(char* url);
 Result get_os_version(OS_VersionBin* ver);
+void _e(int error);
+Scene* get_new_error_scene(void);
 
 typedef struct {
 	u32 magic; // 0x4F00

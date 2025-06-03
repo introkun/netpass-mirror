@@ -96,6 +96,7 @@ SceneResult N(report)(Scene* sc) {
 			CecMessageHeader msg;
 			Result res = reportGetSomeMsgHeader(&msg, N(send_transfer_id));
 			if (R_FAILED(res)) {
+				_e(res);
 				printf("ERROR: %lx\n", res);
 				goto exit;
 			}
@@ -145,6 +146,7 @@ void N(init)(Scene* sc) {
 	}
 
 	if (!loadReportMessages(_data->msgs, _data->entry->transfer_id)) {
+		_e(-1);
 		freeReportMessages(_data->msgs);
 		free(_data->msgs);
 		free(_data);

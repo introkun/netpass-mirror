@@ -99,7 +99,7 @@ int main() {
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (R_FAILED(location) && location != -1) {
 					// something not working
-					return getConnectionErrorScene(location);
+					return getErrorScene(location, true);
 				}
 		
 				bgLoopInit();
@@ -167,6 +167,12 @@ int main() {
 		if (new_scene != scene) {
 			scene = new_scene;
 			continue;
+		}
+		Scene* err_scene = get_new_error_scene();
+		if (err_scene) {
+			err_scene->pop_scene = scene;
+			err_scene->init(err_scene);
+			scene = err_scene;
 		}
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(top, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));

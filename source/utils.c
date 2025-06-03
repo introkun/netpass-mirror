@@ -444,3 +444,19 @@ Result get_os_version(OS_VersionBin* ver) {
 	
 	return res;
 }
+
+int current_error = 0;
+void _e(int error) {
+	if (error) {
+		current_error = error;
+	}
+}
+
+Scene* get_new_error_scene(void) {
+	if (current_error) {
+		int e = current_error;
+		current_error = 0;
+		return getErrorScene(e, false);
+	}
+	return NULL;
+}

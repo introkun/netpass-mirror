@@ -20,10 +20,6 @@
 
 #include <3ds.h>
 #include <citro2d.h>
-#include "api.h"
-#include "strings.h"
-#include "config.h"
-#include "utils.h"
 
 #define SCREEN_TOP_WIDTH 400
 #define SCREEN_TOP_HEIGHT 240
@@ -48,10 +44,15 @@ struct Scene {
 
 Scene* processScene(Scene* scene);
 
+#include "api.h"
+#include "strings.h"
+#include "config.h"
+#include "utils.h"
+
 #include "scenes/about.h"
 #include "scenes/back_alley.h"
 #include "scenes/bad_os_version.h"
-#include "scenes/connection_error.h"
+#include "scenes/error.h"
 #include "scenes/home.h"
 #include "scenes/info.h"
 #include "scenes/integration_scene.h"

@@ -18,6 +18,7 @@
 
 #include "integration.h"
 #include "api.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -50,7 +51,10 @@ cleanup:
 IntegrationList* get_integration_list(void) {
 	if (!g_list) {
 		Result res = lazy_init();
-		if (R_FAILED(res)) return 0;
+		if (R_FAILED(res)) {
+			_e(res);
+			return 0;
+		}
 	}
 	return g_list;
 }

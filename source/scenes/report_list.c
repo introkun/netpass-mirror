@@ -41,6 +41,7 @@ void N(init)(Scene* sc) {
 	_data->list = loadReportList();
 
 	if (!_data->list) {
+		_e(-1);
 		free(_data);
 		sc->d = NULL;
 		return;
