@@ -46,7 +46,11 @@ APP_DESCRIPTION	:=	NetPass: StreetPass in the modern world!
 ROMFS			:=	romfs
 GFXBUILD		:=	$(ROMFS)/gfx
 MUSICBUILD		:=	$(ROMFS)/music
-ICON			:=	meta/icon.png
+ifneq ($(DEBUG),1)
+    ICON			:=	meta/icon.png
+else
+	ICON			:=	meta/icon-debug.png
+endif
 BANNER_AUDIO	:=	meta/banner.ogg
 BANNER_IMAGE	:=	meta/banner.cgfx
 APP_TITLE_INT	:=	
@@ -73,7 +77,10 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 # Set DEBUG-related flags
 ifeq ($(DEBUG),1)
     CFLAGS += -DDEBUG
+    SUFFIX := _debug
     $(info [INFO] Compiling with DEBUG enabled)
+else
+	SUFFIX :=
 endif
 
 
@@ -110,7 +117,7 @@ CPPCHECK_FLAGS += --language=c --quiet --suppressions-list=.cppcheck.suppress --
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(OUTDIR)/$(TARGET)
+export OUTPUT	:=	$(CURDIR)/$(OUTDIR)/$(TARGET)$(SUFFIX)
 export TOPDIR	:=	$(CURDIR)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
