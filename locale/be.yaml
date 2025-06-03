@@ -76,7 +76,7 @@ str_about_netpass_community: "Супольнасць NetPass"
 str_about_special_thanks: "Асаблівая падзяка"
 str_about_special_thanks_txt: "Homebrew-супольнасці 3DS за ўвеь рэверс-інжынірынг
   і дакументацыю"
-str_about_production_cat: ""
+str_about_production_cat: "Вытворчы кот"
 str_scan_qr: "Адсканіраваць QR-код"
 str_x_switch_camera: "{x_button} Пераключыць камеру"
 str_prompt_verify: "Ты ўпэўнены, што хочаш праверыць гэту 3DS?"
@@ -86,11 +86,15 @@ str_welcome_message: "Перад пачаткам выкарыстання NetPa
 str_view_rules: "Праглядзець правілы"
 str_view_privacy: "Праглядзець палітыку прыватнасці"
 str_continue: "Працягнуць"
-str_bad_os_version: ""
-str_update_patches_poweroff_clear_desc: ""
-str_bg_music: ""
-str_prompt_dl_pass: ""
-str_report_integration: ""
-str_skip: ""
-str_install: ""
-str_remove: ""
+str_bad_os_version: "Для правільнай працы NetPass патрабуецца аперацыйная сістэма
+  3DS версіі 11.15.0 або больш позняя. На жаль, здаецца, што ты выкарыстоўваеш старую
+  версію. Абнаві АС і зноў запусці NetPass.\n\nНацісні любую клавішу для выхаду"
+str_update_patches_poweroff_clear_desc: "Патчы паспяхова выдалены! Твая кансоль зараз
+  перазагрузіцца."
+str_bg_music: "Фонавая музыка"
+str_prompt_dl_pass: "Ты ўпэўнены, што хочаш спампаваць гэты пас?"
+str_report_integration: "Гэта паведамленне паходзіць ад інтэграцыі. Каб паведаміць
+  пра яго, напішы камандзе мадэратараў гэтай інтэграцыі."
+str_skip: "Прапусціць"
+str_install: "Усталяваць"
+str_remove: "Выдаліць"
