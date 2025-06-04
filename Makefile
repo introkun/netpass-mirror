@@ -99,6 +99,9 @@ LIBS	:= -lcitro2d -lcitro3d -lctru -lopusfile -lopus -logg `curl-config --libs` 
 #---------------------------------------------------------------------------------
 LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
+CODEGEN_CFILES = ../codegen/lang_strings.c
+CODEGEN_OUTPUTS	= codegen/lang_strings.h codegen/lang_strings.c
+
 # Cppcheck options
 CPPCHECK_FLAGS = --enable=warning,unusedFunction,performance,portability,missingInclude --inline-suppr --std=c11
 CPPCHECK_FLAGS += --language=c --quiet --suppressions-list=.cppcheck.suppress --template=gcc --check-level=exhaustive
@@ -127,6 +130,8 @@ SHLISTFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.shlist)))
 GFXFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.t3s)))
 MUSICFILES	:=	$(foreach dir,$(MUSIC),$(notdir $(wildcard $(dir)/*.*)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+
+CFILES += $(CODEGEN_CFILES)
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -180,8 +185,6 @@ export APP_ICON := $(TOPDIR)/$(BUILD)/icon.png
 BANNERTOOL	?=	bannertool
 FFMPEG		?=	ffmpeg
 PYTHON		?=	python
-
-CODEGEN_OUTPUTS	=	codegen/lang_strings.h codegen/lang_strings.c
 
 ifeq ($(strip $(NO_SMDH)),)
 	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
