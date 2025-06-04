@@ -109,10 +109,9 @@ void reportInit(void);
 static inline s16 get_mii_name(u8 mii_name[static MII_UTF8_NAME_LEN], MiiData* mii) {
 	// Forcibly insert null terminator: utf16_to_utf8 does not take an
 	// input length bound.
-	mii->mii_name[MII_UTF16_NAME_LEN] = 0;
+	mii->mii_name[MII_UTF16_NAME_LEN - 1] = 0;
 	memset(mii_name, 0, MII_UTF8_NAME_LEN);
 	// SAFETY: Wrote the null terminator with memset.
 	return utf16_to_utf8(mii_name, mii->mii_name, MII_UTF8_NAME_LEN-1);
 }
 #pragma GCC diagnostic pop
-

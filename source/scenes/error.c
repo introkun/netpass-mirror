@@ -63,7 +63,7 @@ void N(init)(Scene* sc) {
 			snprintf(str, sizeof(str), _s(str_libcurl_error), errcode, errmsg);
 			str_font = _font(str_libcurl_error);
 			if (errcode == 60) {
-				strncpy(subtext, _s(str_libcurl_date_and_time), sizeof(subtext));
+				strncpy(subtext, _s(str_libcurl_date_and_time), sizeof(subtext) - 1);
 				subtext_font = _font(str_libcurl_date_and_time);
 			}
 			break;
