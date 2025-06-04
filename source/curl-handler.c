@@ -203,10 +203,6 @@ void getMacStr(char value[13]) {
 	}
 }
 
-void getNetpassId(char* value, u32 size) {
-	snprintf(value, size, "%s", netpass_id);
-}
-
 void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();

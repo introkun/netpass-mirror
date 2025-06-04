@@ -28,6 +28,7 @@
 #include "boss.h"
 #include "report.h"
 #include "music.h"
+#include "integration.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -96,6 +97,9 @@ int main() {
 		if (SYSTEM_VERSION(ver.mainver, ver.minor, ver.build) < SYSTEM_VERSION(11, 15, 0)) {
 			scene = getBadOsVersionScene();
 		} else {
+			// somehow cpp check fails with this lambda for the ptr->int return type check
+			// as it does not even compile if we were to cast the returns to ints, this is clearly a cppcheck bug
+			// cppcheck-suppress CastAddressToIntegerAtReturn
 			scene = getLoadingScene(getSwitchScene(lambda(Scene*, (void) {
 				if (R_FAILED(location) && location != -1) {
 					// something not working
@@ -186,6 +190,7 @@ int main() {
 		svcSleepThread(1);
 	}
 	printf("\nExiting...\n");
+	integrationExit();
 	bgLoopExit();
 	musicExit();
 	C2D_Fini();

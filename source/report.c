@@ -78,6 +78,10 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	while (!r && (p=readdir(d)) && msgs->count < 12) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
+		if (!fname) {
+			free(buf);
+			return false;
+		}
 		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
 		// we found a file
 		FILE* f = fopen(fname, "rb");
@@ -227,7 +231,10 @@ void saveMsgInLog(CecMessageHeader* msg) {
 		f = fopen(LOG_INDEX, "wb");
 		if (!f) return;
 		list = memalign(4, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
-		if (!list) return;
+		if (!list) {
+			fclose(f);
+			return;
+		}
 		memset(list, 0, sizeof(ReportListHeader) + sizeof(ReportListEntry) * MAX_REPORT_ENTRIES_LEN);
 		list->header.magic = 0x454C524e;
 		list->header.version = 1;
@@ -337,6 +344,10 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 	while (!r && (p=readdir(d))) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
+		if (!fname) {
+			closedir(d);
+			return -1;
+		}
 		snprintf(fname, fname_len, "%s/%s", dirname, p->d_name);
 		// we found a file
 		FILE* f = fopen(fname, "rb");

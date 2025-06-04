@@ -1,3 +1,7 @@
 *:source/hmac_sha256/*
 *:source/quirc/*
+*:source/nanojpeg.c
 missingIncludeSystem:*
+staticFunction:*
+unusedFunction:source/boss.c
+unusedFunction:source/cecd.c

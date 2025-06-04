@@ -262,7 +262,7 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr get slots metadata";
 	res = cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total);
 	if (R_FAILED(res)) goto fail;
-	printf("Uploading outboxes (%ld)", slots_total);
+	printf("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// Upload all slots
 	for (int i = 0; i < slots_total; i++) {
@@ -293,7 +293,7 @@ Result doSlotExchange(void) {
 	res = cecdSprFinaliseSend();
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
-	printf(" Done\nDownloading inboxes (%ld)", slots_total);
+	printf(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// time to start download!
 	res = cecdSprStartRecv();

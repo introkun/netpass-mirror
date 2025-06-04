@@ -25,6 +25,7 @@
 #define _NJ_INCLUDE_HEADER_ONLY
 #include "nanojpeg.c"
 
+// cppcheck-suppress unusedFunction
 void* cecGetExtHeader(CecMessageHeader* msg, u32 type) {
 	u32 counter = sizeof(CecMessageHeader);
 	while (counter < msg->total_header_size) {
@@ -38,6 +39,7 @@ void* cecGetExtHeader(CecMessageHeader* msg, u32 type) {
 	return NULL;
 }
 
+// cppcheck-suppress unusedFunction
 u32 cecGetExtHeaderSize(CecMessageHeader* msg, u32 type) {
 	u32 counter = sizeof(CecMessageHeader);
 	while (counter < msg->total_header_size) {
@@ -71,6 +73,7 @@ char* b64encode(u8* in, size_t len) {
 
 	size_t elen = b64_encoded_size(len);
 	char* out = malloc(elen + 1);
+	if (!out) return NULL;
 	out[elen] = '\0';
 
 	for (size_t i = 0, j = 0; i < len; i += 3, j += 4) {
@@ -161,6 +164,7 @@ void mkdir_p(char* orig_path) {
 	} while(pos < maxlen);
 }
 
+// cppcheck-suppress unusedFunction
 Result APT_Wrap(u32 in_size, void* in, u32 nonce_offset, u32 nonce_size, u32 out_size, void* out) {
 	u32 cmdbuf[16];
 	cmdbuf[0] = IPC_MakeHeader(0x46, 4, 4); // 0x001F0084
