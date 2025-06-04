@@ -545,8 +545,8 @@ const char* get_desc_str_am(int desc) {
 		"EsNoRight",
 		"EsAlignment",
 	};
-	if (desc >= 1 && desc <= 67) return map[desc];
-	if (desc >= 100 && desc <= 14) return map2[desc];
+	if (desc >= 1 && desc <= 67) return map[desc - 1];
+	if (desc >= 100 && desc <= 114) return map2[desc - 100];
 	return NULL;
 }
 
@@ -638,7 +638,7 @@ const char* get_desc_desc_am(int desc) {
 		"ES alignment",
 	};
 	if (desc >= 1 && desc <= 67) return map[desc - 1];
-	if (desc >= 100 && desc <= 14) return map2[desc - 100];
+	if (desc >= 100 && desc <= 114) return map2[desc - 100];
 	return NULL;
 }
 
@@ -769,8 +769,8 @@ const char* get_desc_str_boss(int desc) {
 		"NsalistDownloadTaskError",
 		"NotEnoughSpaceInExtSaveData",
 	};
-	if (desc >= 1 && desc <= 78) return map[desc - 1];
-	if (desc >= 192 && desc <= 192 + 7) return map2[desc - 192];
+	if (desc >= 1 && desc <= 77) return map[desc - 1];
+	if (desc >= 192 && desc <= 192 + 6) return map2[desc - 192];
 	return NULL;
 }
 
@@ -861,8 +861,8 @@ const char* get_desc_desc_boss(int desc) {
 		"An error has been detected in the NSA list file format.",
 		"The NSA list download result was an error.",
 		"Expanded save data has insufficient capacity.",	};
-	if (desc >= 1 && desc <= 78) return map[desc - 1];
-	if (desc >= 192 && desc <= 192 + 7) return map2[desc - 192];
+	if (desc >= 1 && desc <= 77) return map[desc - 1];
+	if (desc >= 192 && desc <= 192 + 6) return map2[desc - 192];
 	return NULL;
 }
 
@@ -1354,13 +1354,13 @@ const char* get_desc_str_ec(int desc) {
 		"AppletInvalidVersion",
 		"AppletSdAccessError",
 	};
-	if (desc >= 128 && desc <= 128 + 30) return map1[desc - 128];
-	if (desc >= 192 && desc <= 192 + 3) return map2[desc - 192];
-	if (desc >= 256 && desc <= 256 + 27) return map3[desc - 256];
+	if (desc >= 128 && desc <= 128 + 29) return map1[desc - 128];
+	if (desc >= 192 && desc <= 192 + 2) return map2[desc - 192];
+	if (desc >= 256 && desc <= 256 + 26) return map3[desc - 256];
 	if (desc == 320 - 2) return "InfraNeedsReconnectError";
 	if (desc >= 1 && desc <= 28) return map4[desc - 1];
-	if (desc >= 64 && desc <= 64 + 4) return map5[desc - 64];
-	if (desc >= 96 && desc <= 96 + 14) return map6[desc - 96];
+	if (desc >= 64 && desc <= 64 + 3) return map5[desc - 64];
+	if (desc >= 96 && desc <= 96 + 13) return map6[desc - 96];
 	return NULL;
 }
 
@@ -1483,13 +1483,13 @@ const char* get_desc_desc_ec(int desc) {
 		"Applet invalid version.",
 		"Applet SD access error.",
 	};
-	if (desc >= 128 && desc <= 128 + 30) return map1[desc - 128];
-	if (desc >= 192 && desc <= 192 + 3) return map2[desc - 192];
-	if (desc >= 256 && desc <= 256 + 27) return map3[desc - 256];
+	if (desc >= 128 && desc <= 128 + 29) return map1[desc - 128];
+	if (desc >= 192 && desc <= 192 + 2) return map2[desc - 192];
+	if (desc >= 256 && desc <= 256 + 26) return map3[desc - 256];
 	if (desc == 320 - 2) return "Infra needs reconnect error.";
 	if (desc >= 1 && desc <= 28) return map4[desc - 1];
-	if (desc >= 64 && desc <= 64 + 4) return map5[desc - 64];
-	if (desc >= 96 && desc <= 96 + 14) return map6[desc - 96];
+	if (desc >= 64 && desc <= 64 + 3) return map5[desc - 64];
+	if (desc >= 96 && desc <= 96 + 13) return map6[desc - 96];
 	return NULL;
 }
 
@@ -1499,7 +1499,7 @@ const char* get_desc_str_enc(int desc) {
 		"InvalidParameter",
 		"InvalidFormat",
 	};
-	if (desc >= 1 && desc <= 3) return map[desc];
+	if (desc >= 1 && desc <= 3) return map[desc - 1];
 	return NULL;
 }
 
@@ -1509,7 +1509,7 @@ const char* get_desc_desc_enc(int desc) {
 		"Invalid parameter.",
 		"Invalid format.",
 	};
-	if (desc >= 1 && desc <= 3) return map[desc];
+	if (desc >= 1 && desc <= 3) return map[desc - 1];
 	return NULL;
 }
 
@@ -1695,7 +1695,7 @@ const char* get_desc_str_friends(int desc) {
 		if (map_val >= 0 && map_val <= max_num) return map_meta[map_picker - 1][map_val];
 		if (map_val == 0b11111) return map_meta[map_picker - 1][max_num + 1];
 	}
-	if (desc >= 1 && desc <= 5) return map9[desc];
+	if (desc >= 1 && desc <= 5) return map9[desc - 1];
 	return NULL;
 }
 
@@ -1871,7 +1871,7 @@ const char* get_desc_desc_friends(int desc) {
 		if (map_val >= 0 && map_val <= max_num) return map_meta[map_picker - 1][map_val];
 		if (map_val == 0b11111) return map_meta[map_picker - 1][max_num + 1];
 	}
-	if (desc >= 1 && desc <= 5) return map9[desc];
+	if (desc >= 1 && desc <= 5) return map9[desc - 1];
 	return NULL;
 }
 
@@ -2418,7 +2418,7 @@ const char* get_desc_str_http(int desc) {
 		"SslFailToCreateCrlStore",
 	};
 	if (desc >= 0 && desc <= 7) return map_00[desc];
-	if (desc >= 10 && desc <= 23) return map_10[desc - 10];
+	if (desc >= 10 && desc <= 12) return map_10[desc - 10];
 	if (desc >= 20 && desc <= 26) return map_20[desc - 20];
 	if (desc >= 30 && desc <= 32) return map_30[desc - 30];
 	if (desc >= 40 && desc <= 43) return map_40[desc - 40];
@@ -2504,7 +2504,7 @@ const char* get_desc_desc_http(int desc) {
 		"Failed to create SSL CRL store.",
 	};
 	if (desc >= 0 && desc <= 7) return map_00[desc];
-	if (desc >= 10 && desc <= 23) return map_10[desc - 10];
+	if (desc >= 10 && desc <= 12) return map_10[desc - 10];
 	if (desc >= 20 && desc <= 26) return map_20[desc - 20];
 	if (desc >= 30 && desc <= 32) return map_30[desc - 30];
 	if (desc >= 40 && desc <= 43) return map_40[desc - 40];
@@ -2812,7 +2812,7 @@ const char* get_desc_str_mvd(int desc) {
 		"SystemError",
 		"DwlError",
 	};
-	if (desc >= 0 && desc <= 7) return map1[desc - 1];
+	if (desc >= 0 && desc <= 7) return map1[desc];
 	if (desc == 50) return "DriverSucessOffset";
 	if (desc == 56) return "SliceRdy";
 	if (desc >= 100 && desc <= 104) return map2[desc - 100];
@@ -2886,7 +2886,7 @@ const char* get_desc_desc_mvd(int desc) {
 		"System: A system error occurred",
 		"DWL: A DWL error occurred",
 	};
-	if (desc >= 0 && desc <= 7) return map1[desc - 1];
+	if (desc >= 0 && desc <= 7) return map1[desc];
 	if (desc == 50) return "DriverSucessOffset";
 	if (desc == 56) return "HW finished processing a slice";
 	if (desc >= 100 && desc <= 104) return map2[desc - 100];
@@ -3735,7 +3735,7 @@ const char* get_desc_str_ssl(int desc) {
 		"InternalCert",
 		"InternalCrl",
 	};
-	if (desc >= 0 && desc <= 22) return map1[desc];
+	if (desc >= 0 && desc <= 21) return map1[desc];
 	if (desc >= 50 && desc <= 50 + 11) return map2[desc - 50];
 	return NULL;
 }
@@ -3778,7 +3778,7 @@ const char* get_desc_desc_ssl(int desc) {
 		"Failed to use built-in certificate",
 		"Failed to use built-in CRL",
 	};
-	if (desc >= 0 && desc <= 22) return map1[desc];
+	if (desc >= 0 && desc <= 21) return map1[desc];
 	if (desc >= 50 && desc <= 50 + 11) return map2[desc - 50];
 	return NULL;
 }
