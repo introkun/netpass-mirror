@@ -68,6 +68,14 @@ APP_DESC_INT	:=	-gl "NetPass: StreetPass in der modernen Welt!" \
 #---------------------------------------------------------------------------------
 include $(TOPDIR)/version.env
 
+# Set Git hash if not in release mode
+ifndef RELEASE
+GIT_HASH := $(shell git rev-parse --short HEAD)
+VERSION_GIT_SHA := $(GIT_HASH)
+else
+VERSION_GIT_SHA :=
+endif
+
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
 CFLAGS	:=	-g -Wall -O2 -mword-relocations -Wno-format-truncation \
@@ -88,6 +96,7 @@ CFLAGS	+=	$(INCLUDE) -D__3DS__
 CFLAGS	+=	-D_VERSION_MAJOR_=$(NETPASS_VERSION_MAJOR) \
 			-D_VERSION_MINOR_=$(NETPASS_VERSION_MINOR) \
 			-D_VERSION_MICRO_=$(NETPASS_VERSION_MICRO) \
+			-DVERSION_GIT_SHA=\"$(VERSION_GIT_SHA)\" \
 			-D_WELCOME_VERSION_=$(NETPASS_WELCOME_VERSION) \
 			-D_PATCHES_VERSION_=$(NETPASS_PATCHES_VERSION) \
 			-DNUM_LOCATIONS=$(NETPASS_NUM_LOCATIONS) \
@@ -212,6 +221,11 @@ MAKEROM_ARGS	:= -elf $(OUTPUT).elf -rsf meta/netpass.rsf -major ${NETPASS_VERSIO
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 all: build cia
+
+.PHONY: release
+release:
+	@$(MAKE) RELEASE=1 build
+	@$(MAKE) RELEASE=1 cia
 
 $(BUILD):
 	@mkdir -p $(BUILD)
