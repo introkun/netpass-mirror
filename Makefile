@@ -250,10 +250,11 @@ $(GFXBUILD):
 endif
 
 ifneq ($(MUSICBUILD),$(BUILD))
+BITRATE := 48k
 $(MUSICBUILD):
 	@mkdir -p $@
 	@for file in $(MUSICFILES) ; do \
-		ffmpeg -y -i $(MUSIC)/$$file -ar 48000 -ac 2 $(MUSICBUILD)/$${file%.*}.opus ; \
+		$(FFMPEG) -y -i $(MUSIC)/$$file -ar 48000 -ac 1 -b:a $(BITRATE) $(MUSICBUILD)/$${file%.*}.opus ; \
 	done
 endif
 
