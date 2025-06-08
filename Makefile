@@ -226,7 +226,7 @@ cia: 3dsx
 
 $(APP_ICON): $(TOPDIR)/$(ICON)
 	@mkdir -p $(BUILD)
-	@$(FFMPEG) -y -i $(TOPDIR)/$(ICON) -vf scale=48:48 $(APP_ICON)
+	@$(FFMPEG) -y -i $(TOPDIR)/$(ICON) -vf scale=48:48 -frames:v 1 -update 1 $(APP_ICON)
 
 ifneq ($(GFXBUILD),$(BUILD))
 $(GFXBUILD):
