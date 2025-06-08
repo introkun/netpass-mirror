@@ -26,9 +26,9 @@
 
 #define MUSIC_CHANNEL 8
 #define OPUS_RATE (48000.f)
-#define OPUS_CHANNELS ((size_t)2)
-#define NUM_BUFFERS 2
-#define OPUS_BUFFERSIZE ((size_t)(32 * 1024))
+#define NUM_BUFFERS 3
+#define OPUS_BUFFERSIZE (16 * 1024) // 16K stereo frames = 32K int16_t samples
+#define TEMP_MONO_BUFFER_SIZE 4096
 
 bool stop_playing = false;
 Thread music_thread = 0;
@@ -42,67 +42,81 @@ void wait_for_state(bool playing) {
 	}
 }
 
-__attribute__((optimize ("O3")))
+__attribute__((optimize("O3")))
 u64 fill_opus_buffer(OggOpusFile* opus_file, int16_t* buffer, int samples_to_read) {
-	u64 samples_read = 0;
+	u64 samples_written = 0;
 
 	while (samples_to_read > 0) {
-		int samples_just_read = op_read_stereo(opus_file, buffer, samples_to_read);
-
-		if (samples_just_read < 0) {
-			return samples_just_read;
-		} else if(samples_just_read == 0) {
-			// EOF, loop file
+		int read = op_read(opus_file, buffer, samples_to_read, NULL);
+		if (read < 0) {
+			return read;
+		} else if (read == 0) {
 			op_pcm_seek(opus_file, 0);
+			continue;
 		}
 
-		samples_read += samples_just_read;
-		samples_to_read -= samples_just_read*2;
-		buffer += samples_just_read*2;
+		samples_written += read;
+		samples_to_read -= read;
+		buffer += read;
 	}
-	return samples_read;
+
+	return samples_written; // number of int16_t mono samples
 }
 
-__attribute__((optimize ("O3")))
+__attribute__((optimize("O3")))
 void play_thread(void* p) {
 	OggOpusFile* opus_file = p;
-	// now allocate the buffers
+
+	// Allocate enough memory for stereo buffers
 	s16* buffers_mem = linearAlloc(OPUS_BUFFERSIZE * sizeof(s16) * NUM_BUFFERS);
+	if (!buffers_mem) {
+		printf("Failed to allocate audio buffers\n");
+		op_free(opus_file);
+		threadExit(1);
+		return;
+	}
+
 	s16* buffers[NUM_BUFFERS];
 	for (int i = 0; i < NUM_BUFFERS; i++) {
-		buffers[i] = buffers_mem + i*OPUS_BUFFERSIZE;
+		buffers[i] = buffers_mem + i * OPUS_BUFFERSIZE;
 	}
+
 	ndspWaveBuf wavebuf[NUM_BUFFERS];
 	memset(wavebuf, 0, sizeof(wavebuf));
-	// now set the 3ds to be able to play the stuffs
+
+	// NDSP setup
 	ndspChnReset(MUSIC_CHANNEL);
 	ndspChnWaveBufClear(MUSIC_CHANNEL);
-	ndspSetOutputMode(NDSP_OUTPUT_STEREO);
+	ndspSetOutputMode(NDSP_OUTPUT_MONO);
 	ndspChnSetInterp(MUSIC_CHANNEL, NDSP_INTERP_POLYPHASE);
 	ndspChnSetRate(MUSIC_CHANNEL, OPUS_RATE);
-	ndspChnSetFormat(MUSIC_CHANNEL, NDSP_FORMAT_STEREO_PCM16);
-	// set the wave buffers
+	ndspChnSetFormat(MUSIC_CHANNEL, NDSP_FORMAT_MONO_PCM16);
+
+	// Initial buffer fill
 	for (int i = 0; i < NUM_BUFFERS; i++) {
 		int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 		if (read <= 0) {
 			printf("Music Fail: %d\n", read);
 			goto fail;
 		}
+
+		DSP_FlushDataCache(buffers[i], read * sizeof(s16));
 		wavebuf[i].nsamples = read;
 		wavebuf[i].data_vaddr = buffers[i];
 		ndspChnWaveBufAdd(MUSIC_CHANNEL, &wavebuf[i]);
-		DSP_FlushDataCache(buffers[i], OPUS_BUFFERSIZE * sizeof(s16));
 	}
-	// now start the loop
+
 	stop_playing = false;
 	wait_for_state(true);
+
+	// Playback loop
 	while (!stop_playing) {
 		svcSleepThread((u64)1000 * 10);
-		// do nothing if the channel is paused
+
 		if (ndspChnIsPaused(MUSIC_CHANNEL)) {
 			continue;
 		}
-		
+
 		for (int i = 0; i < NUM_BUFFERS; i++) {
 			if (wavebuf[i].status == NDSP_WBUF_DONE) {
 				int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
@@ -111,18 +125,18 @@ void play_thread(void* p) {
 					goto fail;
 				}
 				if (read == 0) {
-					// song should loop
 					op_pcm_seek(opus_file, 0);
 					read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 				}
-				wavebuf[i].nsamples = read;
 
+				DSP_FlushDataCache(buffers[i], read * sizeof(s16));
+				wavebuf[i].nsamples = read;
+				wavebuf[i].data_vaddr = buffers[i];
 				ndspChnWaveBufAdd(MUSIC_CHANNEL, &wavebuf[i]);
 			}
-			DSP_FlushDataCache(buffers[i], OPUS_BUFFERSIZE * sizeof(s16));
 		}
 	}
-	
+
 fail:
 	linearFree(buffers_mem);
 	ndspChnReset(MUSIC_CHANNEL);
