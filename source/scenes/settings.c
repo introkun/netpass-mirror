@@ -17,12 +17,10 @@
  */
 
 #include "settings.h"
-#include "../curl-handler.h"
 #include "../utils.h"
 #include "../music.h"
 #include "misc_settings.h"
 #include <stdlib.h>
-#include <malloc.h>
 #define N(x) scenes_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
 #define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_TOGGLE_TITLES_LEN + STR_REPORT_USER_LEN + STR_LANGUAGE_PICK_LEN + STR_INTEGRATIONS_LEN + STR_SCAN_QR_LEN + STR_SETTINGS_MISC_LEN + STR_BACK_LEN + STR_SYSTEM_LANGUAGE_LEN + STR_LANGUAGE_TOTAL_LEN + STR_BG_MUSIC_LEN + STR_TOGGLE_TITLES_ON_LEN + STR_TOGGLE_TITLES_OFF_LEN)
@@ -56,9 +54,6 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_settings_misc);
 	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 	TextLangParse(&_data->g_languages[0], _data->g_staticBuf, str_system_language);
-	for (int i = 0; i < NUM_LANGUAGES; i++) {
-		TextLangSpecificParse(&_data->g_languages[i+1], _data->g_staticBuf, str_language, all_languages[i]);
-	}
 	TextLangParse(&_data->g_on_off[0], _data->g_staticBuf, str_toggle_titles_off);
 	TextLangParse(&_data->g_on_off[1], _data->g_staticBuf, str_toggle_titles_on);
 	_data->selected_language = -1;
@@ -66,9 +61,12 @@ void N(init)(Scene* sc) {
 		for (int i = 0; i < NUM_LANGUAGES; i++) {
 			if (all_languages[i] == config.language) {
 				_data->selected_language = i;
+				break;
 			}
 		}
 	}
+	TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf, str_language,
+		all_languages[_data->selected_language]);
 	get_text_dimensions(&_data->g_entries[2], 1, 1, &_data->lang_width, 0);
 	get_text_dimensions(&_data->g_entries[3], 1, 1, &_data->bg_music_width, 0);
 }
@@ -126,6 +124,8 @@ SceneResult N(process)(Scene* sc) {
 			if (old_lang != _data->selected_language) {
 				config.language = _data->selected_language == -1 ? -1 : all_languages[_data->selected_language];
 				configWrite();
+				TextLangSpecificParse(&_data->g_languages[_data->selected_language + 1], _data->g_staticBuf,
+					str_language, all_languages[_data->selected_language]);
 			}
 		}
 		if (kDown & KEY_A) {
