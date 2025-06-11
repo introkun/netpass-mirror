@@ -3,12 +3,12 @@ str_libcurl_error: "libCURL 오류 (%d): %s"
 str_libcurl_date_and_time: '시스템의 날짜와 시간이 올바르게 설정되어 있는지 확인하세요!'
 str_httpstatus_error: 'HTTP 상태 코드 %d'
 str_3ds_error: '3DS 오류 코드 %08lx'
-str_at_home: '집에 왔습니다.'
-str_goto_train_station: '기차역으로 갑니다'
+str_at_home: '당신은 집에 있습니다.'
+str_goto_train_station: '기차역으로 가기'
 str_at_train_station: '당신은 기차역에 있습니다.'
-str_goto_plaza: '광장으로 갑니다'
+str_goto_plaza: '광장으로 가기'
 str_at_plaza: '당신은 광장에 있습니다.'
-str_goto_mall: '쇼핑몰로 갑니다'
+str_goto_mall: '쇼핑몰로 가기'
 str_at_mall: '당신은 쇼핑몰에 있습니다.'
 str_exit: '나가기'
 str_settings: '설정'
@@ -16,12 +16,74 @@ str_download_data: '개인 데이터 다운로드'
 str_delete_data: '개인 데이터 삭제'
 str_back: '뒤로가기'
 str_language: '한국어'
-str_goto_beach: '해변으로 이동합니다'
+str_goto_beach: '해변으로 가기'
 str_at_beach: '당신은 해변에 있습니다.'
-str_goto_arcade: '오락실로 갑니다'
+str_goto_arcade: '오락실로 가기'
 str_at_arcade: '당신은 오락실에 있습니다.'
-str_goto_catcafe: '고양이카페로 갑니다'
+str_goto_catcafe: '고양이카페로 가기'
 str_at_catcafe: '당신은 고양이카페에 있습니다.'
 str_system_language: '시스템 언어'
 str_language_pick: '언어:'
 str_no_location_twice: '같은 장소를 두 번 연속 방문할 수 없습니다!'
+str_toggle_titles_message: '{a_button}을 눌러 경로 교환을 켜거나 끕니다.'
+str_back_alley: 뒷골목
+str_report_user_hint: '"%s" 신고하기'
+str_cancel: 취소
+str_submit: 확인
+str_toggle_titles_on: (켬)
+str_toggle_titles_off: (끔)
+str_check_inboxes: 수신 데이터 확인
+str_toggle_titles: 게임 전환
+str_back_alley_pay: '{playcoin}%d개로 패스 구매'
+str_report_mii_name: 'Mii 이름: %s'
+str_report_mario_kart_7_greeting: '인사말: %s'
+str_report_source_unknown: 알 수 없는 출처
+str_b_go_back: '{b_button} 뒤로가기'
+str_scan_qr: QR코드 스캔
+str_x_switch_camera: '{x_button} 카메라 전환'
+str_report_mii_plaza_country: '지역: %s - %s'
+str_report_mii_plaza_greeting: '인사말: %s'
+str_report_mii_plaza_custom_message: '개인 인사말: %s'
+str_report_mii_plaza_last_game: '최근에 플레이한 게임: %s'
+str_report_mii_plaza_custom_reply: '맞춤 답변: %s'
+str_report_tomodachi_life_island_name: '섬 이름: %s'
+str_b_cancel: '{b_button} 취소'
+str_a_ok: '{a_button} 확인'
+str_update_patches: 패치 업데이트
+str_update_patches_poweroff_desc: 패치 업데이트를 완료했습니다! 이제 콘솔이 다시 시작됩니다.
+str_settings_about: NetPass 정보
+str_about_lead_dev: 개발 총괄
+str_about_graphics: 그래픽
+str_about_music: 음악
+str_about_netpass_community: NetPass 커뮤니티
+str_about_reports: 보고 체계 개발
+str_about_production_cat: 프로덕션 Cat
+str_update_patches_desc: NetPass 설치를 완료하기 위해 몇 가지 sysmodule 패치를 생성합니다. 패치가 작동하려면 Luma3DS
+  설정에서 "Enable loading external FIRMs and modules"을 사용하도록 설정해야 합니다. 전원을 끄고 {select_button}
+  버튼을 누른 채 {power_button} 버튼을 누르면 해당 옵션에 접근할 수 있습니다. 이 작업은 패치가 생성된 후에 진행할 수 있습니다.
+str_report_source: '출처: %s'
+str_settings_misc: 기타
+str_update_patches_error_desc: 패치 업데이트 중 오류가 발생했습니다. NetPass의 GitLab, GBAtemp나 Discord에
+  이 문제를 신고해 주시기 바랍니다. https://netpass.cafe/discord
+str_about_special_thanks: 고마운 분들
+str_about_localisation: 현지화
+str_about_special_thanks_txt: 리버스 엔지니어링과 문서 작업에 힘써준 3DS 홈브루 커뮤니티
+str_prompt_verify: 이 3DS를 인증하시겠습니까?
+str_welcome: NetPass에 오신 걸 환영합니다
+str_view_rules: 이용 약관 보기
+str_view_privacy: 개인정보처리방침 보기
+str_continue: 계속하기
+str_welcome_message: 시작하기 전, 이용 약관과 개인정보처리방침을 읽고 동의해 주십시오.
+str_integrations: 연동
+str_integrations_message: 서드파티와의 연동은 NetPass에서 관리하지 않습니다. 사용 시 발생하는 모든 위험은 사용자에게 있습니다!
+str_report_integration: 이 메시지는 연동된 기능으로부터 받았습니다. 신고하려면 해당 연동 서비스의 지원팀에 문의하십시오.
+str_bad_os_version: "NetPass가 작동하려면 3DS 시스템 버전이 11.15.0 이상이어야 합니다. 시스템 업데이트 후 NetPass를
+  다시 시작해 주세요.\n\n아무 버튼을 누르면 종료됩니다"
+str_update_patches_poweroff_clear_desc: 패치를 안전하게 제거했습니다! 이제 콘솔이 다시 시작됩니다.
+str_bg_music: 배경음악
+str_skip: 건너뛰기
+str_install: 설치
+str_remove: 제거
+str_prompt_dl_pass: 이 통신을 다운로드하시겠습니까?
+str_back_alley_message: 더 많이 엇갈려보자!
+str_report_user: 사용자 신고
