@@ -25,7 +25,6 @@
 #include "cecd.h"
 #include "curl-handler.h"
 #include "config.h"
-#include "boss.h"
 #include "report.h"
 #include "music.h"
 #include "integration.h"
@@ -63,8 +62,7 @@ int main() {
 
 	// mount sharedextdata_b so that we can read it later, for e.g. playcoins
 	{
-		u32 extdata_lowpathdata[3];
-		memset(extdata_lowpathdata, 0, 0xc);
+		u32 extdata_lowpathdata[3] = {0};
 		extdata_lowpathdata[0] = MEDIATYPE_NAND;
 		extdata_lowpathdata[1] = 0xf000000b;
 		FS_Path extdata_path = {
