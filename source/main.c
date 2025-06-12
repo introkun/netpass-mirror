@@ -42,8 +42,8 @@ int main() {
 	fsInit();
 	consoleInit(GFX_BOTTOM, NULL);
 	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
-#ifdef VERSION_GIT_SHA
-	printf("+%s", VERSION_GIT_SHA);
+#ifdef _VERSION_GIT_SHA_
+	printf("+%s", _VERSION_GIT_SHA_);
 #endif
 	printf("\n");
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);

@@ -71,9 +71,9 @@ include $(TOPDIR)/version.env
 # Set Git hash if not in release mode
 ifndef RELEASE
 GIT_HASH := $(shell git rev-parse --short HEAD)
-VERSION_GIT_SHA := $(GIT_HASH)
+_VERSION_GIT_SHA_ := $(GIT_HASH)
 else
-VERSION_GIT_SHA :=
+_VERSION_GIT_SHA_ :=
 endif
 
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
@@ -96,7 +96,7 @@ CFLAGS	+=	$(INCLUDE) -D__3DS__
 CFLAGS	+=	-D_VERSION_MAJOR_=$(NETPASS_VERSION_MAJOR) \
 			-D_VERSION_MINOR_=$(NETPASS_VERSION_MINOR) \
 			-D_VERSION_MICRO_=$(NETPASS_VERSION_MICRO) \
-			-DVERSION_GIT_SHA=\"$(VERSION_GIT_SHA)\" \
+			-D_VERSION_GIT_SHA_=\"$(_VERSION_GIT_SHA_)\" \
 			-D_WELCOME_VERSION_=$(NETPASS_WELCOME_VERSION) \
 			-D_PATCHES_VERSION_=$(NETPASS_PATCHES_VERSION) \
 			-DNUM_LOCATIONS=$(NETPASS_NUM_LOCATIONS) \

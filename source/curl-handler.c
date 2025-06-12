@@ -228,10 +228,10 @@ void curl_multi_loop_request_setup(int i) {
 	
 	// add version header
 	char header_netpass_version[100];
-#ifdef VERSION_GIT_SHA
+#ifdef _VERSION_GIT_SHA_
 	snprintf(header_netpass_version, sizeof(header_netpass_version),
 			 "3ds-netpass-version: v%d.%d.%d-%s",
-			 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, VERSION_GIT_SHA);
+			 _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_, _VERSION_GIT_SHA_);
 #else
 	snprintf(header_netpass_version, sizeof(header_netpass_version),
 			 "3ds-netpass-version: v%d.%d.%d",
