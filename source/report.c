@@ -71,11 +71,10 @@ bool loadReportMessages(ReportMessages* msgs, u32 transfer_id) {
 	DIR* d = opendir(dirname);
 	if (!d) return false;
 	struct dirent *p;
-	int r = 0;
 	CecMessageHeader* buf = malloc(MAX_MESSAGE_SIZE);
 	if (!buf) return false;
 	u16 source_ident = 0;
-	while (!r && (p=readdir(d)) && msgs->count < 12) {
+	while ((p=readdir(d)) && msgs->count < 12) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		if (!fname) {
@@ -340,8 +339,7 @@ Result reportGetSomeMsgHeader(CecMessageHeader* msg, u32 transfer_id) {
 	if (!d) return -1;
 
 	struct dirent *p;
-	int r = 0;
-	while (!r && (p=readdir(d))) {
+	while ((p=readdir(d))) {
 		int fname_len = path_len + strlen(p->d_name) + 2;
 		char* fname = malloc(fname_len);
 		if (!fname) {
