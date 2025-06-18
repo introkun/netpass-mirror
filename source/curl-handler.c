@@ -249,29 +249,29 @@ void curl_multi_loop_request_setup(int i) {
 	
 	FriendKey friend_key;
 	Result res = FRD_GetMyFriendKey(&friend_key);
-	char header_fc[100];
-	char header_friend_key[100];
 	if (R_SUCCEEDED(res)) {
 		u64 fc;
 		res = FRD_PrincipalIdToFriendCode(friend_key.principalId, &fc);
 		if (R_SUCCEEDED(res)) {
+			char header_fc[100];
 			snprintf(header_fc, 100, "3ds-fc: %016llX", fc);
 			headers = curl_slist_append(headers, header_fc);
 			u64 fc_seed;
 			res = CFGI_GetLocalFriendCodeSeed(&fc_seed);
 			if (R_SUCCEEDED(res)) {
+				char header_friend_key[100];
 				snprintf(header_friend_key, 100, "3ds-friend-code: %016llX", (fc ^ fc_seed) & 0x0000ffffffffffffll);
 				headers = curl_slist_append(headers, header_friend_key);
 			}
 		}
 	}
-	char header_title_name[225];
 	if (h->title_name && !h->file_reply) {
+		char header_title_name[225];
 		snprintf(header_title_name, 225, "3ds-title-name: %s", h->title_name);
 		headers = curl_slist_append(headers, header_title_name);
 	}
-	char header_hmac_key[255];
 	if (h->hmac_key && !h->file_reply) {
+		char header_hmac_key[255];
 		snprintf(header_hmac_key, 255, "3ds-hmac-key: %s", h->hmac_key);
 		headers = curl_slist_append(headers, header_hmac_key);
 	}
