@@ -31,11 +31,12 @@ After installing devkitPro, you will need to download the following using [devki
 
 - 3ds-dev
 - 3ds-curl
+- 3ds-opusfile
 
 In other words, you'll need to run the following command in a Terminal/command prompt (with administrator/root privileges):
 
 ```bash
-dkp-pacman -S 3ds-dev 3ds-curl
+dkp-pacman -S 3ds-dev 3ds-curl 3ds-opusfile
 ```
 
 Furthermore, you need to have `ffmpeg` and `python` and `python-pyyaml` installed.
