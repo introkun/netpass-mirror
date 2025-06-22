@@ -24,8 +24,8 @@
 #define BASE_URL "https://api.netpass.cafe"
 //#define BASE_URL "https://devapi.netpass.cafe"
 
-#define RULES_URL "https://netpass.cafe/rules.html"
-#define PRIVACY_URL "https://netpass.cafe/privacy.html"
+#define RULES_URL "http://netpass.cafe/rules.html"
+#define PRIVACY_URL "http://netpass.cafe/privacy.html"
 
 #define lambda(return_type, function_body) \
 ({ \
