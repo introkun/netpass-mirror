@@ -439,10 +439,24 @@ Result get_os_version(OS_VersionBin* ver) {
 		0x00017502, //KOR
 		0x00017602, //TWN
 	};
+	
+	static const u8 __map_to_try[6] = {
+		2, 1, 4, 6, 5, 0,
+	};
+	
+	Result res = cfguInit();
+	if (R_SUCCEEDED(res)) {
+		u8 region = 0;
+		res = CFGU_SecureInfoGetRegion(&region);
+		if (R_SUCCEEDED(res) && region < 7) {
+			res = osReadVersionBin(TID_HIGH | __CVer_tidlow_regionarray[region], ver);
+			if (R_SUCCEEDED(res)) return res;
+		}
+		cfguExit();
+	}
 
-	Result res = 0;
-	for (int region = 0; region < 7; region++) {
-		res = osReadVersionBin(TID_HIGH | __CVer_tidlow_regionarray[region], ver);
+	for (int region = 0; region < 6; region++) {
+		res = osReadVersionBin(TID_HIGH | __CVer_tidlow_regionarray[__map_to_try[region]], ver);
 		if (R_SUCCEEDED(res)) break;
 	}
 	
