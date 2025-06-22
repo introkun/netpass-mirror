@@ -79,6 +79,7 @@ SceneResult N(buy_pass)(Scene* sc, int i) {
 		triggerDownloadInboxes();
 		return;
 	error:
+		_e(res);
 		printf("ERROR: failed processing pass: %lx\n", res);
 		free(N(play_coins));
 	}));

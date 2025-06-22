@@ -82,6 +82,7 @@ bool isTitleIgnored(u32 title_id) {
 void load(void) {
 	FILE* f = fopen(config_path, "r");
 	if (!f) {
+		_e(-1);
 		perror("Error");
 		return;
 	}
@@ -168,7 +169,7 @@ void load(void) {
 void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
 	if (!f) {
-		printf("Error, meh\n");
+		_e(-1);
 		perror("Error");
 		return;
 	}

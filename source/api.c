@@ -365,6 +365,7 @@ Result doSlotExchange(void) {
 	goto cleanup;
 fail:
 	cecdSprDone(false);
+	_e(res);
 	printf("ERROR (%s): %08lx\n", error_origin, res);
 cleanup:
 	for (int i = 0; i < 12; i++) {
