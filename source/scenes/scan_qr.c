@@ -306,7 +306,7 @@ SceneResult N(process)(Scene* sc) {
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }
-0 byte
+
 Scene* getScanQrScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
