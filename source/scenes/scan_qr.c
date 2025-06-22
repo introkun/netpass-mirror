@@ -277,9 +277,9 @@ SceneResult N(process)(Scene* sc) {
 							Result res = qr_dl_pass(N(qr_buffer));
 							if (R_FAILED(res)) {
 								_e(res);
-								printf("Verification failed: %lx\n", res);
+								printf("Pass DL failed: %lx\n", res);
 							} else {
-								printf("Verification successful!\n");
+								printf("Pass DL successful!\n");
 							}
 						})));
 						return scene_push;
@@ -306,7 +306,7 @@ SceneResult N(process)(Scene* sc) {
 	if (kDown & KEY_START) return scene_stop;
 	return scene_continue;
 }
-
+0 byte
 Scene* getScanQrScene(void) {
 	Scene* scene = malloc(sizeof(Scene));
 	if (!scene) return NULL;
