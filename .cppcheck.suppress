@@ -5,3 +5,5 @@ missingIncludeSystem:*
 staticFunction:*
 unusedFunction:source/boss.c
 unusedFunction:source/cecd.c
+invalidPrintfArgType_s:source/main.c
+invalidPrintfArgType_s:source/curl-handler.c
