@@ -139,7 +139,6 @@ int main() {
 				}
 				waitForCecdState(true, CEC_COMMAND_STOP, CEC_STATE_ABBREV_IDLE);
 				initTitleData();
-				doSlotExchange();
 				res = getLocation();
 				if (R_FAILED(res) && res != -1) {
 					printf("ERROR failed to get location: %ld\n", res);
