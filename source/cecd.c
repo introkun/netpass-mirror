@@ -431,7 +431,7 @@ Result cecdSprDone(bool success) {
 	return res;
 }
 
-Result cecdGenHashConsoleUnique(u64* out) {
+Result cecdGetBossUserid(u64* out) {
 	Result res = 0;
 	u32* cmdbuf = getThreadCommandBuffer();
 	cmdbuf[0] = IPC_MakeHeader(0x415, 0, 0);
