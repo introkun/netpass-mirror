@@ -19,7 +19,6 @@
 #include <3ds.h>
 #include <citro2d.h>
 #include <stdlib.h>
-#include "debug.h"
 #include "scene.h"
 #include "api.h"
 #include "cecd.h"
@@ -28,6 +27,7 @@
 #include "report.h"
 #include "music.h"
 #include "integration.h"
+#include "logger.h"
 
 int main() {
 	osSetSpeedupEnable(true); // enable speedup on N3DS
@@ -40,6 +40,11 @@ int main() {
 	frdInit(false);
 	fsInit();
 	consoleInit(GFX_BOTTOM, NULL);
+	loggerInit(LOG_LEVEL_INFO, LOG_OUTPUT_SCREEN, NULL);
+#ifdef DEBUG
+	loggerSetLevel(LOG_LEVEL_DEBUG);
+	loggerSetOutput(LOG_OUTPUT_BOTH, "log.txt");
+#endif
 	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
 	// cppcheck-suppress invalidPrintfArgType_s
@@ -52,12 +57,12 @@ int main() {
 	romfsInit();
 	init_main_thread_prio();
 
-	DEBUG_PRINTF("DEBUG ON\n");
+	logDebug("DEBUG ON\n");
 
 	cecdInit();
 	Result res = curlInit();
 	if (R_FAILED(res)) {
-		DEBUG_PRINTF("Curl initialization failed\n");
+		logDebug("Curl initialization failed\n");
 	}
 	srand(time(NULL));
 
@@ -119,7 +124,7 @@ int main() {
 				// first, we import the locally stored passes for reports to work
 				reportInit();
 				// next, we gotta wait for having internet
-                DEBUG_PRINTF("Waiting internet\n");
+                logDebug("Waiting internet\n");
 				char url[50];
 				snprintf(url, 50, "%s/ping", BASE_URL);
 				int check_count = 0;
@@ -199,6 +204,7 @@ int main() {
 	C2D_Fini();
 	C3D_Fini();
 	curlExit();
+	loggerClose();
 	romfsExit();
 	fsExit();
 	frdExit();

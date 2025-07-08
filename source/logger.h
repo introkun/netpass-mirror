@@ -1,5 +1,5 @@
 /**
- * NetPass
+* NetPass
  * Copyright (C) 2025 Introkun
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
-#ifdef DEBUG
-    #include <stdio.h>
-    #define DEBUG_PRINTF(...) \
-        do { printf("[DEBUG] "); printf(__VA_ARGS__); } while (0)
-#else
-    #define DEBUG_PRINTF(...) ((void)0)
-#endif
+typedef enum {
+    LOG_LEVEL_DEBUG,
+    LOG_LEVEL_INFO,
+    LOG_LEVEL_WARN,
+    LOG_LEVEL_ERROR,
+    LOG_LEVEL_NONE
+} LogLevel;
+
+typedef enum {
+    LOG_OUTPUT_NONE,
+    LOG_OUTPUT_SCREEN,
+    LOG_OUTPUT_FILE,
+    LOG_OUTPUT_BOTH
+} LogOutput;
+
+void loggerInit(LogLevel level, LogOutput output, const char* filename);
+void loggerSetLevel(LogLevel level);
+void loggerSetOutput(LogOutput output, const char* filename);
+void loggerClose(void);
+
+void logDebug(const char* fmt, ...);
+void logInfo(const char* fmt, ...);
+void logWarn(const char* fmt, ...);
+void logError(const char* fmt, ...);
