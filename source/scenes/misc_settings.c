@@ -18,11 +18,14 @@
 
 #include "misc_settings.h"
 #include "about.h"
+#include "../logger.h"
+#include "logging_scene.h"
 #define N(x) scenes_misc_settings_namespace_##x
 #define _data ((N(DataStruct)*)sc->d)
-#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN + STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_BACK_LEN)
+#define TEXT_BUF_LEN (STR_SETTINGS_LEN + STR_DOWNLOAD_DATA_LEN + STR_DELETE_DATA_LEN + STR_UPDATE_PATCHES_LEN +\
+	STR_VIEW_RULES_LEN + STR_VIEW_PRIVACY_LEN + STR_LOGGER_SETTINGS_LEN + STR_BACK_LEN)
 
-#define NUM_ENTRIES 7
+#define NUM_ENTRIES 8
 
 typedef struct {
 	C2D_TextBuf g_staticBuf;
@@ -45,7 +48,8 @@ void N(init)(Scene* sc) {
 	TextLangParse(&_data->g_entries[3], _data->g_staticBuf, str_update_patches);
 	TextLangParse(&_data->g_entries[4], _data->g_staticBuf, str_view_privacy);
 	TextLangParse(&_data->g_entries[5], _data->g_staticBuf, str_view_rules);
-	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_back);
+	TextLangParse(&_data->g_entries[6], _data->g_staticBuf, str_logger_settings);
+	TextLangParse(&_data->g_entries[7], _data->g_staticBuf, str_back);
 }
 
 void N(render)(Scene* sc) {
@@ -110,7 +114,7 @@ SceneResult N(process)(Scene* sc) {
 						printf("ERROR deleting all data: %ld\n", res);
 						return;
 					}
-					printf("Successfully sent request to delete all data! This can take up to 15 days.\n");
+					logInfo("Successfully sent request to delete all data! This can take up to 15 days.\n");
 				}));
 				return scene_push;
 			}
@@ -125,7 +129,11 @@ SceneResult N(process)(Scene* sc) {
 			if (_data->cursor == 5) {
 				open_url(RULES_URL);
 			}
-			if (_data->cursor == 6) return scene_pop;
+			if (_data->cursor == 6) {
+				sc->next_scene = getLoggingScene();
+				return scene_push;
+			}
+			if (_data->cursor == 7) return scene_pop;
 		}
 	}
 	if (kDown & KEY_B) return scene_pop;
@@ -162,18 +170,18 @@ static void downloadDataThread(void) {
 		printf("FAIL\nExport: bad status code %ld != 202\n", res);
 		return;
 	}
-	printf("ok.\n");
+	logInfo("ok.\n");
 	snprintf(url, URL_SIZE, "%s/data/check", BASE_URL);
-	printf("Waiting..");
+	logInfo("Waiting..");
 #define MAX_WAIT_NANOS 15ULL*1000000000ULL // 15s
 	u64 backoff = 500000000ULL; // 0.5s
 	while (true) {
 		res = httpRequest("GET", url, 0, NULL, 0, 0, 0);
 		if (res == 200) {
-			printf(" Ready.\n");
+			logInfo(" Ready.\n");
 			break;
 		} else if (res == 204) {
-			printf(".");
+			logInfo(".");
 			svcSleepThread(backoff);
 			backoff += backoff >> 2;
 			if (backoff > MAX_WAIT_NANOS) {
@@ -182,10 +190,10 @@ static void downloadDataThread(void) {
 			continue;
 		}
 		if (R_FAILED(res)) {
-			printf("FAIL: %ld\n", res);
+			logError("FAIL: %ld\n", res);
 			return;
 		} else {
-			printf("FAIL\nCheck: bad status code %ld\n", res);
+			logError("FAIL\nCheck: bad status code %ld\n", res);
 			return;
 		}
 	}
@@ -194,20 +202,20 @@ static void downloadDataThread(void) {
 	char filename[200];
 	struct tm now_tm;
 	if (!gmtime_r(&now, &now_tm)) {
-		printf("\nPANIC: gmtime failed\n");
+		logError("\nPANIC: gmtime failed\n");
 		return;
 	}
 	strftime(filename, 200, "sdmc:/netpass_export_%Y%m%dT%H%M%S.zip", &now_tm);
-	printf("Downloading...");
+	logInfo("Downloading...");
 	res = httpRequest("GET", url, 0, 0, (void*)1, filename, 0);
-	printf("\n");
+	logInfo("\n");
 	if (res != 200) {
-		printf("FAIL\nDownload: bad status code %ld\n", res);
+		logError("FAIL\nDownload: bad status code %ld\n", res);
 		remove(filename);
 		return;
 	}
 
-	printf("Successfully downloaded data export!\n");
-	printf("File stored at %s\n", filename);
+	logInfo("Successfully downloaded data export!\n");
+	logInfo("File stored at %s\n", filename);
 #undef URL_SIZE
 }

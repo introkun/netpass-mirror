@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "logger.h"
+
 #define MUSIC_CHANNEL 8
 #define OPUS_RATE (48000.f)
 #define OPUS_CHANNELS ((size_t)2)
@@ -85,7 +87,7 @@ void play_thread(void* p) {
 	for (int i = 0; i < NUM_BUFFERS; i++) {
 		int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 		if (read <= 0) {
-			printf("Music Fail: %d\n", read);
+			logError("Music Fail: %d\n", read);
 			goto fail;
 		}
 		wavebuf[i].nsamples = read;
@@ -107,7 +109,7 @@ void play_thread(void* p) {
 			if (wavebuf[i].status == NDSP_WBUF_DONE) {
 				int read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 				if (read < 0) {
-					printf("Music Fail: %d\n", read);
+					logError("Music Fail: %d\n", read);
 					goto fail;
 				}
 				if (read == 0) {

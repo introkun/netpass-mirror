@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "logger.h"
+
 int location = -1;
 FS_Archive sharedextdata_b = 0;
 NetpassTitleData title_data;
@@ -262,7 +264,7 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr get slots metadata";
 	res = cecdSprGetSlotsMetadata(sizeof(SlotMetadata)*12, slotinfo.metadata, &slots_total);
 	if (R_FAILED(res)) goto fail;
-	printf("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
+	logInfo("Uploading outboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// Upload all slots
 	for (int i = 0; i < slots_total; i++) {
@@ -278,9 +280,9 @@ Result doSlotExchange(void) {
 		}
 		Result res2 = uploadSlot(extra, &slotinfo.metadata[i]);
 		if (R_FAILED(res2)) {
-			printf("-");
+			logInfo("-");
 		} else {
-			printf("=");
+			logInfo("=");
 		}
 		error_origin = "upload slot";
 		res = cecdSprSetTitleSent(slotinfo.metadata[i].title_id, !R_FAILED(res2));
@@ -293,7 +295,7 @@ Result doSlotExchange(void) {
 	res = cecdSprFinaliseSend();
 	error_origin = "finalise send";
 	if (R_FAILED(res)) goto fail;
-	printf(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
+	logInfo(" Done\nDownloading inboxes (%ld/%d)", slots_total, numUsedTitles());
 
 	// time to start download!
 	res = cecdSprStartRecv();
@@ -339,17 +341,17 @@ Result doSlotExchange(void) {
 			continue; // the slot was disabled
 		}
 		if (slotinfo.metadata[i].size == 0 || slotinfo.slots[i] == 0) {
-			printf("=");
+			logInfo("=");
 			continue;
 		}
 		slot_new_data_num++;
 		res = cecdSprAddSlot(slotinfo.metadata[i].title_id, ((CecSlotHeader*)(slotinfo.slots[i]))->size, slotinfo.slots[i]);
 		saveSlotInLog(slotinfo.slots[i]);
 		if (R_FAILED(res)) {
-			printf("-");
+			logInfo("-");
 			goto fail;
 		} else {
-			printf("=");
+			logInfo("=");
 		}
 	}
 
@@ -360,13 +362,13 @@ Result doSlotExchange(void) {
 	error_origin = "cecd spr done";
 	if (R_FAILED(res)) goto fail;
 
-	printf(" Done (%d)\n", slot_new_data_num);
+	logInfo(" Done (%d)\n", slot_new_data_num);
 
 	goto cleanup;
 fail:
 	cecdSprDone(false);
 	_e(res);
-	printf("ERROR (%s): %08lx\n", error_origin, res);
+	logError("ERROR (%s): %08lx\n", error_origin, res);
 cleanup:
 	for (int i = 0; i < 12; i++) {
 		if (slotinfo.slots[i]) {
@@ -412,12 +414,12 @@ Result setLocation(int location) {
 	snprintf(url, 80, "%s/location/%d/enter", BASE_URL, location);
 	res = httpRequest("PUT", url, 0, 0, 0, 0, 0);
 	if (R_FAILED(res)) {
-		printf("ERROR: Failed to enter location %d: %ld\n", location, res);
+		logError("ERROR: Failed to enter location %d: %ld\n", location, res);
 		return res;
 	}
 	config.last_location = location;
 	configWrite();
-	printf("Entered location %d!\n", location);
+	logInfo("Entered location %d!\n", location);
 	return res;
 }
 

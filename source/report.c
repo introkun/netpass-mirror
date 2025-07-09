@@ -22,15 +22,16 @@
 #include "utils.h"
 #include "strings.h"
 #include "curl-handler.h"
+#include "integration.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <sys/stat.h>
-#include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
-#include "integration.h"
+
+#include "logger.h"
 
 #define LOG_DIR "sdmc:/config/netpass/log/"
 #define LOG_INDEX "sdmc:/config/netpass/log/index.nrle"
@@ -384,7 +385,7 @@ void reportInit(void) {
 		if (stat(filename, &statbuf) && !S_ISDIR(statbuf.st_mode)) continue;
 		if (!has_spr_passes) {
 			has_spr_passes = true;
-			printf("Add SPR passes ");
+			logInfo("Add SPR passes ");
 		}
 		FILE* f = fopen(filename, "rb");
 		if (!f) continue;
@@ -393,7 +394,7 @@ void reportInit(void) {
 		rewind(f);
 		if (filesize < sizeof(CecSlotHeader)) {
 			fclose(f);
-			printf("/");
+			logInfo("/");
 			unlink(filename);
 			continue;
 		}
@@ -401,13 +402,13 @@ void reportInit(void) {
 		fread_blk(&slot, sizeof(CecSlotHeader), 1, f);
 		if (slot.size > MAX_SLOT_SIZE) {
 			fclose(f);
-			printf("S");
+			logInfo("S");
 			unlink(filename);
 			continue;
 		}
 		CecSlotHeader* buf_slot = malloc(slot.size);
 		if (!buf_slot) {
-			printf("B");
+			logInfo("B");
 			fclose(f);
 			unlink(filename);
 			continue;
@@ -415,11 +416,11 @@ void reportInit(void) {
 		rewind(f);
 		fread_blk(buf_slot, slot.size, 1, f);
 		fclose(f);
-		printf("=");
+		logInfo("=");
 		saveSlotInLog(buf_slot);
 		free(buf_slot);
 		unlink(filename);
 	}
 	closedir(d);
-	if (has_spr_passes) printf(" Done\n");
+	if (has_spr_passes) logInfo(" Done\n");
 }

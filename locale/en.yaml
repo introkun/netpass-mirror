@@ -95,3 +95,7 @@ str_report_integration: "This message is originating from an integration. To rep
 str_skip: "Skip"
 str_install: "Install"
 str_remove: "Remove"
+str_logger_settings: "Logger Settings"
+str_logger_settings_message: "You can specify here a logging level and a logger output."
+str_logger_level: "Logger Level:"
+str_logger_output: "Logger Output:"

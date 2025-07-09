@@ -31,6 +31,8 @@ typedef struct {
 	int welcome_version;
 	u32 title_ids_ignored[24];
 	bool bg_music;
+	int log_level;
+	int log_output;
 } Config;
 
 void addIgnoredTitle(u32 title_id);

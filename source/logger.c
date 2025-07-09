@@ -114,7 +114,7 @@ static void loggerWrite(LogLevel level, const char* tag, const char* fmt, va_lis
     LightLock_Lock(&logLock);
 
     if (currentOutput == LOG_OUTPUT_SCREEN || currentOutput == LOG_OUTPUT_BOTH) {
-        printf("[%s] %s\n", tag, buffer);
+        printf("%s", buffer);
     }
 
     if ((currentOutput == LOG_OUTPUT_FILE || currentOutput == LOG_OUTPUT_BOTH) && logFile) {

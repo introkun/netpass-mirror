@@ -21,15 +21,15 @@
 #include "strings.h"
 #include "utils.h"
 #include "cecd.h"
+#include "boss.h"
+#include "logger.h"
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
-#include "boss.h"
 
 #define PATCHES_COPY_DSTDIR "sdmc:/luma/sysmodules/"
 #define PATCHES_COPY_SRCDIR "romfs:/patches/"
@@ -48,6 +48,8 @@ Config config = {
 	.welcome_version = 0,
 	.patches_version = 0,
 	.bg_music = 1,
+	.log_level = LOG_LEVEL_INFO,
+	.log_output = LOG_OUTPUT_SCREEN
 };
 
 void addIgnoredTitle(u32 title_id) {
@@ -83,7 +85,7 @@ void load(void) {
 	FILE* f = fopen(config_path, "r");
 	if (!f) {
 		_e(-1);
-		perror("Error");
+		logError("Error loading config file");
 		return;
 	}
 	char line[200];
@@ -98,8 +100,8 @@ void load(void) {
 			*eol = '\0';
 		}
 		if (!key[0] || !value[0]) continue;
-		int key_len = strlen(key);
-		int value_len = strlen(value);
+		const int key_len = strlen(key);
+		const int value_len = strlen(value);
 		for (int i = 0; i < key_len; i++) key[i] = toupper(key[i]);
 		for (int i = 0; i < value_len; i++) value[i] = toupper(value[i]);
 		if (strcmp(key, "LANGUAGE") == 0) {
@@ -138,6 +140,14 @@ void load(void) {
 		if (strcmp(key, "BG_MUSIC") == 0) {
 			config.bg_music = strcmp(value, "TRUE") == 0;
 		}
+		if (strcmp(key, "LOG_LEVEL") == 0) {
+			config.log_level = atoi(value);
+			loggerSetLevel(config.log_level);
+		}
+		if (strcmp(key, "LOG_OUTPUT") == 0) {
+			config.log_output = atoi(value);
+			loggerSetOutput(config.log_output, "log.txt");
+		}
 		if (strcmp(key, "TITLE_IDS_IGNORED") == 0) {
 			// Open mbox_list now to avoid repeatedly doing it later
 			Result res = 0;
@@ -170,7 +180,7 @@ void configWrite(void) {
 	FILE* f = fopen(config_path, "w");
 	if (!f) {
 		_e(-1);
-		perror("Error");
+		logError("Error saving config file");
 		return;
 	}
 	char line[250];
@@ -189,6 +199,10 @@ void configWrite(void) {
 	snprintf(line, 250, "patches_version=%d\n", config.patches_version);
 	fputs_blk(line, f);
 	snprintf(line, 250, "bg_music=%s\n", config.bg_music ? "true" : "false");
+	fputs_blk(line, f);
+	snprintf(line, 250, "log_level=%d\n", config.log_level);
+	fputs_blk(line, f);
+	snprintf(line, 250, "log_output=%d\n", config.log_output);
 	fputs_blk(line, f);
 	if (config.language == -1) {
 		fputs_blk("language=system\n", f);
@@ -219,7 +233,7 @@ void configInit(void) {
 bool clearPatches(void) {
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
-		printf("ERROR: src dir not found\n");
+		logError("ERROR: src dir not found\n");
 		return false;
 	}
 	struct dirent* p;
@@ -236,31 +250,31 @@ bool clearPatches(void) {
 			// we skip files that don't exist
 			if (access(dstpath, F_OK) != 0) continue;
 			// ok we actually have a file, delete it
-			printf("%s...", p->d_name);
+			logInfo("%s...", p->d_name);
 			remove(dstpath);
-			printf("Done\n");
+			logInfo("Done\n");
 			deleted_file = true;
 		}
 	}
 	closedir(d);
-	printf("Updating patches version in config...");
+	logInfo("Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	printf("Done\nClearing sysmodules done\n");
+	logInfo("Done\nClearing sysmodules done\n");
 	return deleted_file;
 }
 
 bool writePatches(void) {
 	mkdir_p(PATCHES_COPY_DSTDIR);
-	printf("Copying sysmodules...\n");
+	logInfo("Copying sysmodules...\n");
 	DIR* d = opendir(PATCHES_COPY_SRCDIR);
 	if (!d) {
-		printf("ERROR: src dir not found\n");
+		logError("ERROR: src dir not found\n");
 		return false;
 	}
 	void* buffer = malloc(0x4000);
 	if (!buffer) {
-		printf("ERROR: malloc\n");
+		logError("ERROR: malloc\n");
 		return false;
 	}
 	struct dirent* p;
@@ -272,50 +286,50 @@ bool writePatches(void) {
 		struct stat statbuf;
 		if (!stat(srcpath, &statbuf) && !S_ISDIR(statbuf.st_mode)) {
 			// ok we actually have a file, copy it
-			printf("%s...", p->d_name);
+			logInfo("%s...", p->d_name);
 			FILE* src = fopen(srcpath, "rb");
 			FILE* dst = fopen(dstpath, "wb+");
 			if (!src || !dst) {
 				if (src) fclose(src);
 				if (dst) fclose(dst);
-				printf("ERROR: open\n");
+				logError("ERROR: open\n");
 				continue;
 			}
 			size_t len = fread(buffer, 1, 0x4000, src);
 			if (!len) {
 				fclose(src);
 				fclose(dst);
-				printf("ERROR: read\n");
+				logError("ERROR: read\n");
 				continue;
 			}
 			if (!fwrite(buffer, len, 1, dst)) {
 				fclose(src);
 				fclose(dst);
-				printf("ERROR: write\n");
+				logError("ERROR: write\n");
 				continue;
 			}
 			fclose(src);
 			fclose(dst);
 
-			printf("Done\n");
+			logInfo("Done\n");
 		}
 	}
 	closedir(d);
-	printf("Updating patches version in config...");
+	logInfo("Updating patches version in config...");
 	config.patches_version = _PATCHES_VERSION_;
 	configWrite();
-	printf("Done\nCopying sysmodules done\n");
+	logInfo("Done\nCopying sysmodules done\n");
 	free(buffer);
 	return true;
 }
 
 void clearBossCacheAndReboot(void) {
-	printf("Clearing spr cache...");
+	logInfo("Clearing spr cache...");
 	bossInit(SPRELAY_TITLE_ID, false);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
 	bossUnregisterTask(SPRELAY_TASK_ID, 0);
-	printf("Done\n");
+	logInfo("Done\n");
 	nsInit();
 	NS_RebootSystem();
-	printf("Rebooting system...\n");
+	logInfo("Rebooting system...\n");
 }

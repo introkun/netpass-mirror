@@ -45,12 +45,12 @@ int main() {
 	loggerSetLevel(LOG_LEVEL_DEBUG);
 	loggerSetOutput(LOG_OUTPUT_BOTH, "log.txt");
 #endif
-	printf("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
+	logInfo("Starting NetPass v%d.%d.%d", _VERSION_MAJOR_, _VERSION_MINOR_, _VERSION_MICRO_);
 #ifdef _VERSION_GIT_SHA_
 	// cppcheck-suppress invalidPrintfArgType_s
-	printf("+%s", _VERSION_GIT_SHA_);
+	logInfo("+%s", _VERSION_GIT_SHA_);
 #endif
-	printf("\n");
+	logInfo("\n");
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
@@ -88,17 +88,20 @@ int main() {
 
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
+	logDebug("Log level: %d\n", config.log_level);
+	logDebug("Log output: %d\n", config.log_output);
+
 	Scene* scene;
 	{
 		OS_VersionBin ver;
 		Result res = get_os_version(&ver);
 		if (R_FAILED(res)) {
-			printf("osGetSystemVersionData res: %08lX\n", res);
+			logInfo("osGetSystemVersionData res: %08lX\n", res);
 			
-			printf("Detected system version (cver): %d.%d.%d%c\n", ver.mainver, ver.minor, ver.build, ver.region);
+			logInfo("Detected system version (cver): %d.%d.%d%c\n", ver.mainver, ver.minor, ver.build, ver.region);
 			u8 region;
 			res = CFGU_SecureInfoGetRegion(&region);
-			printf("Get region (%08lX): %d\n", res, region);
+			logInfo("Get region (%08lX): %d\n", res, region);
 		}
 
 	
@@ -147,25 +150,25 @@ int main() {
 				doSlotExchange();
 				res = getLocation();
 				if (R_FAILED(res) && res != -1) {
-					printf("ERROR failed to get location: %ld\n", res);
+					logInfo("ERROR failed to get location: %ld\n", res);
 					location = -1;
 				} else {
 					location = res;
 					if (location == -1) {
-						printf("Got location home\n");
+						logInfo("Got location home\n");
 					} else {
-						printf("Got location: %d\n", location);
+						logInfo("Got location: %d\n", location);
 					}
 				}
 			}));
 		
 			if (_PATCHES_VERSION_ > config.patches_version) {
-				printf("New patches version to apply!\n");
+				logInfo("New patches version to apply!\n");
 				scene = getUpdatePatchesScene(scene);
 			}
 			
 			if (_WELCOME_VERSION_ > config.welcome_version) {
-				printf("New Welcome Screen to show!\n");
+				logInfo("New Welcome Screen to show!\n");
 				scene = getWelcomeScene(scene);
 			}
 		}
@@ -197,7 +200,7 @@ int main() {
 		C3D_FrameEnd(0);
 		svcSleepThread(1);
 	}
-	printf("\nExiting...\n");
+	logInfo("\nExiting...\n");
 	integrationExit();
 	bgLoopExit();
 	musicExit();

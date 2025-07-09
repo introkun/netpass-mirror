@@ -108,7 +108,7 @@ size_t curlHeader(void *data, size_t size, size_t nmemb, void* ptr) {
 	buf[size*nmemb] = '\0';
 	static const char header_name[] = "3ds-netpass-msg: ";
 	if (strncmp(header_name, buf, strlen(header_name)) == 0) {
-		printf("%s\n", buf + strlen(header_name));
+		logInfo("%s\n", buf + strlen(header_name));
 	}
 	return size*nmemb;
 }
@@ -158,7 +158,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	// request is being sent, let's wait until it is back
 	
 	while (handles[curl_handle_slot].status != CURL_HANDLE_STATUS_DONE) {
-		//printf("%d", handles[curl_handle_slot].status);
+		//logInfo("%d", handles[curl_handle_slot].status);
 		svcSleepThread((u64)1000000 * 100);
 	}
 
@@ -332,7 +332,7 @@ void curl_multi_loop(void* p) {
 	do {
 		CURLMcode mc = curl_multi_perform(curl_multi_handle, &openHandles);
 		if (mc != CURLM_OK) {
-			printf("ERROR curl multi fail: %u\n", mc);
+			logInfo("ERROR curl multi fail: %u\n", mc);
 			return;
 		}
 		CURLMsg* msg;
