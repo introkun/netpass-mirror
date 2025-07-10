@@ -18,18 +18,20 @@
 #pragma once
 
 typedef enum {
+    LOG_LEVEL_NONE,
     LOG_LEVEL_DEBUG,
     LOG_LEVEL_INFO,
     LOG_LEVEL_WARN,
     LOG_LEVEL_ERROR,
-    LOG_LEVEL_NONE
+    LOG_LEVEL_MAX
 } LogLevel;
 
 typedef enum {
     LOG_OUTPUT_NONE,
     LOG_OUTPUT_SCREEN,
     LOG_OUTPUT_FILE,
-    LOG_OUTPUT_BOTH
+    LOG_OUTPUT_BOTH,
+    LOG_OUTPUT_MAX
 } LogOutput;
 
 void loggerInit(LogLevel level, LogOutput output, const char* filename);

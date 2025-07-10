@@ -40,6 +40,12 @@ static void buildLogFilePath(const char* filename, char* outPath, size_t maxLen)
 }
 
 void loggerInit(LogLevel level, LogOutput output, const char* filename) {
+    if (level < LOG_LEVEL_NONE || level >= LOG_LEVEL_MAX) {
+        level = LOG_LEVEL_INFO;
+    }
+    if (output < LOG_OUTPUT_NONE || output >= LOG_OUTPUT_MAX) {
+        output = LOG_OUTPUT_SCREEN;
+    }
     currentLevel = level;
     currentOutput = output;
     LightLock_Init(&logLock);
@@ -72,12 +78,18 @@ void loggerClose(void) {
 
 void loggerSetLevel(LogLevel level) {
     LightLock_Lock(&logLock);
+    if (level < LOG_LEVEL_NONE || level >= LOG_LEVEL_MAX) {
+        level = LOG_LEVEL_INFO;
+    }
     currentLevel = level;
     LightLock_Unlock(&logLock);
 }
 
 void loggerSetOutput(LogOutput output, const char* filename) {
     LightLock_Lock(&logLock);
+    if (output < LOG_OUTPUT_NONE || output >= LOG_OUTPUT_MAX) {
+        output = LOG_OUTPUT_SCREEN;
+    }
 
     // Close existing log file if needed
     if (logFile) {
