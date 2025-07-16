@@ -57,7 +57,9 @@ int main() {
 	romfsInit();
 	init_main_thread_prio();
 
+#ifdef DEBUG
 	logDebug("DEBUG ON\n");
+#endif
 
 	cecdInit();
 	Result res = curlInit();

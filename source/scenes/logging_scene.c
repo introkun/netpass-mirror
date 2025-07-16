@@ -114,7 +114,7 @@ void N(render)(Scene* sc) {
 	C2D_DrawText(&_data->g_logger_level_title, C2D_AlignLeft | C2D_WithColor, 30, 74 + (0 * 14), 0, 0.5, 0.5);
 	C2D_DrawText(&_data->g_logger_levels[_data->selected_logger_level], C2D_AlignLeft, _data->log_level_title_width + 60, 74 + (0 * 14), 0, 0.5, 0.5);
 	C2D_DrawText(&_data->g_logger_output_title, C2D_AlignLeft | C2D_WithColor, 30, 74 + (1 * 14), 0, 0.5, 0.5);
-	C2D_DrawText(&_data->g_logger_outputs[_data->selected_logger_output], C2D_AlignLeft, _data->log_output_title_width + 60, 74 + (1 * 14), 0, 0.5, 0.5);
+	C2D_DrawText(&_data->g_logger_outputs[_data->selected_logger_output], C2D_AlignLeft, _data->log_level_title_width + 60, 74 + (1 * 14), 0, 0.5, 0.5);
 
 	C2D_DrawText(&_data->g_back, C2D_AlignLeft | C2D_WithColor, 30, 74 + (2*14), 0, 0.5, 0.5, clr);
 
