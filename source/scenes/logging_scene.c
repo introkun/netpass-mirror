@@ -135,8 +135,12 @@ SceneResult N(process)(Scene* sc) {
 	const u32 kDown = hidKeysDown();
 	if (_data) {
 		_data->cursor += ((kDown & KEY_DOWN || kDown & KEY_CPAD_DOWN) && 1) - ((kDown & KEY_UP || kDown & KEY_CPAD_UP) && 1);
-		if (_data->cursor < 0) _data->cursor = MENU_ITEM_MAX - 1;
-		if (_data->cursor > MENU_ITEM_MAX - 1) _data->cursor = 0;
+		if (_data->cursor < 0) {
+			_data->cursor = MENU_ITEM_MAX - 1;
+		} else if (_data->cursor > MENU_ITEM_MAX - 1) {
+			_data->cursor = 0;
+		}
+
 		if (_data->cursor == MENU_ITEM_LOGGER_LEVEL) {
 			const int old_level = _data->selected_logger_level;
 			_data->selected_logger_level += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
@@ -148,16 +152,20 @@ SceneResult N(process)(Scene* sc) {
 				loggerSetLevel(_data->selected_logger_level);
 				logDebug("Set logger level: %d\n", _data->selected_logger_level);
 			}
+		} else if (_data->cursor == MENU_ITEM_LOGGER_OUTPUT) {
+			const int old_output = _data->selected_logger_output;
+			_data->selected_logger_output += ((kDown & KEY_RIGHT || kDown & KEY_CPAD_RIGHT) && 1) - ((kDown & KEY_LEFT || kDown & KEY_CPAD_LEFT) && 1);
+			if (_data->selected_logger_output < LOG_OUTPUT_NONE) _data->selected_logger_output = LOG_OUTPUT_NONE;
+			if (_data->selected_logger_output >= LOG_OUTPUT_MAX) _data->selected_logger_output = LOG_OUTPUT_MAX - 1;
+			if (old_output != _data->selected_logger_output) {
+				config.log_output = _data->selected_logger_output;
+				configWrite();
+				loggerSetOutput(_data->selected_logger_output, NULL);
+				logDebug("Set logger output: %d\n", _data->selected_logger_output);
+			}
 		}
+
 		if (kDown & KEY_A) {
-			if (_data->cursor == MENU_ITEM_LOGGER_LEVEL) {
-				// TODO: add change of logger level
-				return scene_pop;
-			}
-			if (_data->cursor == MENU_ITEM_LOGGER_OUTPUT) {
-				// TODO: add change of logger output
-				return scene_pop;
-			}
 			if (_data->cursor == MENU_ITEM_BACK) return scene_pop;
 		}
 	}

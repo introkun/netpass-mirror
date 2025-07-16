@@ -21,14 +21,34 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <3ds.h>
 
+#ifdef __3DS__
+#include <3ds.h>
+#else
+#include <pthread.h>
+#endif
+
+#ifdef __3DS__
+static LightLock logLock;
+#define LOCK_INIT()   LightLock_Init(&logLock)
+#define LOCK()        LightLock_Lock(&logLock)
+#define UNLOCK()      LightLock_Unlock(&logLock)
+#else
+static pthread_mutex_t logLock = PTHREAD_MUTEX_INITIALIZER;
+#define LOCK_INIT()   pthread_mutex_init(&logLock, NULL)
+#define LOCK()        pthread_mutex_lock(&logLock)
+#define UNLOCK()      pthread_mutex_unlock(&logLock)
+#endif
+
+#ifdef __3DS__
 #define LOG_DIR_PATH "sdmc:/3ds/netpass/"
+#else
+#define LOG_DIR_PATH "./log/"
+#endif
 
 static LogLevel currentLevel = LOG_LEVEL_INFO;
 static LogOutput currentOutput = LOG_OUTPUT_SCREEN;
 static FILE* logFile = NULL;
-static LightLock logLock;
 
 static void ensureLogDirExists(void) {
     // Try to create the directory, ignore error if it exists
@@ -48,7 +68,7 @@ void loggerInit(LogLevel level, LogOutput output, const char* filename) {
     }
     currentLevel = level;
     currentOutput = output;
-    LightLock_Init(&logLock);
+    LOCK_INIT();
 
     if ((output == LOG_OUTPUT_FILE || output == LOG_OUTPUT_BOTH) && filename != NULL) {
         ensureLogDirExists();
@@ -66,28 +86,34 @@ void loggerInit(LogLevel level, LogOutput output, const char* filename) {
 }
 
 void loggerClose(void) {
-    LightLock_Lock(&logLock);
+    LOCK();
 
     if (logFile) {
         fclose(logFile);
         logFile = NULL;
     }
 
-    LightLock_Unlock(&logLock);
+    UNLOCK();
 }
 
 void loggerSetLevel(LogLevel level) {
-    LightLock_Lock(&logLock);
+    LOCK();
     if (level < LOG_LEVEL_NONE || level >= LOG_LEVEL_MAX) {
+        printf("[WARN] Incorrect logger level. Falling back to INFO level.\n");
         level = LOG_LEVEL_INFO;
     }
     currentLevel = level;
-    LightLock_Unlock(&logLock);
+    UNLOCK();
 }
 
 void loggerSetOutput(LogOutput output, const char* filename) {
-    LightLock_Lock(&logLock);
+    LOCK();
     if (output < LOG_OUTPUT_NONE || output >= LOG_OUTPUT_MAX) {
+        printf("[WARN] Incorrect logger output. Falling back to screen output.\n");
+        output = LOG_OUTPUT_SCREEN;
+    }
+    if ((output == LOG_OUTPUT_FILE || output == LOG_OUTPUT_BOTH) && filename == NULL && logFile == NULL) {
+        printf("[WARN] Log filename is not specified and log file was not initialized. Falling back to screen output.\n");
         output = LOG_OUTPUT_SCREEN;
     }
 
@@ -113,7 +139,7 @@ void loggerSetOutput(LogOutput output, const char* filename) {
         }
     }
 
-    LightLock_Unlock(&logLock);
+    UNLOCK();
 }
 
 static void loggerWrite(LogLevel level, const char* tag, const char* fmt, va_list args) {
@@ -123,7 +149,7 @@ static void loggerWrite(LogLevel level, const char* tag, const char* fmt, va_lis
     char buffer[512];
     vsnprintf(buffer, sizeof(buffer), fmt, args);
 
-    LightLock_Lock(&logLock);
+    LOCK();
 
     if (currentOutput == LOG_OUTPUT_SCREEN || currentOutput == LOG_OUTPUT_BOTH) {
         printf("%s", buffer);
@@ -134,16 +160,16 @@ static void loggerWrite(LogLevel level, const char* tag, const char* fmt, va_lis
         fflush(logFile);
     }
 
-    LightLock_Unlock(&logLock);
+    UNLOCK();
 }
 
 // --- Log Level Macros ---
 #define DEFINE_LOG_FUNCTION(fnName, enumName, tag)       \
-    void log##fnName(const char* fmt, ...) {             \
-        va_list args;                                    \
-        va_start(args, fmt);                             \
-        loggerWrite(enumName, tag, fmt, args);           \
-        va_end(args);                                    \
+void log##fnName(const char* fmt, ...) {             \
+    va_list args;                                    \
+    va_start(args, fmt);                             \
+    loggerWrite(enumName, tag, fmt, args);           \
+    va_end(args);                                    \
     }
 
 DEFINE_LOG_FUNCTION(Debug, LOG_LEVEL_DEBUG, "DEBUG")
