@@ -3,7 +3,8 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -D__HOST_TEST__ -I../include
 SRC = logger_test.c ../source/logger.c
-OUT = logger_test
+OUTDIR = ../out
+OUT = $(OUTDIR)/logger_test
 LOG_DIR = log
 LOG_FILE = $(LOG_DIR)/test_log.txt
 

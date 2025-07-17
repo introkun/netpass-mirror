@@ -13,3 +13,4 @@ patches/*/code.bin
 patches/*/out
 romfs/gfx
 romfs/music
+tests/log/
