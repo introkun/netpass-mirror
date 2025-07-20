@@ -3,8 +3,8 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -D__HOST_TEST__ -I../include
 SRC = logger_test.c ../source/logger.c
-OUTDIR = ../out
-OUT = $(OUTDIR)/logger_test
+OUT_DIR = ../out
+OUT = $(OUT_DIR)/logger_test
 LOG_DIR = log
 LOG_FILE = $(LOG_DIR)/test_log.txt
 
@@ -15,6 +15,7 @@ all: $(OUT)
 	@./$(OUT)
 
 $(OUT): $(SRC)
+	@mkdir -p $(OUT_DIR)
 	$(CC) $(CFLAGS) -o $@ $(SRC)
 
 clean:
