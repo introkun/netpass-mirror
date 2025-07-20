@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test_homebrew:
+  stage: test
+  image: debian:bullseye
+  before_script:
+    - apt update && apt install -y build-essential make
+  script:
+    - cd tests
+    - make
+  only:
+    - branches
