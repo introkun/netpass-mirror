@@ -28,7 +28,6 @@
 #define OPUS_RATE (48000.f)
 #define NUM_BUFFERS 3
 #define OPUS_BUFFERSIZE (16 * 1024) // 16K stereo frames = 32K int16_t samples
-#define TEMP_MONO_BUFFER_SIZE 4096
 
 bool stop_playing = false;
 Thread music_thread = 0;
