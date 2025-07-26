@@ -105,13 +105,14 @@ void play_thread(void* p) {
 		ndspChnWaveBufAdd(MUSIC_CHANNEL, &wavebuf[i]);
 	}
 
+	// now start the loop
 	stop_playing = false;
 	wait_for_state(true);
 
 	// Playback loop
 	while (!stop_playing) {
 		svcSleepThread((u64)1000 * 10);
-
+		// do nothing if the channel is paused
 		if (ndspChnIsPaused(MUSIC_CHANNEL)) {
 			continue;
 		}
