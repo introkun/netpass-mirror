@@ -56,7 +56,7 @@ void N(init)(Scene* sc) {
 			str_font = _font(str_httpstatus_error);
 			break;
 		}
-		if (err > -100 && err < 0 && (err != -1 || errno == 0)) {
+		if (err > -100 && err < 0) {
 			// libcurl error code
 			int errcode = -err;
 			const char* errmsg = curl_easy_strerror(errcode);
@@ -68,7 +68,7 @@ void N(init)(Scene* sc) {
 			}
 			break;
 		}
-		if (err <= -600 || R_FAILED(errno)) {
+		if (err <= -600) {
 			// 3ds error code
 			snprintf(str, sizeof(str), _s(str_3ds_error), (u32)err);
 			str_font = _font(str_3ds_error);
@@ -87,7 +87,7 @@ void N(init)(Scene* sc) {
 			break;
 		}
 		// errno error
-		strerror_r(errno, str, sizeof(str));
+		strerror_r(err, str, sizeof(str));
 		str_font = 0;
 		break;
 	} while(1);

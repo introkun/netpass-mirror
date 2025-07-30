@@ -128,7 +128,7 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 	}
 	if (!found_handle_slot) {
 		// TODO: dunno, wait or something?
-		return -1;
+		return ERROR_CURL_NO_FREE_HANDLE;
 	}
 
 	FILE* file = 0;
@@ -136,8 +136,8 @@ Result httpRequest(char* method, char* url, int size, u8* body, CurlReply** repl
 		// we have a file reply
 		file = fopen(title_name, "wb");
 		if (!file) {
-			_e(-1);
-			return -2;
+			_e_errno();
+			return ERROR_ERRNO;
 		}
 	}
 	handles[curl_handle_slot].file_reply = file;
@@ -208,7 +208,7 @@ void curl_multi_loop_request_setup(int i) {
 	struct CurlHandle* h = &handles[i];
 	h->handle = curl_easy_init();
 	if (!h->handle) {
-		h->res = -1;
+		h->res = ERROR_CURL_NO_FREE_HANDLE;
 		h->status = CURL_HANDLE_STATUS_DONE;
 		return;
 	}
@@ -375,7 +375,7 @@ Result curlInit(void) {
 	Result res;
 	// ok, we have to init this first
 	SOC_buffer = (u32*)memalign(SOC_ALIGN, SOC_BUFFERSIZE);
-	if (!SOC_buffer) return -1;
+	if (!SOC_buffer) return ERROR_OUT_OF_MEMORY;
 	res = socInit(SOC_buffer, SOC_BUFFERSIZE);
 	if (R_FAILED(res)) return res;
 	curl_global_init(CURL_GLOBAL_ALL);

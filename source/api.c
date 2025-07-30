@@ -97,7 +97,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	Result res = 0;
 	char url[50];
 	if (!metadata->title_id) {
-		return -1; // something went wrong
+		return ERROR_NO_TITLE_ID; // something went wrong
 	}
 	if (metadata->size == 0 || metadata->send_method == 1) {
 		// recv only, delete outbox
@@ -109,7 +109,7 @@ Result uploadSlot(TitleExtraInfo* extra, SlotMetadata* metadata) {
 	// read extra metadata to send
 	u8* slot = malloc(metadata->size);
 	if (!slot) {
-		return -2;
+		return ERROR_OUT_OF_MEMORY;
 	}
 
 	// now it is time to *actually* fetch the slot
@@ -146,7 +146,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 		return res;
 	}
 	if (http_code != 200) {
-		res = -1;
+		res = -http_code;
 		goto fail;
 	}
 	if (reply->len < sizeof(CecSlotHeader)) {
@@ -160,7 +160,7 @@ Result downloadSlot(int i, SlotInfo* slotinfo) {
 	metadata->size = slot->size;
 	slotinfo->slots[i] = malloc(slot->size);
 	if (!slotinfo->slots[i]) {
-		res = -1;
+		res = ERROR_MISSING_SLOT_META;
 		goto fail;
 	}
 
@@ -212,7 +212,7 @@ Result doSlotExchange(void) {
 		clearIgnoredTitles(&mbox_list.header);
 		u8* buf = malloc(MAX(200, sizeof(CecMBoxInfoHeader)));
 		if (!buf) {
-			res = -1;
+			res = ERROR_OUT_OF_MEMORY;
 			error_origin = "malloc for mboxinfo";
 			goto fail;
 		}
@@ -398,7 +398,7 @@ Result getLocation(void) {
 	if (http_code == 200) {
 		res = *(u32*)(reply->ptr);
 	} else {
-		res = -1;
+		res = -http_code;
 	}
 cleanup:
 	curlFreeHandler(reply->offset);

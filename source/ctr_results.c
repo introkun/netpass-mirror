@@ -69,6 +69,16 @@
 #define GET_MODULE(res) GET_CODE_BITS(res, MASK_MODULE, SHIFTS_MODULE)
 #define GET_DESCRIPTION(res) GET_CODE_BITS(res, MASK_DESCRIPTION, SHIFTS_DESCRIPTION)
 
+#define SET_CODE_BITS(res, mask, shift) (((uint32_t)res << shift) & mask)
+#define SET_LEVEL(res) SET_CODE_BITS(res, MASK_LEVEL, SHIFTS_LEVEL)
+#define SET_SUMMARY(res) SET_CODE_BITS(res, MASK_SUMMARY, SHIFTS_SUMMARY)
+#define SET_MODULE(res) SET_CODE_BITS(res, MASK_MODULE, SHIFTS_MODULE)
+#define SET_DESCRIPTION(res) SET_CODE_BITS(res, MASK_DESCRIPTION, SHIFTS_DESCRIPTION)
+
+
+int32_t make_result(int level, int summary, int module, int description) {
+	return SET_LEVEL(level) | SET_SUMMARY(summary) | SET_MODULE(module) | SET_DESCRIPTION(description);
+}
 
 const char* const level_to_string[] = {
 	"Success",
@@ -3943,6 +3953,32 @@ const char* get_desc_desc_webbrs(int desc) {
 	return NULL;
 }
 
+int application_desc_size = 0;
+const char** application_desc_str_map = NULL;
+const char** application_desc_desc_map = NULL;
+
+void set_application_desc_map(int size, const char** str_map, const char** desc_map) {
+	application_desc_size = size;
+	application_desc_str_map = str_map;
+	application_desc_desc_map = desc_map;
+}
+
+const char* get_desc_str_application(int desc) {
+	if (!application_desc_str_map) return NULL;
+	
+	if (desc < application_desc_size) return application_desc_str_map[desc];
+	
+	return NULL;
+}
+
+const char* get_desc_desc_application(int desc) {
+	if (!application_desc_desc_map) return NULL;
+	
+	if (desc < application_desc_size) return application_desc_desc_map[desc];
+	
+	return NULL;
+}
+
 const char* (*module_desc_str[])(int) = {
 	NULL, //"cmn",
 	get_desc_str_kern,
@@ -4195,14 +4231,14 @@ void get_summary_formatted(char* dest, size_t size, int32_t res) {
 
 const char* get_module_string(int32_t res) {
 	int module = GET_MODULE(res);
-	if (module == MAX_DESCRIPTION - 1) return "application";
+	if (module == 254) return "application";
 	if (module <= 98) return module_to_string[module];
 	return "invalid";
 }
 
 const char* get_module_description(int32_t res) {
 	int module = GET_MODULE(res);
-	if (module == MAX_DESCRIPTION - 1) return "Application";
+	if (module == 254) return "Application";
 	if (module <= 98) return module_description[module];
 	return "Invalid";
 }
@@ -4222,6 +4258,10 @@ const char* get_description_string(int32_t res) {
 			if (s) return s;
 		}
 	}
+	if (module == CTR_RESULT_MODULE_APPLICATION) {
+		const char* s = get_desc_str_application(description);
+		if (s) return s;
+	}
 	if (description == 0) return "Success";
 	if (description >= 1000) return description_to_string[description - 1000];
 	return "unknown";
@@ -4236,6 +4276,10 @@ const char* get_description_description(int32_t res) {
 			const char* s = fn(description);
 			if (s) return s;
 		}
+	}
+	if (module == CTR_RESULT_MODULE_APPLICATION) {
+		const char* s = get_desc_desc_application(description);
+		if (s) return s;
 	}
 	if (description == 0) return "Succeeded.";
 	if (description >= 1000) return description_description[description - 1000];
