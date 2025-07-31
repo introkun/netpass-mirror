@@ -125,6 +125,7 @@ void play_thread(void* p) {
 					goto fail;
 				}
 				if (read == 0) {
+					// song should loop
 					op_pcm_seek(opus_file, 0);
 					read = fill_opus_buffer(opus_file, buffers[i], OPUS_BUFFERSIZE);
 				}
